@@ -1,10 +1,16 @@
 
 ## TODO
 
+- [ ] [img2dataset](https://github.com/rom1504/img2dataset)
 - [ ] [Semantic search with embeddings: index anything](https://rom1504.medium.com/semantic-search-with-embeddings-index-anything-8fb18556443c)
 - [ ] [clip-retrieval](https://github.com/rom1504/clip-retrieval)
 - [ ] [watermark-detection](https://github.com/LAION-AI/watermark-detection)
 - [ ] [LAION-5B-WatermarkDetection](https://github.com/LAION-AI/LAION-5B-WatermarkDetection/releases/tag/1.0)
+
+
+
+<br><br><br>
+
 
 ## Public Datasets
 
@@ -18,11 +24,16 @@
      *  LAION 5B, a CLIP-filtered dataset of 5,85 billion high-quality image-text pairs, their CLIP ViT-L/14 embeddings, kNN-indices, a web interface for exploration & subset-creation and NSFW- and watermark-detection scores and tools.
   *  Keep in mind that the uncurated nature of the dataset means that collected links may lead to strongly discomforting and disturbing content for a human viewer. 
      *  It is possible to extract a “safe” subset by filtering out samples based on the safety tags (using a customized trained NSFW classifier that we built). 
+  *  **<font color='red'>Dataset Statistics</font>** 
+     * Also see the whole [sheet](https://docs.google.com/spreadsheets/d/19AkcufyABAnbBlsr12VUmlR9oyQWb4uloAQnd-rqJC0/edit#gid=0) and the whole [dashboard](https://datastudio.google.com/reporting/c67c1749-816f-464f-873a-867b4a43f044/page/p_i9he8sxntc/edit).
+     * ![](./images/Laion2B-en.jpg)
+     * ![](./images/Laion2B-multi.jpg)
+     * ![](./images/Laion2B-nolang.jpg)
   *  **<font color='red'>Download the data</font>** 
      *  [laion2B-en](https://huggingface.co/datasets/laion/laion2B-en) 2.32 billion of these contain texts in the English language
      *  [laion2B-multi](https://huggingface.co/datasets/laion/laion2B-multi) 2.26 billion contain texts from 100+ other languages
      *  [laion1B-nolang](https://huggingface.co/datasets/laion/laion1B-nolang) 1.27 billion have texts where a particular language couldn’t be clearly detected.
-     *  The data can comfortably be downloaded with [img2dataset](https://github.com/rom1504/img2dataset) (240TB in 384, 80TB in 224)
+     *  <font color='gree'>The data can comfortably be downloaded with [img2dataset](https://github.com/rom1504/img2dataset) (240TB in 384, 80TB in 224)</font>
   *  **<font color='red'>Acquisition pipeline</font>** 
      *  Distributed processing of Common Crawl
         *  language detection on text with three possible outputs: English language with confidence, another language with confidence, no language which contains “no detection” and “detection under the confidence threshold”. The “no language” set often contains short texts, mostly with names of people and places. 
