@@ -6,6 +6,8 @@ github: [NVlabs/prismer](https://github.com/NVlabs/prismer)
 
 参照：[NVlabs/prismer](https://github.com/NVlabs/prismer)
 
+github在构建环境的时候，写的并不详细，环境构建建议参照如下：
+
 ```
 conda create --name prismer python=3.8
 conda activate prismer
@@ -19,6 +21,13 @@ pip install -r requirements.txt
 
 ```
 
+<br>
+
+## 个人见解
+模型整体效果一般，和SOTA尚有差距。模型中应用了多种预训练的experts，如depth/normal/edge等，大量减少了训练参数，整体的训练速度很快，这也算是本文的亮点。但个人在这篇paper上不会投入更多精力。
+
+<br>
+
 ## Paper
 
 * **Model Overview**
@@ -28,11 +37,26 @@ pip install -r requirements.txt
     * **One of the key advantages of the Prismer model is its exceptional data efficiency during training. This is achieved by leveraging a combined power of strong domain-specific experts, resulting in a significant reduction in the number of GPU hours required to achieve comparable performance to other state-of-the-art vision-language models.**
     * Additionally, we also extend the vision encoder to accept multi-modal signals — this enables it to better capture semantics and information about the input image through the help of the generated multi-modal auxiliary knowledge. For example, we expect “text-reading” problems can be easily solved by leveraging an OCR detection expert; and “object-recognition” problems can be easily solved by leveraging an object detection expert.
     * ![](./images/prismer/f2-prismer-arch-overview.jpg)
+    * **To link the multi-modal labels as well as the vision and language parts of Prismer, we insert two types of parameter-efficient trainable components: Experts Resampler and Adaptor. The Experts Resampler is used in the vision encoder to map a variable length of multi-modal signals to a sequence of multi-modal features with a fixed length. The Adaptors are inserted in each transformer layer of the vision and language parts of the model to better adapt the pre-trained experts to new tasks and modalities.**
+
 
 <br>
 
-* ****
+* **Key Architectural Components**
+    * Modality-Specific Convolutional Stem
+    * Experts Resampler
+    * Lightweight Adaptor
+    * ![](./images/prismer/f3-design-details.JPG)
 
+<br>
+
+* **Training Objective**
+
+<br>
+
+* **Experiments**
+  * ![](./images/prismer/t3-perf.JPG)
+  * ![](./images/prismer/f4-results.JPG)
 
 <br>
 
