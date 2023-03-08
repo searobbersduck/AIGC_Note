@@ -27,6 +27,11 @@ pip install -r requirements.txt
     * Prismer is an encoder-decoder transformer model [78] that leverages a library of existing pre-trained experts. It consists of a vision encoder and an auto-regressive language decoder. The vision encoder takes an RGB image and its corresponding multi-modal labels as input (e.g. depth, surface normal, segmentation labels, predicted from the frozen pre-trained experts), and outputs a sequence of RGB and multi-modal features. The language decoder is then conditioned on these multimodal features via cross attention, and produces a sequence of text tokens.
     * **One of the key advantages of the Prismer model is its exceptional data efficiency during training. This is achieved by leveraging a combined power of strong domain-specific experts, resulting in a significant reduction in the number of GPU hours required to achieve comparable performance to other state-of-the-art vision-language models.**
     * Additionally, we also extend the vision encoder to accept multi-modal signals — this enables it to better capture semantics and information about the input image through the help of the generated multi-modal auxiliary knowledge. For example, we expect “text-reading” problems can be easily solved by leveraging an OCR detection expert; and “object-recognition” problems can be easily solved by leveraging an object detection expert.
+    * ![](./images/prismer/f2-prismer-arch-overview.jpg)
+
+<br>
+
+* ****
 
 
 <br>
