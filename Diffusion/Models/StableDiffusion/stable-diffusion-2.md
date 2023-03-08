@@ -2,6 +2,7 @@
 
 * **Training**
   * **Training Data**
+    * LAION-5B and subsets (details below). The training data is further filtered using LAION's NSFW detector, with a "p_unsafe" score of 0.1 (conservative). 
   * **Training Procedure**
     * Images are encoded through an encoder, which turns images into latent representations. The autoencoder uses a relative downsampling factor of 8 and maps images of shape H x W x 3 to latents of shape H/f x W/f x 4
     * Text prompts are encoded through the OpenCLIP-ViT/H text-encoder.
@@ -18,6 +19,18 @@
     *  <br>
     *  **<font color='red'>x4-upscaling-ema.ckpt</font>**: Trained for **1.25M steps on a 10M subset of LAION containing images >2048x2048**. The model was trained on crops of size 512x512 and is a text-guided latent upscaling diffusion model. In addition to the textual input, it receives a noise_level as an input parameter, which can be used to add noise to the low-resolution input according to a predefined diffusion schedule.
     *  <br>
+  * **Hardware**
+    * Hardware: 32 x 8 x A100 GPUs
+    * Optimizer: AdamW
+    * Gradient Accumulations: 1
+    * Batch: 32 x 8 x 2 x 4 = 2048
+    * Learning rate: warmup to 0.0001 for 10,000 steps and then kept constant
+  * **Environmental Impact**
+    * Hardware Type: A100 PCIe 40GB
+    * Hours used: 200000
+    * Cloud Provider: AWS
+    * Compute Region: US-east
+    * Carbon Emitted (Power consumption x Time x Carbon produced based on location of power grid): 15000 kg CO2 eq.
 
 ## [Stable Diffusion v2 Model Card](https://huggingface.co/stabilityai/stable-diffusion-2)
 
