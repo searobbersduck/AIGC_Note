@@ -436,6 +436,9 @@ accelerate configuration saved at /home/rtx/.cache/huggingface/accelerate/defaul
 - [ ] step 15: Which Type of launcher do you want to use?
   - [ ] [mvapich](https://baike.baidu.com/item/mvapich/10804942)
   - [ ] [并行计算入门：mpich的安装与测试](https://blog.ailemon.net/2018/03/27/parallel-computing-introduction-mpich-install-and-test/)
+  - [ ] [MPI(OpenMPI和MPICH（IntelMPI、MVAPICH)）和OpenMP](https://blog.csdn.net/weixin_44004788/article/details/117388559)
   - [ ] [【深度学习】分布式训练常用技术总结](https://my.oschina.net/oneflow/blog/5088758)
     * 内容量有点大，看完再分类
+  - [ ] [WRITING DISTRIBUTED APPLICATIONS WITH PYTORCH](https://pytorch.org/tutorials/intermediate/dist_tuto.html)
+    * 你要的答案这里都有，细看
 
