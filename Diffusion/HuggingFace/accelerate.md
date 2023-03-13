@@ -429,6 +429,8 @@ accelerate configuration saved at /home/rtx/.cache/huggingface/accelerate/defaul
   - [ ] [[源码解析] PyTorch 分布式之弹性训练(4)---Rendezvous 架构和逻辑](https://cloud.tencent.com/developer/article/1926432)
   - [ ] [云原生的弹性 AI 训练系列之二：PyTorch 1.9.0 弹性分布式训练的设计与实现](https://mp.weixin.qq.com/s/hlOYLKSHFDZWN21AsUn6bg)
   - [ ] [PyTorch Elastic源码阅读](https://zhuanlan.zhihu.com/p/408382623)
+  - [ ] [RENDEZVOUS](https://pytorch.org/docs/stable/elastic/rendezvous.html)
+    * pytorch官网内容
 
 - [ ] step 9: Which dynamo backend would you like to use?
 
@@ -443,7 +445,9 @@ accelerate configuration saved at /home/rtx/.cache/huggingface/accelerate/defaul
         * 可大幅降低延迟
 
 - [ ] step 15: Which Type of launcher do you want to use?
-  - [ ] [mvapich](https://baike.baidu.com/item/mvapich/10804942)
+  - [x] [mvapich](https://baike.baidu.com/item/mvapich/10804942)
+    * MVAPICH [1]  是VAPI层上InfiniBand的MPI的缩写，它充当着连接消息传递接口(MPI和被称作VAPI的InfiniBand软件接口间的桥梁，也是MPI标准的一种实现。
+    * 中国第一台千万亿次计算机，国防科技大学的“天河一号”，拥有71680个核心，截止到2010年3月在top500 [3]  中排名第五，使用的MPI实现就是MVAPICH。
   - [ ] [并行计算入门：mpich的安装与测试](https://blog.ailemon.net/2018/03/27/parallel-computing-introduction-mpich-install-and-test/)
   - [ ] [MPI(OpenMPI和MPICH（IntelMPI、MVAPICH)）和OpenMP](https://blog.csdn.net/weixin_44004788/article/details/117388559)
   - [ ] [【深度学习】分布式训练常用技术总结](https://my.oschina.net/oneflow/blog/5088758)
