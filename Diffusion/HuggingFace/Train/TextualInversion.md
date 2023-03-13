@@ -95,12 +95,13 @@ accelerate launch textual_inversion.py \
   --output_dir="textual_inversion_cat"
 
 
-
 # 解决完问题再次运行并将log写入log.tx
 
 accelerate launch textual_inversion.py   --pretrained_model_name_or_path=$MODEL_NAME   --train_data_dir=$DATA_DIR   --learnable_property="object"   --placeholder_token="<cat-toy>" --initializer_token="toy"   --resolution=512   --train_batch_size=1   --gradient_accumulation_steps=4   --max_train_steps=3000   --learning_rate=5.0e-04 --scale_lr   --lr_scheduler="constant"   --lr_warmup_steps=0   --output_dir="textual_inversion_cat" | tee -a log.txt
 
 ```
+
+<br>
 
 ## 错误及解决方案
 
@@ -308,4 +309,21 @@ Mon Mar 13 10:55:48 2023
 |    1   N/A  N/A     29803      G   /usr/lib/xorg/Xorg                  4MiB |
 +-----------------------------------------------------------------------------+
 
+```
+
+<br>
+
+## Inference
+
+```
+from diffusers import StableDiffusionPipeline
+
+model_id = "path-to-your-trained-model"
+pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
+
+prompt = "A <cat-toy> backpack"
+
+image = pipe(prompt, num_inference_steps=50, guidance_scale=7.5).images[0]
+
+image.save("cat-backpack.png")
 ```
