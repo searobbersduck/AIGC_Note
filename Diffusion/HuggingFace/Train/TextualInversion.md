@@ -20,17 +20,17 @@
 ![](./images/TexInversion/DSC06392.jpg)
 
 四种提示的生成图如下(结果看客自己评价吧，不多说了)：
-prompt = "Manga drawing of a <cat-toy>"
-![](./images/TexInversion/shoe1.jpg)
-
-prompt = "A <cat-toy> watering can"
-![](./images/TexInversion/shoe2.jpg)
-
-prompt = "<cat-toy> Death Star"
-![](./images/TexInversion/shoe3.jpg)
-
-prompt = "A poster for the movie 'The Teapot' starring <cat-toy>"
-![](./images/TexInversion/shoe4.jpg)
+* prompt = "Manga drawing of a <cat-toy>"
+* ![](./images/TexInversion/shoe1.jpg)
+* <br>
+* prompt = "A <cat-toy> watering can"
+* ![](./images/TexInversion/shoe2.jpg)
+* <br>
+* prompt = "<cat-toy> Death Star"
+* ![](./images/TexInversion/shoe3.jpg)
+* <br>
+* prompt = "A poster for the movie 'The Teapot' starring <cat-toy>"
+* ![](./images/TexInversion/shoe4.jpg)
 
 
 <br>
