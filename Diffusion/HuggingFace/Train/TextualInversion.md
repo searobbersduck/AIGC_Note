@@ -2,6 +2,39 @@
 
 <br>
 
+## Overview
+![](./images/TexInversion/overview-1.JPG)
+![](./images/TexInversion/overview-arch.JPG)
+
+## 试验
+
+参照上述架构图，我用了几张鞋子的照片，做了类似尝试。关键词我就按照那个茶壶的关键词给，看一下试验效果。
+
+关键词(虽然完全不是一回事，差的有点远)：
+* Manga drawing of a *
+* A * watering can
+* * Death Star
+* A poster for the movie 'The Teapot' starring *
+
+原图类似这种：
+![](./images/TexInversion/DSC06392.jpg)
+
+四种提示的生成图如下(结果看客自己评价吧，不多说了)：
+prompt = "Manga drawing of a <cat-toy>"
+![](./images/TexInversion/shoe1.jpg)
+
+prompt = "A <cat-toy> watering can"
+![](./images/TexInversion/shoe2.jpg)
+
+prompt = "<cat-toy> Death Star"
+![](./images/TexInversion/shoe3.jpg)
+
+prompt = "A poster for the movie 'The Teapot' starring <cat-toy>"
+![](./images/TexInversion/shoe4.jpg)
+
+
+<br>
+
 ## accelerate配置如下：
 
 ```
@@ -63,6 +96,10 @@ Copy-and-paste the text below in your GitHub issue
 
 ## 训练
 
+* A full training run takes ~1 hour on one V100 GPU.
+* 下面的训练是在两块rtxA6000上进行的，大约也是一个小时的训练时间。
+
+
 ```
 git clone https://github.com/huggingface/diffusers.git
 
@@ -104,10 +141,10 @@ accelerate launch textual_inversion.py   --pretrained_model_name_or_path=$MODEL_
 <br>
 
 ```
-accelerate launch textual_inversion.py   --pretrained_mo$
-el_name_or_path=$MODEL_NAME   --train_data_dir=$DATA_DIR   --learnable_property="object"   --placeholder_token="<cat-toy>" --initializer_token="toy$
+accelerate launch textual_inversion.py --pretrained_model_name_or_path=$MODEL_NAME   --train_data_dir=$DATA_DIR   --learnable_property="object"   --placeholder_token="<cat-toy>" --initializer_token="toy$
    --resolution=512   --train_batch_size=1   --gradient_accumulation_steps=4   --max_train_steps=3000   --learning_rate=5.0e-04 --scale_lr   --lr_s$
 heduler="constant"   --lr_warmup_steps=0   --output_dir="textual_inversion_cat" | tee -a log.txt
+
 [10:48:16] WARNING  The following values were not passed to `accelerate launch` and had defaults used instead:                         launch.py:88$
                             `--dynamo_backend` was set to a value of `'no'`
                     To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
@@ -206,6 +243,8 @@ Configuration saved in textual_inversion_cat/scheduler/scheduler_config.json
 Steps: 100%|████████████████████████████████████████████████████████████████████████████| 3000/3000 [59:47<00:00,  1.20s/it, loss=0.00332, lr=0.004]
 ```
 
+
+<br>
 
 ## 错误及解决方案
 
@@ -420,12 +459,19 @@ Mon Mar 13 10:55:48 2023
 ## Inference
 
 ```
+import torch
+
 from diffusers import StableDiffusionPipeline
 
 model_id = "path-to-your-trained-model"
 pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to("cuda")
 
 prompt = "A <cat-toy> backpack"
+
+# prompt = "Manga drawing of a <cat-toy>"
+# prompt = "A <cat-toy> watering can"
+# prompt = "<cat-toy> Death Star"
+# prompt = "A poster for the movie 'The Teapot' starring <cat-toy>"
 
 image = pipe(prompt, num_inference_steps=50, guidance_scale=7.5).images[0]
 
