@@ -432,6 +432,15 @@ accelerate configuration saved at /home/rtx/.cache/huggingface/accelerate/defaul
 
 - [ ] step 9: Which dynamo backend would you like to use?
 
+- [ ] step 13: Where to offload optimizer states?
+  - [x] nvme: 这个选项中，nvme指的是将优化器状态offload到硬盘
+    * [什么是 NVMe SSD 技术？](https://www.kingston.com/cn/ssd/what-is-nvme-ssd-technology)
+      * NVMe 技术带来出众的存储空间、速度和兼容性。由于 NVMe 利用 PCIe 插槽，它传输的数据量是同等 SATA 产品的 25 倍。
+    * [NVMe SSD和普通ssd的区别](https://www.crucial.cn/articles/about-ssd/difference-between-nvme-ssd-and-sata-ssd)
+      * 首先要知道什么是NVMe，NVM Express（NVMe），或称非易失性内存主机控制器接口规范(Non-Volatile Memory express),是一个逻辑设备接口规范。
+      * NVMe的优势，对比于SATA SSD:
+        * 性能有数倍的提升
+        * 可大幅降低延迟
 
 - [ ] step 15: Which Type of launcher do you want to use?
   - [ ] [mvapich](https://baike.baidu.com/item/mvapich/10804942)
