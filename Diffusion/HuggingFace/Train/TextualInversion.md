@@ -103,6 +103,110 @@ accelerate launch textual_inversion.py   --pretrained_model_name_or_path=$MODEL_
 
 <br>
 
+```
+accelerate launch textual_inversion.py   --pretrained_mo$
+el_name_or_path=$MODEL_NAME   --train_data_dir=$DATA_DIR   --learnable_property="object"   --placeholder_token="<cat-toy>" --initializer_token="toy$
+   --resolution=512   --train_batch_size=1   --gradient_accumulation_steps=4   --max_train_steps=3000   --learning_rate=5.0e-04 --scale_lr   --lr_s$
+heduler="constant"   --lr_warmup_steps=0   --output_dir="textual_inversion_cat" | tee -a log.txt
+[10:48:16] WARNING  The following values were not passed to `accelerate launch` and had defaults used instead:                         launch.py:88$
+                            `--dynamo_backend` was set to a value of `'no'`
+                    To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+/home/rtx/workspace/anaconda3/envs/lavis/lib/python3.8/site-packages/accelerate/accelerator.py:243: FutureWarning: `logging_dir` is deprecated and w
+ill be removed in version 0.18.0 of 🤗 Accelerate. Use `project_dir` instead.
+  warnings.warn(
+/home/rtx/workspace/anaconda3/envs/lavis/lib/python3.8/site-packages/accelerate/accelerator.py:243: FutureWarning: `logging_dir` is deprecated and w
+ill be removed in version 0.18.0 of 🤗 Accelerate. Use `project_dir` instead.
+  warnings.warn(
+03/13/2023 10:48:18 - INFO - __main__ - Distributed environment: MULTI_GPU  Backend: nccl
+Num processes: 2
+Process index: 0
+Local process index: 0
+Device: cuda:0
+
+Mixed precision type: no
+
+03/13/2023 10:48:18 - INFO - __main__ - Distributed environment: MULTI_GPU  Backend: nccl
+Num processes: 2
+Process index: 1
+Local process index: 1
+Device: cuda:1
+
+Mixed precision type: no
+
+{'dynamic_thresholding_ratio', 'prediction_type', 'clip_sample_range', 'variance_type', 'thresholding', 'sample_max_value'} was not found in config.
+ Values will be initialized to default values.
+{'scaling_factor'} was not found in config. Values will be initialized to default values.
+{'resnet_time_scale_shift', 'timestep_post_act', 'mid_block_type', 'time_cond_proj_dim', 'num_class_embeds', 'use_linear_projection', 'conv_out_kern
+el', 'dual_cross_attention', 'only_cross_attention', 'time_embedding_type', 'conv_in_kernel', 'upcast_attention', 'class_embed_type', 'projection_cl
+ass_embeddings_input_dim'} was not found in config. Values will be initialized to default values.
+03/13/2023 10:48:40 - INFO - __main__ - ***** Running training *****
+03/13/2023 10:48:40 - INFO - __main__ -   Num examples = 1100
+03/13/2023 10:48:40 - INFO - __main__ -   Num Epochs = 22
+03/13/2023 10:48:40 - INFO - __main__ -   Instantaneous batch size per device = 1
+03/13/2023 10:48:40 - INFO - __main__ -   Total train batch size (w. parallel, distributed & accumulation) = 8
+03/13/2023 10:48:40 - INFO - __main__ -   Gradient Accumulation steps = 4
+03/13/2023 10:48:40 - INFO - __main__ -   Total optimization steps = 3000
+Steps:   0%|                                                                              | 1/3000 [00:20<17:26:08, 20.93s/it, loss=0.155, lr=0.004]
+03/13/2023 10:49:01 - INFO - torch.nn.parallel.distributed - Reducer buckets have been rebuilt in this iteration.
+03/13/2023 10:49:01 - INFO - torch.nn.parallel.distributed - Reducer buckets have been rebuilt in this iteration.
+Steps:  17%|█████████████▏                                                                 | 500/3000 [09:58<48:29,  1.16s/it, loss=0.168, lr=0.004]
+03/13/2023 10:58:39 - INFO - __main__ - Saving embeddings
+03/13/2023 10:58:39 - INFO - accelerate.accelerator - Saving current state to textual_inversion_cat/checkpoint-500
+03/13/2023 10:58:39 - INFO - accelerate.checkpointing - Model weights saved in textual_inversion_cat/checkpoint-500/pytorch_model.bin
+03/13/2023 10:58:39 - INFO - accelerate.checkpointing - Optimizer state saved in textual_inversion_cat/checkpoint-500/optimizer.bin
+03/13/2023 10:58:39 - INFO - accelerate.checkpointing - Scheduler state saved in textual_inversion_cat/checkpoint-500/scheduler.bin
+03/13/2023 10:58:39 - INFO - accelerate.checkpointing - Random states saved in textual_inversion_cat/checkpoint-500/random_states_0.pkl
+03/13/2023 10:58:39 - INFO - __main__ - Saved state to textual_inversion_cat/checkpoint-500
+Steps:  33%|█████████████████████████▋                                                   | 1000/3000 [19:39<38:52,  1.17s/it, loss=0.0701, lr=0.004]
+03/13/2023 11:08:20 - INFO - __main__ - Saving embeddings
+03/13/2023 11:08:20 - INFO - accelerate.accelerator - Saving current state to textual_inversion_cat/checkpoint-1000
+03/13/2023 11:08:20 - INFO - accelerate.checkpointing - Model weights saved in textual_inversion_cat/checkpoint-1000/pytorch_model.bin
+03/13/2023 11:08:20 - INFO - accelerate.checkpointing - Optimizer state saved in textual_inversion_cat/checkpoint-1000/optimizer.bin
+03/13/2023 11:08:20 - INFO - accelerate.checkpointing - Scheduler state saved in textual_inversion_cat/checkpoint-1000/scheduler.bin
+03/13/2023 11:08:20 - INFO - accelerate.checkpointing - Random states saved in textual_inversion_cat/checkpoint-1000/random_states_0.pkl
+03/13/2023 11:08:20 - INFO - __main__ - Saved state to textual_inversion_cat/checkpoint-1000
+Steps:  50%|██████████████████████████████████████▌                                      | 1500/3000 [29:22<29:20,  1.17s/it, loss=0.0948, lr=0.004]
+03/13/2023 11:18:02 - INFO - __main__ - Saving embeddings
+03/13/2023 11:18:02 - INFO - accelerate.accelerator - Saving current state to textual_inversion_cat/checkpoint-1500
+03/13/2023 11:18:03 - INFO - accelerate.checkpointing - Model weights saved in textual_inversion_cat/checkpoint-1500/pytorch_model.bin
+03/13/2023 11:18:03 - INFO - accelerate.checkpointing - Optimizer state saved in textual_inversion_cat/checkpoint-1500/optimizer.bin
+03/13/2023 11:18:03 - INFO - accelerate.checkpointing - Scheduler state saved in textual_inversion_cat/checkpoint-1500/scheduler.bin
+03/13/2023 11:18:03 - INFO - accelerate.checkpointing - Random states saved in textual_inversion_cat/checkpoint-1500/random_states_0.pkl
+03/13/2023 11:18:03 - INFO - __main__ - Saved state to textual_inversion_cat/checkpoint-1500
+Steps:  67%|███████████████████████████████████████████████████▎                         | 2000/3000 [39:04<19:26,  1.17s/it, loss=0.0592, lr=0.004]
+03/13/2023 11:27:44 - INFO - __main__ - Saving embeddings
+03/13/2023 11:27:44 - INFO - accelerate.accelerator - Saving current state to textual_inversion_cat/checkpoint-2000
+03/13/2023 11:27:45 - INFO - accelerate.checkpointing - Model weights saved in textual_inversion_cat/checkpoint-2000/pytorch_model.bin
+03/13/2023 11:27:45 - INFO - accelerate.checkpointing - Optimizer state saved in textual_inversion_cat/checkpoint-2000/optimizer.bin
+03/13/2023 11:27:45 - INFO - accelerate.checkpointing - Scheduler state saved in textual_inversion_cat/checkpoint-2000/scheduler.bin
+03/13/2023 11:37:27 - INFO - accelerate.checkpointing - Random states saved in textual_inversion_cat/checkpoint-2500/random_states_0.pkl
+03/13/2023 11:37:27 - INFO - __main__ - Saved state to textual_inversion_cat/checkpoint-2500
+Steps: 100%|█████████████████████████████████████████████████████████████████████████████| 3000/3000 [58:30<00:00,  1.18s/it, loss=0.0188, lr=0.004]
+03/13/2023 11:47:10 - INFO - __main__ - Saving embeddings
+03/13/2023 11:47:10 - INFO - accelerate.accelerator - Saving current state to textual_inversion_cat/checkpoint-3000
+03/13/2023 11:47:10 - INFO - accelerate.checkpointing - Model weights saved in textual_inversion_cat/checkpoint-3000/pytorch_model.bin
+03/13/2023 11:47:11 - INFO - accelerate.checkpointing - Optimizer state saved in textual_inversion_cat/checkpoint-3000/optimizer.bin
+03/13/2023 11:47:11 - INFO - accelerate.checkpointing - Scheduler state saved in textual_inversion_cat/checkpoint-3000/scheduler.bin
+03/13/2023 11:47:11 - INFO - accelerate.checkpointing - Random states saved in textual_inversion_cat/checkpoint-3000/random_states_0.pkl
+03/13/2023 11:47:11 - INFO - __main__ - Saved state to textual_inversion_cat/checkpoint-3000
+Downloading pytorch_model.bin: 100%|███████████████████████████████████████████████████████████████████████████| 1.22G/1.22G [01:05<00:00, 18.6MB/s]
+Fetching 15 files: 100%|████████████████████████████████████████████████████████████████████████████████████████████| 15/15 [01:07<00:00,  4.49s/it]
+{'requires_safety_checker'} was not found in config. Values will be initialized to default values.                   | 4/15 [01:07<03:05, 16.84s/it]
+{'prediction_type'} was not found in config. Values will be initialized to default values.
+/home/rtx/workspace/anaconda3/envs/lavis/lib/python3.8/site-packages/transformers/models/clip/feature_extraction_clip.py:28: FutureWarning: The clas
+s CLIPFeatureExtractor is deprecated and will be removed in version 5 of Transformers. Please use CLIPImageProcessor instead.
+  warnings.warn(
+Configuration saved in textual_inversion_cat/model_index.json
+Configuration saved in textual_inversion_cat/vae/config.json
+Model weights saved in textual_inversion_cat/vae/diffusion_pytorch_model.bin
+Configuration saved in textual_inversion_cat/unet/config.json
+Model weights saved in textual_inversion_cat/unet/diffusion_pytorch_model.bin
+Configuration saved in textual_inversion_cat/scheduler/scheduler_config.json
+03/13/2023 11:48:28 - INFO - __main__ - Saving embeddings
+Steps: 100%|████████████████████████████████████████████████████████████████████████████| 3000/3000 [59:47<00:00,  1.20s/it, loss=0.00332, lr=0.004]
+```
+
+
 ## 错误及解决方案
 
 ```
