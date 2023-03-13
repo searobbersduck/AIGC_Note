@@ -25,6 +25,42 @@ accelerate configuration saved at /home/rtx/.cache/huggingface/accelerate/defaul
 
 <br>
 
+```
+
+accelerate env
+
+Copy-and-paste the text below in your GitHub issue
+
+- `Accelerate` version: 0.17.0
+- Platform: Linux-5.4.0-139-generic-x86_64-with-glibc2.17
+- Python version: 3.8.16
+- Numpy version: 1.24.2
+- PyTorch version (GPU?): 1.13.1+cu117 (True)
+- `Accelerate` default config:
+        - compute_environment: LOCAL_MACHINE
+        - distributed_type: MULTI_GPU
+        - mixed_precision: bf16
+        - use_cpu: False
+        - num_processes: 2
+        - machine_rank: 0
+        - num_machines: 1
+        - gpu_ids: all
+        - rdzv_backend: static
+        - same_network: True
+        - main_training_function: main
+        - deepspeed_config: {}
+        - fsdp_config: {}
+        - megatron_lm_config: {}
+        - downcast_bf16: no
+        - tpu_use_cluster: False
+        - tpu_use_sudo: False
+        - tpu_env: []
+        - dynamo_config: {}
+
+```
+
+<br>
+
 ## 训练
 
 ```
