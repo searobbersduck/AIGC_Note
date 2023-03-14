@@ -4,7 +4,10 @@
 
 参考：
 * [Extensions](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Extensions)
-* []()
+* [Multi-frame rendering](https://github.com/OedoSoldier/enhanced-img2img): 原文的几个视频链接，**一定要看**。连续帧生产视频对原始输入的要求应该很高，我随便使用的视频，输入结果很差。
+  * [AI动画制作指南【工具发布】](https://www.bilibili.com/video/BV1pv4y1o7An/?vd_source=2ef7e92f2d522c31939f486aea77a19e)
+  * [【AI动画】多帧渲染法 介绍及使用](https://www.bilibili.com/video/BV1R54y1M7u5/?vd_source=2ef7e92f2d522c31939f486aea77a19e)
+
 
 <br>
 
@@ -124,9 +127,12 @@ ffmpeg -f image2 -i images_out2/out%d.jpg out2.avi
 参考：[(Beta) Multi-frame Video rendering for StableDiffusion](https://xanthius.itch.io/multi-frame-rendering-for-stablediffusion)
 
 1. 选择`img2img`选项卡，在`script`下选择`Multi-frame rendering`，并指定`Input directory`和`Output directory`;
-2. 其它设置可以参考上述连接，**这里需要细调，想调出好的结果并不容易**。
+2. 输入适当的prompt；
+3. 其它设置可以参考上述连接，**这里需要细调，想调出好的结果并不容易**。
 
 ![](./images/multi-frame/gen.JPG)
+
+<br>
 
 ## 结果
 
