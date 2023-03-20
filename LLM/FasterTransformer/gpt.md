@@ -1,4 +1,4 @@
-#
+# [FasterTransformer/docs/gpt_guide](https://github.com/NVIDIA/FasterTransformer/blob/main/docs/gpt_guide.md)
 
 ## Install
 
@@ -765,3 +765,8 @@ The first time I saw the movie "The Big Short," I was in the middle of a long, l
 ```
 mpirun -n 8 --allow-run-as-root python ../examples/pytorch/gpt/multi_gpu_gpt_example.py --tensor_para_size=1 --pipeline_para_size=8 --ckpt_path="/workspace/FasterTransformer/models/megatron-models/c-model/345m/1-gpu"
 ```
+
+
+## Ref
+
+1. [NCCL error when running distributed training](https://discuss.pytorch.org/t/nccl-error-when-running-distributed-training/129301)
