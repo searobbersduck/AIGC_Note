@@ -264,7 +264,7 @@ prompts = [
 
 <br><br>
 
-## mp4 to gif
+## 辅助：mp4 to gif
 
 参考：[How to Convert Video Files to a Gif in Python](https://www.freecodecamp.org/news/how-to-convert-video-files-to-gif-in-python/)
 
