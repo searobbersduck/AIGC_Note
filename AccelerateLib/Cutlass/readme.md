@@ -1,4 +1,4 @@
-# []
+# [cutlass](https://github.com/NVIDIA/cutlass)
 
 ## [CUTLASS 3.0 GEMM procedural names](https://github.com/NVIDIA/cutlass/blob/master/media/docs/profiler.md#cutlass-30-gemm-procedural-names)
 
@@ -43,3 +43,11 @@ cutlass3x_sm90_tensorop_s64x128x8tf32gemm_f32_f32_f32_f32_128x128x32_2x1x1_0_tnn
 * `s64x128x8tf32gemm`: indicates that the MMA consumes inputs in `tf32` format, and therefore
 the kernel performs rounding of the `f32` values in global memory while loading them into shared memory.
 
+<br>
+
+## [CUTLASS: 基于 CUDA 的多层次稠密线性代数计算原语](https://www.nvidia.cn/on-demand/session/gtcchina2018-ch8303/)
+* 一定要看，视频
+
+
+## [CUTLASS: Fast Linear Algebra in CUDA C++](https://zhuanlan.zhihu.com/p/461060382)
+* 讲得很详细了

@@ -1,0 +1,1 @@
+# [Fireside Chat with Ilya Sutskever and Jensen Huang: AI Today and Vision of the Future [S52092]](https://www.nvidia.cn/gtc-global/session-catalog/?tab.catalogallsessionstab=16566177511100015Kus&search=52092#/session/1669748941314001t6Nv)

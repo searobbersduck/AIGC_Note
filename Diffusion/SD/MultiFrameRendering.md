@@ -112,7 +112,14 @@ Startup time: 8.3s (import gradio: 1.4s, import ldm: 0.3s, other imports: 1.0s, 
 * [convert from jpg to mp4 by ffmpeg](https://stackoverflow.com/questions/22965569/convert-from-jpg-to-mp4-by-ffmpeg)
 
 
-生成图像： `ffmpeg -i IMG_8244.MOV -vf fps=10 images_in2/*.jpg`， `fps=10`代表每秒抽取10帧。
+生成图像： 
+```
+# ffmpeg -i IMG_8244.MOV -vf fps=10 images_in2/*.jpg
+
+ffmpeg -i videos/human.mp4 -vf fps=10 images_in/out%d.jpg
+```
+
+`fps=10`代表每秒抽取10帧。
 
 结果合成图像：
 ```
