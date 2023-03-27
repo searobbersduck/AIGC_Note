@@ -1,5 +1,8 @@
 # [Text-to-video synthesis](https://huggingface.co/docs/diffusers/main/en/api/pipelines/text_to_video)
 
+<br><br>
+
+## 环境安装
 
 ```
 conda create --name text2video python=3.9
@@ -178,7 +181,7 @@ Successfully installed accelerate-0.18.0 diffusers-0.15.0.dev0 huggingface-hub-0
 
 ```
 
-<br><br>
+<br><br><br><br>
 
 
 ## text-to-video
@@ -262,7 +265,7 @@ prompts = [
 
 
 
-<br><br>
+<br><br><br><br>
 
 ## 辅助：mp4 to gif
 
