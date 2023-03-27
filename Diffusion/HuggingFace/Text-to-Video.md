@@ -252,12 +252,10 @@ prompts = [
 显示如下：
 
 <video id="video" controls="" preload="none" poster="https://i.vimeocdn.com/video/862586401_640x360.jpg">
-      <source id="mp4" src="./images/Text-to-Video/Big_bird_rises_with_the_same_wind_in_one_day.mp4" type="video/mp4">
+      <source id="mp4" src="https://gzc-download.weiyun.com/ftn_handler/4172f99714837bfe77b3284a78733bfb4c12550b163ca17bc4f52aaff067fb04/Iceland%20-%2033191-1.mp4?fname=Iceland%20-%2033191-1.mp4&from=30111&version=3.3.3.3" type="video/mp4">
       </video>
 
-<video src="./images/Text-to-Video/Big_bird_rises_with_the_same_wind_in_one_day.mp4" controls="controls" style="max-width: 730px;"></video>
-
-https://github.com/searobbersduck/AIGC_Note/blob/main/Diffusion/HuggingFace/images/Text-to-Video/Big_bird_rises_with_the_same_wind_in_one_day.mp4
+https://github.com/searobbersduck/AIGC_Note/raw/main/Diffusion/HuggingFace/images/Text-to-Video/Big_bird_rises_with_the_same_wind_in_one_day.mp4
 
 https://github.com/searobbersduck/AIGC_Note/blob/main/Diffusion/HuggingFace/images/Text-to-Video/I_want_to_cross_the_Yellow_River_which_is_blocked_by_ice.mp4
 
