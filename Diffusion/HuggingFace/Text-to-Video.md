@@ -251,15 +251,41 @@ prompts = [
 
 显示如下：
 
-<video id="video" controls="" preload="none" poster="none">
-      <source id="mp4" src="./images/Text-to-Video/Big_bird_rises_with_the_same_wind_in_one_day.mp4" type="video/mp4">
-      </video>
+**Big bird rises with the same wind in one day**
+![](./images/Text2Video/Big_bird_rises_with_the_same_wind_in_one_day.gif)
+<br>
+**Two orioles singing green willows**
+![](./images/Text2Video/Two_orioles_singing_green_willows.gif)
+
+**I want to cross the Yellow River which is blocked by ice**
+![](./images/Text2Video/I_want_to_cross_the_Yellow_River_which_is_blocked_by_ice.gif)
 
 
-<video id="video" controls="" preload="none" poster="none">
-      <source id="mp4" src="./images/Text-to-Video/I_want_to_cross_the_Yellow_River_which_is_blocked_by_ice.mp4" type="video/mp4">
-      </video>
 
-<video id="video" controls="" preload="none" poster="none">
-      <source id="mp4" src="./images/Text-to-Video/Two_orioles_singing_green_willows.mp4" type="video/mp4">
-      </video>
+<br><br>
+
+## mp4 to gif
+
+参考：[How to Convert Video Files to a Gif in Python](https://www.freecodecamp.org/news/how-to-convert-video-files-to-gif-in-python/)
+
+```
+pip install moviepy
+```
+
+代码：
+
+```
+from moviepy.editor import VideoFileClip
+from glob import glob
+import os
+
+tmp_dir = '/home/rtx/workspace/tmp_data'
+files = glob(os.path.join(tmp_dir, '*.mp4'))
+
+for file in files:
+    basename = os.path.basename(file).replace('.mp4','')
+    outfile = os.path.join(tmp_dir, basename+'.gif')
+    videoClip = VideoFileClip(file)
+    videoClip.write_gif(outfile)
+
+```
