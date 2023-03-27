@@ -255,16 +255,19 @@ prompts = [
 显示如下：
 
 **Big bird rises with the same wind in one day**
+
 ![](./images/Text2Video/Big_bird_rises_with_the_same_wind_in_one_day.gif)
 
 <br>
 
 **Two orioles singing green willows**
+
 ![](./images/Text2Video/Two_orioles_singing_green_willows.gif)
 
 <br>
 
 **I want to cross the Yellow River which is blocked by ice**
+
 ![](./images/Text2Video/I_want_to_cross_the_Yellow_River_which_is_blocked_by_ice.gif)
 
 
