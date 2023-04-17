@@ -23,3 +23,74 @@
 
 ### [ChatGLM-6B Chatbot](https://huggingface.co/spaces/wangrongsheng/ChatGLM)
 
+<br><br>
+
+## Code
+
+src/transformers/models/auto/auto_factory.py    from_pretrained
+
+src/transformers/modeling_utils.py      PreTrainedModel     from_pretrained
+
+```
+    @classmethod
+    def from_pretrained(cls, pretrained_model_name_or_path, *model_args, **kwargs):
+        config = kwargs.pop("config", None)
+        trust_remote_code = kwargs.pop("trust_remote_code", False)
+        kwargs["_from_auto"] = True
+        hub_kwargs_names = [
+            "cache_dir",
+            "force_download",
+            "local_files_only",
+            "proxies",
+            "resume_download",
+            "revision",
+            "subfolder",
+            "use_auth_token",
+        ]
+        hub_kwargs = {name: kwargs.pop(name) for name in hub_kwargs_names if name in kwargs}
+        if not isinstance(config, PretrainedConfig):
+            kwargs_copy = copy.deepcopy(kwargs)
+            # ensure not to pollute the config object with torch_dtype="auto" - since it's
+            # meaningless in the context of the config object - torch.dtype values are acceptable
+            if kwargs_copy.get("torch_dtype", None) == "auto":
+                _ = kwargs_copy.pop("torch_dtype")
+
+            config, kwargs = AutoConfig.from_pretrained(
+                pretrained_model_name_or_path,
+                return_unused_kwargs=True,
+                trust_remote_code=trust_remote_code,
+                **hub_kwargs,
+                **kwargs_copy,
+            )
+        if hasattr(config, "auto_map") and cls.__name__ in config.auto_map:
+            if not trust_remote_code:
+                raise ValueError(
+                    f"Loading {pretrained_model_name_or_path} requires you to execute the modeling file in that repo "
+                    "on your local machine. Make sure you have read the code there to avoid malicious use, then set "
+                    "the option `trust_remote_code=True` to remove this error."
+                )
+            if hub_kwargs.get("revision", None) is None:
+                logger.warning(
+                    "Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure "
+                    "no malicious code has been contributed in a newer revision."
+                )
+            class_ref = config.auto_map[cls.__name__]
+            module_file, class_name = class_ref.split(".")
+            model_class = get_class_from_dynamic_module(
+                pretrained_model_name_or_path, module_file + ".py", class_name, **hub_kwargs, **kwargs
+            )
+            model_class.register_for_auto_class(cls.__name__)
+            return model_class.from_pretrained(
+                pretrained_model_name_or_path, *model_args, config=config, **hub_kwargs, **kwargs
+            )
+        elif type(config) in cls._model_mapping.keys():
+            model_class = _get_model_class(config, cls._model_mapping)
+            return model_class.from_pretrained(
+                pretrained_model_name_or_path, *model_args, config=config, **hub_kwargs, **kwargs
+            )
+        raise ValueError(
+            f"Unrecognized configuration class {config.__class__} for this kind of AutoModel: {cls.__name__}.\n"
+            f"Model type should be one of {', '.join(c.__name__ for c in cls._model_mapping.keys())}."
+        )
+```
+
