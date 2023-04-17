@@ -218,6 +218,8 @@ Root Cause (first observed failure):
 
 ### 我们再来尝试些不同的例子，`prompts`如下，依然执行上面的代码：
 
+**`--num_frames 160`控制生成视频的长度**，简单做了个测试，默认`--num_frames 16`，当`--num_frames 160`时，整个视频毫无连续性。
+
 ```
 prompts = [
     '大鹏一日同风起',
@@ -235,7 +237,10 @@ prompts = [
 
 
 ```
-PROMPT="Big bird rises with the same wind in one day" 
+# PROMPT="Big bird rises with the same wind in one day" 
+
+PROMPT="Big bird rises with the same wind in one day, wildlife photography, photograph, high quality, wildlife, f 1.8, soft focus, 8k, national geographic, award - winning photograph by nick nichols"
+
 OUTDIR="results/"
 
 BASE_PATH="models/base_t2v/model.ckpt"
@@ -249,6 +254,7 @@ python scripts/sample_text2video.py \
     --n_samples 1 \
     --batch_size 1 \
     --seed 1000 \
+    --num_frames 160 \
     --show_denoising_progress
 ```
 
@@ -267,6 +273,7 @@ python scripts/sample_text2video.py \
     --n_samples 1 \
     --batch_size 1 \
     --seed 1000 \
+    --num_frames 160 \
     --show_denoising_progress
 ```
 
@@ -285,12 +292,57 @@ python scripts/sample_text2video.py \
     --n_samples 1 \
     --batch_size 1 \
     --seed 1000 \
+    --num_frames 160 \
     --show_denoising_progress
 ```
 
+**具体生成视频请参见：`.\images\VideoCraft\`**
 
 
 <br><br>
 
 ## [VideoLoRA](https://github.com/VideoCrafter/VideoCrafter#2-videolora)
 
+<br><br>
+
+## [VideoControl](https://github.com/VideoCrafter/VideoCrafter#3-videocontrol)
+
+1. **下载文件，需要下载3个文件，并放在指定路径下**
+* `models/base_t2v/model.ckpt`，已经下载好，如未下载，运行`wget -c -P ./models/base_t2v/ https://huggingface.co/VideoCrafter/t2v-version-1-1/resolve/main/models/base_t2v/model.ckpt`
+* `models/adapter_t2v_depth/adapter.pth`: `wget -c -P ./models/adapter_t2v_depth/ https://huggingface.co/VideoCrafter/t2v-version-1-1/resolve/main/models/adapter_t2v_depth/adapter.pth`
+* `models/adapter_t2v_depth/dpt_hybrid-midas.pt`: `wget -c -P ./models/adapter_t2v_depth/ https://huggingface.co/VideoCrafter/t2v-version-1-1/resolve/main/models/adapter_t2v_depth/dpt_hybrid-midas.pt`
+
+2. **运行**
+
+    ```
+    PROMPT="An ostrich walking in the desert, photorealistic, 4k"
+    VIDEO="input/flamingo.mp4"
+    OUTDIR="results/"
+
+    NAME="video_adapter"
+    CONFIG_PATH="models/adapter_t2v_depth/model_config.yaml"
+    BASE_PATH="models/base_t2v/model.ckpt"
+    ADAPTER_PATH="models/adapter_t2v_depth/adapter.pth"
+
+    python scripts/sample_text2video_adapter.py \
+        --seed 123 \
+        --ckpt_path $BASE_PATH \
+        --adapter_ckpt $ADAPTER_PATH \
+        --base $CONFIG_PATH \
+        --savedir $OUTDIR/$NAME \
+        --bs 1 --height 256 --width 256 \
+        --frame_stride -1 \
+        --unconditional_guidance_scale 15.0 \
+        --ddim_steps 50 \
+        --ddim_eta 1.0 \
+        --prompt "$PROMPT" \
+        --num_frames 160 \
+        --video $VIDEO
+    ```
+
+3. **结果如下：
+   * 请参见: `./images/VideoCraft/video_adapter`路径下
+
+
+
+<br><br>
