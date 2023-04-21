@@ -81,7 +81,14 @@ https://github.com/CVCUDA/CV-CUDA.git
     export PATH=/usr/local/cuda/bin:$PATH
 
 
-    pip3 install git+https://github.com/NVIDIA/VideoProcessingFramework
+    # pip3 install git+https://github.com/NVIDIA/VideoProcessingFramework
+
+    cd /workspace/code/acclib/
+    git clone https://github.com/NVIDIA/VideoProcessingFramework.git
+    cd VideoProcessingFramework
+    pip3 install .
+
+    pip install src/PytorchNvCodec
     ```
 
 
@@ -105,6 +112,22 @@ https://github.com/CVCUDA/CV-CUDA.git
     ```
 
 * **pyNvCodec: ModuleNotFoundError: No module named 'PyNvCodec'**
-    ```
+  * 如果遇到问题，可以参照VPF的安装
 
-    ```
+
+<br>
+
+### 运行Demo
+* https://github.com/CVCUDA/CV-CUDA/blob/release_v0.2.x/samples/segmentation/python/inference.py
+
+```
+cd /workspace/code/acclib/CV-CUDA/samples/segmentation/python
+
+root@b7e37412e2ea:/workspace/code/acclib/CV-CUDA/samples/segmentation/python# python inference.py -i /workspace/data/Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg  -o /workspace/data/ -c car
+Processing batch 1 of 1
+        Saving the overlay result for car class for to: /workspace/data/out_Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg
+
+```
+
+![](./images/install_docker/Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg)
+![](./images/install_docker/out_Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg)
