@@ -120,6 +120,12 @@ https://github.com/CVCUDA/CV-CUDA.git
 ### 运行Demo
 * https://github.com/CVCUDA/CV-CUDA/blob/release_v0.2.x/samples/segmentation/python/inference.py
 
+切换到代码路径，运行如下命令：
+```
+python inference.py -i /workspace/data/Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg  -o /workspace/data/ -c car
+```
+
+运行过程如下：
 ```
 cd /workspace/code/acclib/CV-CUDA/samples/segmentation/python
 
@@ -132,7 +138,145 @@ Processing batch 1 of 1
 ![](./images/install_docker/Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg)
 ![](./images/install_docker/out_Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg)
 
-<br>
+上述示例中，默认使用的是`pytorch backend`，如果使用`tensorrt backend`，运行代码如下：
+
+```
+python inference.py -i /workspace/data/Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg  -o /workspace/data/ -c car -bk tensorrt
+```
+
+运行过程错误：
+
+```
+root@b7e37412e2ea:/workspace/code/acclib/CV-CUDA/samples/segmentation/python# python inference.py -i /workspace/data/Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg  -o /workspace/data/ -c car -bk tensorrt
+Downloading: "https://download.pytorch.org/models/fcn_resnet101_coco-7ecb50ca.pth" to /root/.cache/torch/hub/checkpoints/fcn_resnet101_coco-7ecb50ca.pth
+100.0%
+============= Diagnostic Run torch.onnx.export version 2.0.0+cu118 =============
+verbose: False, log level: Level.ERROR
+======================= 0 NONE 0 NOTE 0 WARNING 0 ERROR ========================
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/dist-packages/torch/onnx/_internal/onnx_proto_utils.py", line 219, in _add_onnxscript_fn
+    import onnx
+ModuleNotFoundError: No module named 'onnx'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "inference.py", line 755, in <module>
+    main()
+  File "inference.py", line 751, in main
+    sample.run()
+  File "inference.py", line 411, in run
+    model_info = self.setup_model()
+  File "inference.py", line 255, in setup_model
+    torch.onnx.export(
+  File "/usr/local/lib/python3.8/dist-packages/torch/onnx/utils.py", line 506, in export
+    _export(
+  File "/usr/local/lib/python3.8/dist-packages/torch/onnx/utils.py", line 1620, in _export
+    proto = onnx_proto_utils._add_onnxscript_fn(
+  File "/usr/local/lib/python3.8/dist-packages/torch/onnx/_internal/onnx_proto_utils.py", line 221, in _add_onnxscript_fn
+    raise errors.OnnxExporterError("Module onnx is not installed!") from e
+torch.onnx.errors.OnnxExporterError: Module onnx is not installed!
+
+```
+
+解决问题：
+
+```
+pip install onnx
+```
+
+继续运行程序，并记录过程及结果如下：
+
+```
+python inference.py -i /workspace/data/Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg  -o /workspace/data/ -c car -bk tensorrt
+============= Diagnostic Run torch.onnx.export version 2.0.0+cu118 =============
+verbose: False, log level: Level.ERROR
+======================= 0 NONE 0 NOTE 0 WARNING 0 ERROR ========================
+
+Generated an ONNX model and saved at: /workspace/data/model.1.224.224.onnx
+Using TensorRT version: 8.5.3.1
+[04/23/2023-02:38:08] [TRT] [I] [MemUsageChange] Init CUDA: CPU +315, GPU +0, now: CPU 3113, GPU 1833 (MiB)
+[04/23/2023-02:38:09] [TRT] [I] [MemUsageChange] Init builder kernel library: CPU +442, GPU +118, now: CPU 3610, GPU 1951 (MiB)
+[04/23/2023-02:38:09] [TRT] [W] CUDA lazy loading is not enabled. Enabling it can significantly reduce device memory usage. See `CUDA_MODULE_LOADING` in https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#env-vars
+Using precision : float16
+Loading ONNX file from path /workspace/data/model.1.224.224.onnx
+[04/23/2023-02:38:09] [TRT] [W] onnx2trt_utils.cpp:377: Your ONNX model has been generated with INT64 weights, while TensorRT does not natively support INT64. Attempting to cast down to INT32.
+INPUT[0] : input (1, 3, 224, 224)
+OUTPUT[0] : output (1, 21, 224, 224)
+OUTPUT[1] : 1022 (1, 21, 224, 224)
+Completed parsing of ONNX file.
+Building an engine from file /workspace/data/model.1.224.224.onnx. This may take a while...
+[04/23/2023-02:38:09] [TRT] [I] [MemUsageChange] Init cuBLAS/cuBLASLt: CPU +0, GPU +8, now: CPU 3819, GPU 1959 (MiB)
+[04/23/2023-02:38:09] [TRT] [I] [MemUsageChange] Init cuDNN: CPU +0, GPU +10, now: CPU 3819, GPU 1969 (MiB)
+[04/23/2023-02:38:09] [TRT] [I] Local timing cache in use. Profiling results in this builder pass will not be stored.
+[04/23/2023-02:38:18] [TRT] [I] Some tactics do not have sufficient workspace memory to run. Increasing workspace size will enable more tactics, please check verbose output for requested sizes.
+[04/23/2023-02:38:39] [TRT] [I] Total Activation Memory: 1167678464
+[04/23/2023-02:38:39] [TRT] [I] Detected 1 inputs and 2 output network tensors.
+[04/23/2023-02:38:39] [TRT] [I] Total Host Persistent Memory: 345472
+[04/23/2023-02:38:39] [TRT] [I] Total Device Persistent Memory: 15360
+[04/23/2023-02:38:39] [TRT] [I] Total Scratch Memory: 0
+[04/23/2023-02:38:39] [TRT] [I] [MemUsageStats] Peak memory usage of TRT CPU/GPU memory allocators: CPU 121 MiB, GPU 589 MiB
+[04/23/2023-02:38:39] [TRT] [I] [BlockAssignment] Started assigning block shifts. This will take 112 steps to complete.
+[04/23/2023-02:38:39] [TRT] [I] [BlockAssignment] Algorithm ShiftNTopDown took 0.608082ms to assign 5 blocks to 112 nodes requiring 8467456 bytes.
+[04/23/2023-02:38:39] [TRT] [I] Total Activation Memory: 8467456
+[04/23/2023-02:38:39] [TRT] [W] TensorRT encountered issues when converting weights between types and that could affect accuracy.
+[04/23/2023-02:38:39] [TRT] [W] If this is not the desired behavior, please modify the weights or retrain with regularization to adjust the magnitude of the weights.
+[04/23/2023-02:38:39] [TRT] [W] Check verbose logs for the list of affected weights.
+[04/23/2023-02:38:39] [TRT] [W] - 158 weights are affected by this issue: Detected subnormal FP16 values.
+[04/23/2023-02:38:39] [TRT] [W] - 109 weights are affected by this issue: Detected values less than smallest positive FP16 subnormal value and converted them to the FP16 minimum subnormalized value.
+[04/23/2023-02:38:39] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in building engine: CPU +103, GPU +104, now: CPU 103, GPU 104 (MiB)
+Completed creating Engine. Saving on disk...
+Saved to file /workspace/data/model.1.224.224.trtmodel
+Generated TensorRT engine in: /workspace/data/model.1.224.224.trtmodel
+[04/23/2023-02:38:39] [TRT] [I] The logger passed into createInferRuntime differs from one already provided for an existing builder, runtime, or refitter. Uses of the global logger, returned by nvinfer1::getLogger(), will return the existing value.
+
+[04/23/2023-02:38:39] [TRT] [I] Loaded engine size: 104 MiB
+[04/23/2023-02:38:39] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in engine deserialization: CPU +0, GPU +103, now: CPU 0, GPU 103 (MiB)
+[04/23/2023-02:38:39] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in IExecutionContext creation: CPU +0, GPU +8, now: CPU 0, GPU 111 (MiB)
+[04/23/2023-02:38:39] [TRT] [W] CUDA lazy loading is not enabled. Enabling it can significantly reduce device memory usage. See `CUDA_MODULE_LOADING` in https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#env-vars
+TensorRT Binding[0]: input := shape: (1, 3, 224, 224) dtype: float32
+TensorRT Binding[1]: output := shape: (1, 21, 224, 224) dtype: float32
+        Allocated the binding as an output.
+TensorRT Binding[2]: 1022 := shape: (1, 21, 224, 224) dtype: float32
+        Allocated the binding as an output.
+Processing batch 1 of 1
+        Saving the overlay result for car class for to: /workspace/data/out_Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg
+```
+
+我们将使用其中的模型推理部分重复100次，测试一下，使用`pytorch backend`和`tensorrt backend`在推理效率上的差别:
+
+
+```
+root@b7e37412e2ea:/workspace/code/acclib/CV-CUDA/samples/segmentation/python# python inference.py -i /workspace/data/Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg  -o /workspace/data/ -c car -bk tensorrt
+Using a pre-built TensorRT engine from: /workspace/data/model.1.224.224.trtmodel
+[04/23/2023-03:39:07] [TRT] [I] Loaded engine size: 104 MiB
+[04/23/2023-03:39:07] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in engine deserialization: CPU +0, GPU +103, now: CPU 0, GPU 103 (MiB)
+[04/23/2023-03:39:07] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in IExecutionContext creation: CPU +0, GPU +8, now: CPU 0, GPU 111 (MiB)
+[04/23/2023-03:39:07] [TRT] [W] CUDA lazy loading is not enabled. Enabling it can significantly reduce device memory usage. See `CUDA_MODULE_LOADING` in https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#env-vars
+TensorRT Binding[0]: input := shape: (1, 3, 224, 224) dtype: float32
+TensorRT Binding[1]: output := shape: (1, 21, 224, 224) dtype: float32
+        Allocated the binding as an output.
+TensorRT Binding[2]: 1022 := shape: (1, 21, 224, 224) dtype: float32
+        Allocated the binding as an output.
+Processing batch 1 of 1
+Model inference avg time is: 0.00160ms
+        Saving the overlay result for car class for to: /workspace/data/out_Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg
+root@b7e37412e2ea:/workspace/code/acclib/CV-CUDA/samples/segmentation/python#
+root@b7e37412e2ea:/workspace/code/acclib/CV-CUDA/samples/segmentation/python#
+root@b7e37412e2ea:/workspace/code/acclib/CV-CUDA/samples/segmentation/python#
+root@b7e37412e2ea:/workspace/code/acclib/CV-CUDA/samples/segmentation/python#
+root@b7e37412e2ea:/workspace/code/acclib/CV-CUDA/samples/segmentation/python# python inference.py -i /workspace/data/Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg  -o /workspace/data/ -c car -bk pytorch
+Processing batch 1 of 1
+Model inference avg time is: 0.00631ms
+        Saving the overlay result for car class for to: /workspace/data/out_Google_Street_View_camera_cars_in_Hong_Kong_2009.jpg
+0
+```
+
+可见，仅就模型推理这一步，TensorRT的backend相比于Pytorch的backend，推理效率有很大提升：`0.00160ms` vs `0.00631ms`. 
+
+<br><br>
+
 
 ### 运行VPF Demo
 
