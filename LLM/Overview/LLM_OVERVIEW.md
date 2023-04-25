@@ -38,6 +38,10 @@ This produced an instruction-following dataset with 52K examples obtained at a m
 ![](./images/llama_adapter/overview.JPG)
 **Demos (LLaMA-Adapter V2)**
 ![](./images/llama_adapter/demos_v2.JPG)
+**Overview**
+![](./images/llama_adapter/overview1.JPG)
+![](./images/llama_adapter/multi_modal.JPG)
+
 
 <br><br>
 ***
