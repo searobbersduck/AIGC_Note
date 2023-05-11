@@ -1,0 +1,521 @@
+Welcome to GTC 2023.
+I'm Kimberly Powell, the Vice President of Healthcare.
+
+At every GTC, we invite innovators from across the globe, from across diverse backgrounds and every corner of the healthcare ecosystem to share new breakthroughs and applications that address the great challenges, needs, and opportunities in healthcare.
+
+This GTC is just incredible.
+
+Let me welcome and thank our speakers for joining us on this exciting AI journey to share the great impact AI is having on healthcare and patients' lives.
+
+Medtronics' Austin Chang is talking on real-time AI applications.
+
+Gretchen Jackson at Intuitive on actionable insights in surgery.
+
+Mark Van Owen of PacBio is talking about how AI scales the throughput of genomics.
+
+Parker Moss from Genomics England and Rosemary Sinclair-Docas at Oxford Nanopore are talking about the impact genomics is having on cancer care.
+
+And Burkhard Rose from TU Munich on AI capturing the language of proteins.
+
+Amgen's Christopher Langmead on the transformative AI platforms for biologics discovery.
+
+And Kevin Yang at Microsoft Research on multimodal AI for protein engineering.
+
+Bristol Myers Squibb, Kevin Brown talking about creating multimodal models for clinical trials.
+
+And the team at Evozyne generating proteins with enhanced functionality.
+
+It's here, the next wave of AI.
+
+Generative AI has become a human co-creation engine.
+
+Chat GPT has an uncanny ability to use and generate language.
+
+It can summarize, answer questions, write in any form you ask.
+
+It can write code, it can write an email, or even generate a table.
+
+And Dali helped Cosmo Magazine design this stunning AI cover with an insanely complicated prompt.
+
+A wide angle shot from below of a female astronaut with an athletic female body walking with swagger toward camera on Mars in an infinite universe in synthwave digital art.
+
+And AlphaFold achieving experimental accuracy using generative AI to predict 3D structures of proteins.
+
+Not just a breakthrough in a 60-year-old problem, but a seminal example and inspiration to biology and the computational chemistry field that AI can learn meaning in biology and generate ideas faster for scientists.
+
+NVIDIA Clara is inspired by this work.
+
+We set our charter to bring the most advanced computing approaches to the healthcare industry.
+
+NVIDIA Clara is a suite of computing platforms, software, and services that now serves the breadth of healthcare applications, from imaging and instruments to genomics and drug discovery.
+
+Generative AI has a broad utility in healthcare, and we are building software and services to accelerate its application.
+
+R&D groups from large pharma, startups, academia need a streamlined way to get access to NVIDIA AI and Clara.
+
+With our announcement today to offer NVIDIA DGX Cloud through partnerships with cloud service providers, Microsoft Azure, Google GCP, and Oracle OCI, we can now bring NVIDIA Clara to the healthcare industry with incredible speed and scale.
+
+Increasing the reach of NVIDIA Clara is our incredible partner ecosystem.
+
+Clara now has hundreds of partners ranging from the edge to cloud solutions.
+
+Genomics cloud and drug discovery platforms integrate NVIDIA Clara to accelerate scientific discovery.
+
+Ecosystem integrators and service providers accelerate and customize NVIDIA Clara for healthcare enterprises.
+
+Embedded edge solutions provide building and certifying NVIDIA Clara computing platforms for medical devices and life sciences instruments.
+
+And machine learning platforms integrate NVIDIA Clara to manage the end-to-end life cycle of machine learning models.
+
+Starting with AI for imaging, 90% of healthcare data is imaging.
+
+We need an industry standard for building and deploying AI.
+
+Muni is our suite of tools that tackles the entire AI life cycle.
+
+We call it the AI factory.
+
+Powerful tools that use AI to do the expensive data labeling through active learning and AI assistance.
+
+And when there isn't sufficient data, we use generative AI for synthetic data generation.
+
+Or when there's a lot of data, but it isn't labeled, self-supervised learning can train large transformer models that can be fine-tuned for downstream tasks.
+
+And when data is decentralized, federated learning enables local training and sharing of privacy-preserving model updates.
+
+And finally, packages up models in a standard format to be deployed across the Muni ecosystem.
+
+Muni is integrated into cloud services like Amazon SageMaker, Google Medical Imaging Suite, and Oracle Cloud.
+
+MLOps flywheel, weights, and biases make it easy to reproduce and standardize model development.
+
+And solution delivery partners Deloitte, Quantify, and Kitware are helping set up AI factories for hospitals, pharmaceutical companies, and medical device makers.
+
+It's an honor to be able to celebrate the amazing milestone of 1 million downloads from Muni at GTC 2023.
+
+Just three years after the announcement of Project Muni, and with the incredible contributions from founding members, advisory board members, and developers, Muni has reached 1 million downloads.
+
+A great congratulations to you all, and I look forward to millions more.
+
+Don't miss Muni at GTC.
+
+The schedule is packed with hands-on training, workshops, and technical talks.
+
+Muni gives developers a jumpstart with the Model Zoo, almost two dozen pre-trained models, like the Heart Segmentation Model from King's College and the Breast Density Calculation from Mayo Clinic.
+
+These models are quite advanced.
+
+Let's check out the Whole Brain Segmentation from Vanderbilt University.
+
+It's a transformer model capable of segmenting 133 structures in the brain.
+
+And each model is like this, where the model descriptions provide all the reference papers, the model architecture overview, data and training scripts, so developers can reproduce and build on existing research.
+
+Let's take a closer look at some of the new generative AI models coming to Muni.
+
+Muni, a framework for building and deploying medical AI, is also advancing generative AI with methods to create large synthetic data sets for training generalizable AI models that can learn from evolving patient data while preserving patient privacy.
+
+The Latent Diffusion Model is a breakthrough in generative AI for medical imaging and is being developed by King's College London, co-founders of Muni.
+
+This model can generate synthetic medical images of the human anatomy, including high-resolution brain images.
+
+It was trained on the UK Biobank dataset and NVIDIA DGX Cloud in just one week, enabling researchers to control global and regional brain volumes and adjust for age, gender and disease.
+
+Generative AI is already making an impact in clinical settings.
+
+King's College London and University College London have developed a novel transformer-based outlier detector that aids in clinical evaluation of deployed segmentation models.
+
+The results suggest that this approach can be used to ensure only expected and good quality data reaches downstream decision-making algorithms.
+
+NVIDIA Mount Sinai and East River Imaging have collaborated to develop a new generative AI model for medical imaging known as RAD ImageGAN.
+
+By utilizing the StyleGAN XL model and training it on the RAD ImageNet dataset, RAD ImageGAN has become the most diverse synthetic data generator for 2D medical imaging.
+
+To access these models, visit the NVIDIA NGC catalog.
+
+Ready to join the future of healthcare powered by generative AI?
+
+Join the Muni community today.
+
+Bristol Myers Squibb has been a world leader in cancer drug development for decades.
+
+Clinical trials are a costly $500 billion per year and where 90% of drug candidates fail.
+
+BMS has decades of clinical trial data and millions of CT scans, and it's using Muni to build large foundation models to improve their clinical trial outcomes.
+
+Using self-supervised learning features of Muni, BMS created a semantic segmentation foundation model that detects, classifies and measures the patient data for a more consistent and accurate response assessment.
+
+As you can see, imaging is the foundational tool in healthcare, used in every stage from screening, diagnosis to treatment.
+
+2D imaging for annual screening and early detection, advanced 3D for quantitative image analysis and 4D that captures the motion and the function.
+
+And now we're entering the fifth dimension, multiple real-time sensors that enables the medical devices to automatically perform tasks.
+
+As the sensor technology and the fusion of sensors technology becomes more complex, new real-time computing platforms and AI applications will be required to do a myriad of tasks, starting with detecting, classifying and segmenting, moving to much more complex sensor fusion tasks like registering, mapping, tracking and navigating.
+
+This is why NVIDIA invented HoloScan, a real-time AI sensor platform.
+
+NVIDIA HoloScan brings together end-to-end solutions to build and deploy AI for medical devices.
+
+It brings together everything from the device to the data center.
+
+Using Muni and our Omniverse digital twin platform to create and simulate AI.
+
+And NVIDIA HoloScan, a full stack, scalable platform for real-time processing of streaming sensor data.
+
+HoloScan provides a complete edge computing platform with all-in-one hardware systems, operating systems and an SDK that is cloud-native to scale applications to the cloud.
+
+The HoloScan platform gives the medical device industry a unified and common computing platform.
+
+And it's software-defined to realize the software-as-a-service business model, saving huge amounts of hardware and platform software engineering, making more resources available to develop life-saving healthcare applications.
+
+Over 70 leading medical device companies, startups and medical centers are developing new real-time applications on NVIDIA HoloScan.
+
+HoloScan comes with a suite of reference applications and the platform is sensor agnostic. With the lowest latency pipeline from sensor to multiple sensors in, to the advanced AI processing and advanced visualization.
+
+Announcing today, I am excited to share that you can now place orders for HoloScan IGX Orin Developer Kits from our global distribution network.
+
+The IGX Orin Developer Kits are an all-in-one industrial computer consisting of a high-speed sensor input, ConnectX, NIC, an Orin system-on-a-chip and an RTX GPU, with all the safety and security features needed for industrial and medical designs.
+
+You can reach out to Arrow, P&Y, Leadtech, EDOM, RYOYO, MACNICA to order HoloScan IGX Developer Kits and begin prototyping today.
+
+For putting HoloScan in production, Edge AI appliances built with IGX Orin will be available in the second half of this year from our global OEM and ODM network.
+
+All great offerings are being made available from AdvanTech, Dedicated Computing, Cosmo Intelligent Devices, Portwell, ProDrive, AdLink and more.
+
+Today we are announcing a remarkable partnership with the world leader in medical devices, Medtronic, to build the AI platform for medical devices.
+
+NVIDIA and Medtronic have been working together for many years on many of their innovative platforms, from robotic-assisted surgery, surgical navigation, and interoperative imaging systems.
+
+I was able to have a chat with Jeff Martha, CEO of Medtronic, about the impact AI is already having and his strategic vision for AI going forward. 
+
+Jeff, it's so good to see you.
+
+It's a wonderful opportunity to have you join us at GTC, the AI conference.
+
+Well, thanks Kimberly.
+
+I'm really excited.
+
+When you first talked to me about it in January, I was really excited to join. 
+
+It feels like it's the Super Bowl for AI and I couldn't be more excited to be here and talk about the progress that we're making together.
+
+Absolutely.
+
+Medtronic is the global leader in medical devices that has served over 76 million patients across 70 health conditions.
+
+You've created the ultimate condition to broaden the impact of AI in healthcare.
+
+You mentioned the 76 million patients, so that's 76 million patients a year.
+
+That's about two patients every second.
+
+And I'm convinced AI is going to help us move upstream to less sick people, high-risk people, and we're going to take that number to go from that, call it 80 million a year to 800 million a year.
+
+I think that's the power that we have in front of us.
+
+That's incredible, Jeff.
+
+Two patients a second, and your vision is to take that to 20 patients a second? 
+
+Can you tell us more about how we make this vision possible and the role AI plays in medical devices and the applications in patient care?
+
+I talk to physicians every day and look, they don't want more data.
+
+They want insights.
+
+They want insights that can lead to action.
+
+And so, you know, for us to do this at scale and speed to meaningfully impact society, we need AI.
+
+It's that simple.
+
+And I believe, you know, we've only just scratched the surface of what's possible.
+
+Jeff, you make two really critical points.
+
+AI is a technology to deliver insights, insights to clinicians that benefit patients.
+
+I think your other point you made is, you know, we're just at the beginning of this journey.
+
+AI, just like human intelligence, is a journey of continuous learning and evolution.
+
+So can you share with us any specific use cases, for example, in early cancer screening or surgery, where AI has already made a significant impact within Medtronic and for the health care providers?
+
+Sure.
+
+You know, I'm happy to share that we're already seeing a number of benefits of AI in a number of areas.
+
+So, one, our GI Genius Intelligent Endoscopy Module is the first computer-aided detection system to use AI to identify polyps during a colonoscopy.
+
+So GI Genius scans every visual frame of the entire procedure in real time and then alerts physicians to the presence of lesions, including small, flat polyps that can be easily, can easily go undetected by the human eye, especially after a long day of doing colonoscopies.
+
+These things, physicians can miss these.
+
+And we recently published the results of our largest trial to date, demonstrating just how using GI Genius can reduce the miss rate of polyps by up to 50% compared to a human-only colonoscopy.
+
+And that's just huge.
+
+The potential of AI is essentially limitless.
+
+And considering colon cancer, as you said, it's the second most common cancer cause of death in the United States.
+
+But it's also the most curable if caught early.
+
+And the AI applications provided by GI Genius platform are helping.
+
+As you said, the clinicians are seeing and catching 50% more cases.
+
+This is absolutely life-changing.
+
+Jeff, this is exactly what inspired us to build the NVIDIA HoloScan platform.
+
+How do you see HoloScan providing value to Medtronic and, in turn, bringing support to the physicians and the care that they provide?
+
+Where I think NVIDIA's technologies really play a major role is providing a comprehensive experience to developers and medical device makers who want to create AI-based medical applications.
+
+So any new product development is labor-intensive and very time-consuming.
+
+So the integration of Medtronic's GI Genius Intelligent Endoscopy Module with NVIDIA's latest technologies, like HoloScan and IGX, has the potential to significantly accelerate
+
+AI innovation for healthcare.
+
+And it will allow thousands of developers worldwide to get involved in the future of medical AI and to help benefit millions of patients.
+
+So our work together here is going to increase the scale and the speed of medical AI innovation and help shape the future of healthcare.
+
+It's a challenge, and really more of a challenge, it's an opportunity that I'm proud for us to be a part of and a lead role with you.
+
+We feel the same way, and we're excited to partner with you and the Medtronic team to build this AI platform for medical devices.
+
+It's very exciting to hear that GI Genius, based on NVIDIA HoloScan, is going to start bringing many more applications to the bedside for the clinicians and the patients, even as early as the end of the year.
+
+We have an incredible future ahead of us.
+
+Thank you so much for telling the world about it today.
+
+Sounds good.
+
+Thank you for having me again.
+
+We couldn't be more excited to be working with Jeff and his team. 
+
+And today, we're also announcing Medtronic is designing their GI Genius AI-assisted colonoscopy system with NVIDIA HoloScan and IGX to support physicians with real-time AI-enhanced imaging, shipping at the end of the year.
+
+GI Genius has been designed to host a suite of AI algorithms, like the Intelligent Endoscopy Module, the first FDA-accleared AI-assisted colonoscopy tool.
+
+It helps physicians detect polyps that can lead to colorectal cancer.
+
+Working with the GI business at Medtronic and partner Cosmo, we are also helping enable third-party developers to train and validate AI models for the GI Genius platform, accelerating important applications to get to market.
+
+Another field that is continuously pioneering ways to leverage AI is genomics.
+
+Last year was an incredible year.
+
+NVIDIA worked across the entire ecosystem to make NVIDIA Parabricks accessible in all public and genomics cloud platforms.
+
+New genomics sequencing platform introductions using AI to increase instrument throughput and reduce the cost of sequencing to just hundreds of dollars.
+
+And achieving the Guinness World Record time of five hours for diagnostic sequencing technique. 
+
+There are two monumental achievements bringing genomic sequencing closer to becoming the standard of care.
+
+And for the first time, the completion of the whole human genome was accomplished by the Telomere-to-Telomere Consortium, introducing another 200 million genomic bases to the genome.
+
+Long read sequencing and the platforms invented by Oxford Nanopore and PacBio are the core to this achievement, along with many more discoveries in transcriptomics and epigenomics toward long read sequencing, nature's method of the year in 2022.
+
+Genomic sequencing platforms far outpace Moore's law and throughput of the instruments is what drives the cost down.
+
+NVIDIA Parabricks is accelerating every stage of the genomics analysis pipeline, driving up throughput and accuracy while driving down cost.
+
+Today, instruments want to become more turnkey so they can live on the benchtop in a hospital for clinical use or in a lab at a drug discovery startup.
+
+Using AI and accelerated computing, we are bringing compute and the workflow to the instrument
+as well as making it available on every cloud.
+With our next release, Parabricks 4.1, whole genome sequencing analysis will be further
+accelerated from 21 minutes to just 16 minutes.
+Also coming to Parabricks 4.1, we are introducing the end-to-end PacBio accelerated analysis
+pipeline, inclusive of accelerated Minimap2 alignment and a fine-tuned deep variant model.
+This will be made available in NVIDIA NGC Catalog and in NextFlow and Whittle workflows
+on the Terra cloud platform in Q2.
+Another new introduction in Parabricks 4.1 is a new deep variant retraining tool to enable
+instrument vendors, researchers, and genomic centers to customize and fine-tune deep variant
+models to new and evolving chemistry and sequencing methods for more accurate variant calling.
+The framework will also be made available in NVIDIA NGC Catalog in Q2.
+Some incredible new platforms are coming to the market, and we are excited to be working
+with such innovative companies like BioNano, who is transforming the way we see genomics
+through optical genome mapping.
+BioNano's Sapphire system is breaking new barriers to the resolution at which we can
+detect structural variants.
+Structural variants can disrupt the normal function of a gene and contribute to a broad
+range of genetic diseases and cancer.
+We are working together to build on-instrument and cloud analysis workflows that tackle over
+96 cancer workflows and integrate into BioNano's NxClinic software for accelerated interpretation
+and reporting.
+And another occurring in the field that is being referred to as the fourth generation
+in genomics, spatial genomics is the study of single-cell genomics in both 2D and 3D
+organization within a tissue sample.
+Giving new understanding of how cells interact and the genes they express has broad application
+to basic biology research, clinical diagnostics, and drug discovery.
+The nanostring's new COSMIC system is capable of taking a tissue of a million cells and
+visualizing a thousand different gene expressions in each of those cells in its X, Y, and Z
+coordinates.
+That number is growing to 6,000 different gene expressions by the end of the year, producing
+three to six terabytes of data per mole or tumor sampled.
+Nanostring built NVIDIA into the imaging platform to do a critical step of cell segmentation,
+identifying the cell boundaries.
+And next, we're going to be working together on large AI models applied to these gigantic
+data sets.
+Three critical paradigms are creating the watershed moment for biology.
+Digital biology.
+We just covered some of the most innovative medical devices that are core to generating
+new biology data with new levels of resolution.
+So we can use computational and mathematical methods to model biological systems, accelerate
+the discovery of new therapies, and improve our ability to predict and treat diseases.
+At the same time, the drug discovery process, design, make, test, is being revolutionized
+by sensors and robotics to automate labs, and it's vastly increasing the amount of data
+available for analysis in biology and drug discovery.
+And here we are, in the chat GPT moment, with an unprecedented new ability for generative
+AI to learn relationships, reason, and predict things from large amounts of biology data.
+And the research shows that generative AI is able to learn and represent biology, and
+it's transforming biology from science to engineering.
+DeepMind's AlphaFold began the mission and won the method of the year in 2021 with a
+stunning achievement, using a large language model to achieve experimental accuracy for
+3D structure prediction of proteins.
+Fast following seminal research from Meta, RoastLab, BakerLab, BarzilayLab, and a thousand
+more papers in 2022.
+DeepMind's collaborative research is broad sweeping across life sciences and drug discovery.
+Like predicting new COVID variants with Argonne National Lab, don't miss Arvind Ramanathan's
+presentation this week.
+Other great work includes generalizable DNA transformer with InstaDeep, and a functional
+protein generator with Evozyme, a protein ligand complex predictor with Caltech and
+Centose, and a molecule generator with AstraZeneca, and finally, a property controlled molecule
+generator.
+Generative AI has broad applicability to the end-to-end pharmaceutical industry.
+Generative AI in biology is innovating the early discovery process from target discovery
+to de novo design.
+Generative AI in imaging is helping to discover new biomarkers and improve clinical trial
+design and outcomes.
+And generative AI in language is finding new therapeutic targets and adverse events in
+health records and real-world data.
+The pharmaceutical industry is approaching $2 trillion, yet we still have tens of thousands
+of diseases without cures.
+With $250 billion spent in R&D, another $500 billion spent in clinical trials, the urgency
+to apply AI to reduce the 10 years and $2 billion to get a drug to market is imperative
+across the industry.
+We have now created a streamlined way to give the industry access to NVIDIA AI and Clara.
+With our announcement of NVIDIA DGX Cloud availability through partnerships with Microsoft
+Azure, Google GCP, and Oracle OCI.
+Today, we are announcing NVIDIA BioNemo cloud services for generative AI and drug discovery.
+BioNemo service is a suite of pre-trained and optimized open-source models that provide
+easy access for drug discovery workflows in 3D protein structure prediction, small molecule
+generation, property predictions, and molecular docking.
+BioNemo provides optimized models and model hosting so that drug discovery teams can easily
+deploy and scale generative AI workloads.
+Let's take a look at BioNemo in action.
+Drug discovery is incredibly hard.
+Bringing a new drug to market takes more than 10 years and has just a 10% success rate.
+Between the complexity of biology and the near infinite chemical and protein combinations,
+discovering drugs to help cure disease is a truly heroic endeavor.
+Accelerating this process is mission critical for drug developers.
+There are three key stages to drug discovery.
+Discovering the biology that causes disease, designing new molecules, whether those are
+small molecules, proteins, or antibodies, and finally, screening how those molecules
+interact with each other.
+Today, generative AI is transforming every step of the drug discovery process.
+NVIDIA BioNemo service provides state-of-the-art generative AI models for drug discovery.
+It's available as a cloud service, providing instant and easy access to accelerated drug
+discovery workflows.
+BioNemo includes models like AlphaFold, ESMFold, and OpenFold for 3D protein structure prediction,
+ProatGPT for protein generation, ESM1 and ESM2 for protein property prediction, MegaMoleBart
+and MoleFlow for molecule generation, and DiffDock for molecule docking.
+Drug discovery teams can use the models through BioNemo's web interface or cloud APIs.
+Here's an example of using NVIDIA BioNemo for drug discovery virtual screening.
+Generative models can now read a protein's amino acid sequence and, in seconds, accurately
+predict the structure of a target protein.
+They can also generate molecules with desirable ADME properties that optimize how a drug behaves
+in the body.
+Generative models can even predict the 3D interactions of a protein and molecule, accelerating
+the discovery of optimal drug candidates.
+With NVIDIA DGX Cloud, BioNemo also provides on-demand supercomputing infrastructure to
+further optimize and train models, saving teams valuable time and money so they can
+focus on discovering life-saving medicines.
+The new AI drug discovery pipelines are here.
+Sign up now for access to NVIDIA BioNemo service.
+Many pharma and biotech companies want to build custom models that leverage their decades'
+worth of valuable proprietary data and their subject matter expertise into these models.
+BioNemo helps researchers create and fine-tune custom models with their proprietary data,
+with on-demand supercomputing infrastructure offered through NVIDIA DGX Cloud and BioNemo
+training service.
+Let's take a look at how Amgen uses BioNemo services.
+Amgen is a world leader in antibody discovery and development, with a long history of successful
+antibody drugs and antibody creation platforms.
+Chris Langmead and the Digital Biologics Discovery team use BioNemo service to customize five
+property prediction models with their own proprietary antibody data, and then run BioNemo
+structure prediction models to generate proteins for further design consideration.
+The team was able to reduce the time to develop these generative AM models from three months
+to four weeks, with a just-bring-your-data approach and let BioNemo training service
+take care of the infrastructure, the software, the pre-trained models, and optimization,
+and of course, our fantastic experts standing by for questions.
+And the models we used for structure prediction were optimized to run five to a hundred times
+faster.
+Don't miss Chris's full talk at GTC.
+NVIDIA and Deloitte announced our partnership last GTC, and Deloitte has been a power user
+of BioNemo ever since.
+The Molecular Modeling and Drug Discovery team at Deloitte has developed a new structural
+drug discovery pipeline called ProMap.
+The pipeline takes advantage of the fact that BioNemo offers multiple structure prediction
+models, and their application can intelligently choose the right model for the right job.
+Here's how ProMap works.
+First, an intelligent proprietary upstream classifier chooses the best model according
+to the amino acid sequence.
+It calls BioNemo service APIs and performs optimized structure prediction.
+And then a downstream Deloitte in-house generative AI model refines the structure to predict
+the druggable regions shown in red.
+This is a perfect example of how easy it is to innovate and build drug discovery applications
+with BioNemo cloud services.
+NVIDIA BioNemo service for generative AI and drug discovery offers instantaneous, optimized,
+scalable services to quickly customize and deploy state-of-the-art biomolecular models.
+The interest and adoption from the industry is incredible.
+Broad sweeping from large pharma, tech bio, drug discovery SaaS platforms, and global
+system integrators, BioNemo will continue to work with the industry to develop and include
+models to address the end-to-end drug discovery process and provide customization on proprietary
+data to increase the pace of innovation and discovery.
+BioNemo is in early access, and we will plan general availability second half of this year.
+Japan is the third largest pharmaceutical industry in the world, making it a unique
+destination for drug discovery innovation.
+Today, Mitsui and NVIDIA are announcing TokyoOne, the first pharmaceutical supercomputer to
+accelerate drug discovery with generative AI in Japan.
+Japan is home to several leading drug discovery companies, including Astellas Pharma, Daiichi
+Sankyo, Ono Pharmaceutical, and Zurica, Mitsui's own AI drug discovery platform.
+TokyoOne will be an innovation hub that enables the pharma industry to transform the landscape,
+providing 16 NVIDIA DGX-H100 nodes, supporting molecular dynamics simulations, large language
+model training, quantum chemistry, and generative AI.
+TokyoOne will be live in the second half of 2023.
+NVIDIA Clara, our suite of AI platforms, software, and services, brings the most advanced
+computing approaches to the healthcare and life sciences industry.
+Medical devices of all kinds are accelerating and becoming software-defined with AI.
+We are delighted to be partnering with Medtronic to build the medical AI platform for medical
+devices, and look forward to HoloScan shipping in their GI Genius AI-assisted colonoscopy
+system later this year.
+Imaging and genomics have ignited the digital biology revolution, and new modalities and
+automation are generating datasets too complex for humans alone to interpret.
+Generative AI has begun writing the next chapter of AI, where every industry will be able to
+access powerful, co-creative abilities that generate new ideas and discoveries.
+The healthcare industry needs to access NVIDIA AI and Clara platforms faster and easier.
+NVIDIA DGX Cloud, through partnerships with Microsoft Azure, Google GCP, and Oracle OCI,
+gives instant access to DGX AI supercomputers and NVIDIA software and services right from
+your browser.
+NVIDIA BioNemo service helps researchers and drug discovery teams create, fine-tune, and
+serve optimized and custom biomolecular models with their proprietary data.
+Amgen, a world leader in antibody therapies, is an early adopter of NVIDIA DGX Cloud and
+BioNemo to accelerate biologics discovery with generative AI and their own data.
+And Japan, the third largest pharmaceutical market in the world, will be turbocharged
+to accelerate drug discovery with Mitsui's TokyoOne NVIDIA DGX supercomputer, an innovation
+hub for the industry.
+Welcome to the next chapter of AI.
+Have a great GTC!
+Thank you for watching.
+For more information, please visit www.ncbi.nlm.nih.gov.
+
