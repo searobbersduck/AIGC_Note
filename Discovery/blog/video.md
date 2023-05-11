@@ -1,4 +1,85 @@
 
+## [Accelerate AI-Powered Drug Discovery With BioNeMo](https://youtu.be/GNL1z7hnj4w)
+
+Drug discovery is incredibly hard.
+
+Bringing a new drug to market takes more than 10 years and has just a 10% success rate.
+
+Between the complexity of biology and the near infinite chemical and protein combinations, discovering drugs to help cure disease is a truly heroic endeavor.
+
+Accelerating this process is mission critical for drug developers.
+
+There are three key stages to drug discovery.
+
+Discovering the biology that causes disease designing new molecules, whether those are small molecules, proteins, or antibodies, and finally, screening how those molecules interact with each other.
+
+Today, generative AI is transforming every step of the drug discovery process.
+
+NVIDIA BioNemo service provides state-of-the-art generative AI models for drug discovery.
+
+It's available as a cloud service, providing instant and easy access to accelerated drug discovery workflows.
+
+BioNemo includes models like AlphaFold, ESMFold, and OpenFold for 3D protein structure prediction, ProteGPT for protein generation, ESM1 and ESM2 for protein property prediction, MegaMoleBart and MoleFlow for molecule generation, and DiffDock for molecule docking.
+
+Drug discovery teams can use the models through BioNemo's web interface or cloud APIs.
+
+Here's an example of using NVIDIA BioNemo for drug discovery virtual screening.
+
+Generative models can now read a protein's amino acid sequence and, in seconds, accurately predict the structure of a target protein.
+
+They can also generate molecules with desirable ADME properties that optimize how a drug behaves in the body.
+
+Generative models can even predict the 3D interactions of a protein and molecule, accelerating the discovery of optimal drug candidates.
+
+With NVIDIA DGX Cloud, BioNemo also provides on-demand supercomputing infrastructure to further optimize and train models, saving teams valuable time and money so they can focus on discovering life-saving medicines.
+
+The new AI drug discovery pipelines are here.
+
+Sign up now for access to NVIDIA BioNemo service.
+
+NVIDIA
+
+
+<br>
+
+药物发现非常困难。
+
+将一种新药推向市场需要 10 多年的时间，而且只有 10% 的成功率。
+
+在生物学的复杂性和近乎无限的化学和蛋白质组合之间，发现有助于治愈疾病的药物是一项真正的英勇努力。
+
+加速这一过程对药物开发人员来说至关重要。
+
+药物发现分为三个关键阶段。
+
+发现导致疾病的生物学设计新分子，无论是小分子、蛋白质还是抗体，最后筛选这些分子如何相互作用。
+
+如今，生成式人工智能正在改变药物发现过程的每一步。
+
+NVIDIA BioNemo 服务为药物发现提供最先进的生成式 AI 模型。
+
+它以云服务的形式提供，提供对加速药物发现工作流程的即时和轻松访问。
+
+BioNemo 包括用于 3D 蛋白质结构预测的 AlphaFold、ESMFold 和 OpenFold 等模型，用于蛋白质生成的 ProteGPT，用于蛋白质特性预测的 ESM1 和 ESM2，用于分子生成的 MegaMoleBart 和 MoleFlow，以及用于分子对接的 DiffDock。
+
+药物发现团队可以通过 BioNemo 的网络界面或云 API 使用这些模型。
+
+下面是使用 NVIDIA BioNemo 进行药物发现虚拟筛选的示例。
+
+生成模型现在可以读取蛋白质的氨基酸序列，并在几秒钟内准确预测目标蛋白质的结构。
+
+它们还可以生成具有理想 ADME 特性的分子，从而优化药物在体内的表现。
+
+生成模型甚至可以预测蛋白质和分子的 3D 相互作用，从而加速最佳候选药物的发现。
+
+借助 NVIDIA DGX Cloud，BioNemo 还提供按需超级计算基础设施，以进一步优化和训练模型，为团队节省宝贵的时间和金钱，使他们能够专注于发现救生药物。
+
+新的 AI 药物发现管道就在这里。
+
+立即注册以访问 NVIDIA BioNemo 服务。
+
+英伟达
+
 
 ## [Generative AI in Biology and Healthcare](https://www.youtube.com/watch?v=NHszJiL-9pM)
 
