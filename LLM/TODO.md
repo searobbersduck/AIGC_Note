@@ -22,3 +22,6 @@
   - [ ] [Using FP8 with Transformer Engine](https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/examples/fp8_primer.html)
   - [ ] [Transformer Engine](https://github.com/NVIDIA/TransformerEngine)
 
+
+- [ ] [Transformers Agent](https://huggingface.co/docs/transformers/transformers_agents)
+- [ ] 
