@@ -24,7 +24,7 @@
 
 ![](./images/imagebind/image_bind_blog_overview.jpg)
 
-> ImageBind is a multimodal model that joins a recent series of Meta's open source AI tools. This includes computer vision models like DINOv2, a new method that doesn’t require fine tuning training high-performance computer vision models, and Segment Anything (SAM) a universal segmentation model that can segment any object in any image, based on any user prompt. ImageBind complements these models as it focuses on multimodal representation learning. It tries to learn a single aligned feature space for multiple modalities, including, but not limited to, images and videos. In the future, ImageBind can leverage the powerful visual features from DINOv2 to further improve its capabilities.
+> <font color='red'>ImageBind is a multimodal model that joins a recent series of Meta's open source AI tools. This includes computer vision models like DINOv2, a new method that doesn’t require fine tuning training high-performance computer vision models, and Segment Anything (SAM) a universal segmentation model that can segment any object in any image, based on any user prompt. ImageBind complements these models as it focuses on multimodal representation learning. It tries to learn a single aligned feature space for multiple modalities, including, but not limited to, images and videos. In the future, ImageBind can leverage the powerful visual features from DINOv2 to further improve its capabilities.</font>
 >
 > ImageBind 是一个多模态模型，加入了最近 Meta 的一系列开源 AI 工具。 这包括像 DINOv2 这样的计算机视觉模型，一种不需要微调训练高性能计算机视觉模型的新方法，以及 Segment Anything (SAM) 一种通用分割模型，可以根据任何用户提示分割任何图像中的任何对象 . ImageBind 补充了这些模型，因为它专注于多模态表示学习。 它尝试为多种模态学习单一对齐的特征空间，包括但不限于图像和视频。 未来，ImageBind 可以利用 DINOv2 强大的视觉功能进一步提高其能力。
 >
@@ -104,3 +104,10 @@
 
 ## Paper: [IMAGEBIND: One Embedding Space To Bind Them All](https://arxiv.org/pdf/2305.05665.pdf)
 
+### Implementation Details - Encoding modalities
+
+> We use a Transformer architecture for all the modality encoders. We use the Vision Transformer (ViT) for images. Following [19], we use the same encoder for images and videos. We temporally inflate the patch projection layer of the ViT and use 2 frame video clips sampled from 2 seconds. We follow for encoding audio and convert a 2 second audio sampled at 16kHz into spectrograms using 128 mel spectrogram bins. As the spectrogram is also a 2D signal like an image, we use a ViT with a patch size of 16 and stride 10. We treat thermal images and depth images as one-channel images and also use a ViT to encode them. We follow to convert depth into disparity maps for scale invariance. We extract the IMU signal consisting of accelerometer and gyroscope measurements across the X, Y , and Z axes. We use 5 second clips resulting in 2K time step IMU readings which are projected using a 1D convolution with a kernel size of 8. The resulting sequence is encoded using a Transformer. Finally, we follow the text encoder design from CLIP.
+>
+> 我们对所有模态编码器使用 Transformer 架构。 我们对图像使用 Vision Transformer (ViT)。 在 [19] 之后，我们对图像和视频使用相同的编码器。 我们暂时膨胀 ViT 的补丁投影层，并使用从 2 秒采样的 2 帧视频剪辑。 我们遵循编码音频并使用 128 个梅尔频谱图箱将以 16kHz 采样的 2 秒音频转换为频谱图。 由于频谱图也是像图像一样的二维信号，因此我们使用补丁大小为 16 且步幅为 10 的 ViT。我们将热图像和深度图像视为单通道图像，并使用 ViT 对其进行编码。 我们遵循将深度转换为视差图以实现尺度不变性。 我们提取由 X、Y 和 Z 轴上的加速度计和陀螺仪测量值组成的 IMU 信号。 我们使用 5 秒的剪辑生成 2K 时间步长的 IMU 读数，这些读数使用内核大小为 8 的一维卷积进行投影。生成的序列使用 Transformer 进行编码。 最后，我们遵循 CLIP 的文本编码器设计。
+>
+> 
