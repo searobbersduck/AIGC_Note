@@ -5,7 +5,7 @@ graph TB
     B[NVCodec decoding] --DecodeSingleSurface--> C[nv12_surface]
     C[nv12_surface] --SurfaceConverter_nv12_to_rgb--> D[rgb24]
     D[rgb24] --SurfaceConverter_rgb_to_planar--> E[rgb_planar]
-    E[rgp_planar] --> F[image_tensor]
+    E[rgb_planar] --> F[image_tensor]
     F[image_tensor] --CVCUDA_Preprocessor_Plugin--> G[cvcuda_preprocessed_tensor]
     G[cvcuda_preprocessed_tensor] --Other_Preprocessor_Plugin--> H[processed_tensor]
     H[processed_tensor] --Tensor_SD_Process--> I[sd_image_tensor]
