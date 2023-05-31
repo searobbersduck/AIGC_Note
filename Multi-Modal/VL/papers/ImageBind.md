@@ -1,4 +1,11 @@
-# []()
+# [ImageBind]()
+
+## [ImageBind Demo](https://imagebind.metademolab.com/demo)
+**demo很赞，但目前的github代码里并不能覆盖这个demo的内容；**
+![](./images/imagebind/imagebind_demo_audio%26image2image.jpg)
+![](./images/imagebind/imagebind_demo_audio%26image2image_result.jpg)
+
+<br><br>
 
 ## [ImageBind: Holistic AI learning across six modalities](https://ai.facebook.com/blog/imagebind-six-modalities-binding-ai/)
 
@@ -22,7 +29,7 @@
 >
 > 正如最近在从文本生成图像、视频和音频方面取得了令人兴奋的进展（例如 Make-A-Scene 和 Meta 的 Make-A-Video）一样，ImageBind 的多模式功能可以让研究人员使用其他模式作为输入查询和检索 以其他格式输出。 ImageBind 也是朝着构建能够像人类一样全面分析不同类型数据的机器迈出的重要一步。
 
-![](./images/imagebind/image_bind_blog_overview.jpg)
+![](./images/imagebind/imagebind_blog_overview.jpg)
 
 > <font color='red'>ImageBind is a multimodal model that joins a recent series of Meta's open source AI tools. This includes computer vision models like DINOv2, a new method that doesn’t require fine tuning training high-performance computer vision models, and Segment Anything (SAM) a universal segmentation model that can segment any object in any image, based on any user prompt. ImageBind complements these models as it focuses on multimodal representation learning. It tries to learn a single aligned feature space for multiple modalities, including, but not limited to, images and videos. In the future, ImageBind can leverage the powerful visual features from DINOv2 to further improve its capabilities.</font>
 >
@@ -109,5 +116,73 @@
 > We use a Transformer architecture for all the modality encoders. We use the Vision Transformer (ViT) for images. Following [19], we use the same encoder for images and videos. We temporally inflate the patch projection layer of the ViT and use 2 frame video clips sampled from 2 seconds. We follow for encoding audio and convert a 2 second audio sampled at 16kHz into spectrograms using 128 mel spectrogram bins. As the spectrogram is also a 2D signal like an image, we use a ViT with a patch size of 16 and stride 10. We treat thermal images and depth images as one-channel images and also use a ViT to encode them. We follow to convert depth into disparity maps for scale invariance. We extract the IMU signal consisting of accelerometer and gyroscope measurements across the X, Y , and Z axes. We use 5 second clips resulting in 2K time step IMU readings which are projected using a 1D convolution with a kernel size of 8. The resulting sequence is encoded using a Transformer. Finally, we follow the text encoder design from CLIP.
 >
 > 我们对所有模态编码器使用 Transformer 架构。 我们对图像使用 Vision Transformer (ViT)。 在 [19] 之后，我们对图像和视频使用相同的编码器。 我们暂时膨胀 ViT 的补丁投影层，并使用从 2 秒采样的 2 帧视频剪辑。 我们遵循编码音频并使用 128 个梅尔频谱图箱将以 16kHz 采样的 2 秒音频转换为频谱图。 由于频谱图也是像图像一样的二维信号，因此我们使用补丁大小为 16 且步幅为 10 的 ViT。我们将热图像和深度图像视为单通道图像，并使用 ViT 对其进行编码。 我们遵循将深度转换为视差图以实现尺度不变性。 我们提取由 X、Y 和 Z 轴上的加速度计和陀螺仪测量值组成的 IMU 信号。 我们使用 5 秒的剪辑生成 2K 时间步长的 IMU 读数，这些读数使用内核大小为 8 的一维卷积进行投影。生成的序列使用 Transformer 进行编码。 最后，我们遵循 CLIP 的文本编码器设计。
->
-> 
+
+
+<br><br>
+
+## github: [ImageBind: One Embedding Space To Bind Them All](https://github.com/facebookresearch/ImageBind)
+
+**目前代码里似乎只包含embedding的内容，模态转换的代码还没有。**
+
+```
+import data
+import torch
+from models import imagebind_model
+from models.imagebind_model import ModalityType
+
+text_list=["A dog.", "A car", "A bird"]
+image_paths=[".assets/dog_image.jpg", ".assets/car_image.jpg", ".assets/bird_image.jpg"]
+audio_paths=[".assets/dog_audio.wav", ".assets/car_audio.wav", ".assets/bird_audio.wav"]
+
+device = "cuda:0" if torch.cuda.is_available() else "cpu"
+
+# Instantiate model
+model = imagebind_model.imagebind_huge(pretrained=True)
+model.eval()
+model.to(device)
+
+# Load data
+inputs = {
+    ModalityType.TEXT: data.load_and_transform_text(text_list, device),
+    ModalityType.VISION: data.load_and_transform_vision_data(image_paths, device),
+    ModalityType.AUDIO: data.load_and_transform_audio_data(audio_paths, device),
+}
+
+with torch.no_grad():
+    embeddings = model(inputs)
+
+print(
+    "Vision x Text: ",
+    torch.softmax(embeddings[ModalityType.VISION] @ embeddings[ModalityType.TEXT].T, dim=-1),
+)
+print(
+    "Audio x Text: ",
+    torch.softmax(embeddings[ModalityType.AUDIO] @ embeddings[ModalityType.TEXT].T, dim=-1),
+)
+print(
+    "Vision x Audio: ",
+    torch.softmax(embeddings[ModalityType.VISION] @ embeddings[ModalityType.AUDIO].T, dim=-1),
+)
+
+# Expected output:
+#
+# Vision x Text:
+# tensor([[9.9761e-01, 2.3694e-03, 1.8612e-05],
+#         [3.3836e-05, 9.9994e-01, 2.4118e-05],
+#         [4.7997e-05, 1.3496e-02, 9.8646e-01]])
+#
+# Audio x Text:
+# tensor([[1., 0., 0.],
+#         [0., 1., 0.],
+#         [0., 0., 1.]])
+#
+# Vision x Audio:
+# tensor([[0.8070, 0.1088, 0.0842],
+#         [0.1036, 0.7884, 0.1079],
+#         [0.0018, 0.0022, 0.9960]])
+```
+
+imagebind_huge模型： GPU Inference Memory footprint:
+
+![](./images/imagebind/github_gpu_mem.JPG)
+
