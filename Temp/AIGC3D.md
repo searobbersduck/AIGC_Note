@@ -1,5 +1,6 @@
 ## [NVIDIA CEO 黄仁勋发布面向各行各业的生成式 AI 平台](https://blogs.nvidia.cn/2023/05/28/computex-keynote-generative-ai/)
-
+* [NVIDIA 精彩亮相 COMPUTEX 2023](https://www.nvidia.cn/events/computex/)
+  * 这是主题演讲视频
 * [WPP Partners With NVIDIA to Build Generative AI-Enabled Content Engine for Digital Advertising](https://nvidianews.nvidia.com/news/wpp-partners-with-nvidia-to-build-generative-ai-enabled-content-engine-for-digital-advertising)
   * WPP 和 NVIDIA 在 Omniverse 中创建数字广告内容引擎。
 * [NVIDIA ACE for Games Sparks Life Into Virtual Characters With Generative AI](https://nvidianews.nvidia.com/news/nvidia-ace-for-games-sparks-life-into-virtual-characters-with-generative-ai)
