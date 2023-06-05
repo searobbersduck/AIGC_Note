@@ -5,11 +5,15 @@
   * WPP 和 NVIDIA 在 Omniverse 中创建数字广告内容引擎。
 * [NVIDIA ACE for Games Sparks Life Into Virtual Characters With Generative AI](https://nvidianews.nvidia.com/news/nvidia-ace-for-games-sparks-life-into-virtual-characters-with-generative-ai)
   * NVIDIA ACE 游戏开发版通过生成式 AI 令游戏角色栩栩如生。
+  * [NVIDIA ACE 游戏开发版](https://images.nvidia.cn/cn/youtube-replicates/nAEQdF3JAJo.mp4)
 * [NVIDIA Picasso](https://www.nvidia.com/en-us/gpu-cloud/picasso/)
   * 生成式AI为价值7,000亿美元的数字广告行业带来新的机遇。
   * 例如，全球最大的营销服务机构WPP正与NVIDIA一起在Omniverse Cloud上构建首个生成式AI内容引擎。
   * 黄仁勋在一段演示中展示了创作团队将如何连接他们的3D设计工具（如Adobe Substance 3D）并在NVIDIA Omniverse中构建客户产品的数字孪生。然后，他们可以凭借在来源可信的数据上训练并使用NVIDIA Picasso构建的生成式AI工具所提供的内容，快速制作出虚拟场景。
   * WPP客户可以使用制作完毕的场景生成大量广告、视频和3D体验，供全球市场和用户在任何网络设备上使用。
+* [由 NVIDIA Grace Hopper 提供动力支持的生成式 AI](https://images.nvidia.cn/cn/youtube-replicates/MVUQ5iJCmKs.mp4)
+* [NVIDIA AI 和 Omniverse 助力数字广告行业](https://images.nvidia.cn/cn/youtube-replicates/diJxEbo7TFw.mp4)
+
 
 <br>
 
