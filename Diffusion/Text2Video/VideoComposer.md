@@ -7,6 +7,9 @@ docker run --shm-size=10gb --gpus all -it --name TextComposer2 -p 6222:22 -p 620
 
 cd /workspace/pkg/
 
+./Anaconda3-2023.03-1-Linux-x86_64.sh
+
+# ref: https://stackoverflow.com/questions/55507519/python-activate-conda-env-through-shell-script
 source /root/anaconda3/etc/profile.d/conda.sh
 
 
@@ -219,3 +222,173 @@ doc_string: "/workspace/code/aigc/text2video/videocomposer/tools/videocomposer/u
    * 我们可以在如下文件 [Supported ONNX Operators](https://github.com/onnx/onnx-tensorrt/blob/main/docs/operators.md#supported-onnx-operators) 查找`ONNX-TensorRT`支持的`op`，会发现`SplitToSequence`的`op`还不支持；
    * ![Alt text](./images/VideoComposer/trtoptim/unetsd_trt_SplitToSequence_op_issue.jpg)
    * 这个`op`需要我们自己实现才能解决问题。
+
+
+<br><br>
+
+## VideoComposer 环境构建（pytorch nightly version）
+
+```
+# docker run --shm-size=10gb --gpus all -it --name TextComposer_th_nightly -p 6322:22 -p 6306:6006 -p 6364:6064 -p 6388:8888 -v /home/rtx/workspace/docker_workspace:/workspace nvcr.io/nvidia/tensorrt:23.05-py3
+
+docker run --shm-size=10gb --gpus all -it --name TextComposer_th_nightly -p 6322:22 -p 6306:6006 -p 6364:6064 -p 6388:8888 -v /home/rtx/workspace/docker_workspace:/workspace nvcr.io/nvidia/tensorrt:22.12-py3
+
+cd /workspace/pkg/
+
+./Anaconda3-2023.03-1-Linux-x86_64.sh
+
+# ref: https://stackoverflow.com/questions/55507519/python-activate-conda-env-through-shell-script
+source /root/anaconda3/etc/profile.d/conda.sh
+
+
+conda create --name VideoComposer
+conda activate VideoComposer
+
+pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu118
+
+pip install pytorch-lightning
+pip install motion-vector-extractor
+pip install opencv-python
+pip install scikit-video
+pip install scikit-image
+
+pip install simplejson
+pip install pynvml
+pip install easydict
+pip install fairscale
+pip install oss2
+pip install ipdb
+pip install rotary_embedding_torch
+pip install open_clip_torch
+
+
+# https://stackoverflow.com/questions/55313610/importerror-libgl-so-1-cannot-open-shared-object-file-no-such-file-or-directo
+apt update
+apt install libgl1
+
+pip install tokenizers
+
+
+
+cd /workspace/code/acclib/
+git clone https://github.com/HazyResearch/flash-attention
+git clone https://github.com/NVIDIA/cutlass.git
+export CPLUS_INCLUDE_PATH=/workspace/code/acclib/cutlass/include/
+export C_INCLUDE_PATH=/workspace/code/acclib/cutlass/include/
+cd flash-attention/
+python setup.py install
+
+# ref: https://github.com/facebookresearch/xformers
+pip install -v -U git+https://github.com/facebookresearch/xformers.git@main#egg=xformers
+
+apt-get install ffmpeg
+
+# 这个很重要
+pip install imageio==2.15.0 --upgrade
+
+
+# 要运行torch.onnx.export需要执行如下
+pip install onnx
+
+
+# for polygraphy
+pip install nvidia-pyindex
+pip install onnx-graphsurgeon
+
+ pip install cupy-cuda11x
+
+```
+
+
+远程连接vscode：
+
+```
+apt-get update    // 这一步视情况执行，有时不执行也不影响后续
+apt-get install openssh-server 
+
+passwd 
+
+apt install vim
+vim /etc/ssh/sshd_config
+
+add: PermitRootLogin yes
+
+service ssh restart
+
+```
+
+运行代码：
+
+```
+# https://github.com/damo-vilab/videocomposer#31-inference-with-customized-inputs
+
+python run_net.py\
+    --cfg configs/exp02_motion_transfer.yaml\
+    --seed 9999\
+    --input_video "demo_video/motion_transfer.mp4"\
+    --image_path "demo_video/moon_on_water.jpg"\
+    --input_text_desc "A beautiful big moon on the water at night"
+```
+
+可能会遇到index cpu 不兼容的错误，此时需要修改代码：
+
+`artist/ops/diffusion.py`中的：
+
+```
+def _i(tensor, t, x):
+    r"""Index tensor using t and format the output according to x.
+    """
+    shape = (x.size(0), ) + (1, ) * (x.ndim - 1)
+    return tensor[t].view(shape).to(x)
+```
+
+修改为
+
+```
+def _i(tensor, t, x):
+    r"""Index tensor using t and format the output according to x.
+    """
+    shape = (x.size(0), ) + (1, ) * (x.ndim - 1)
+    return tensor[t.cpu()].view(shape).to(x)
+```
+
+上述过程中只是把`t`修改为`t.cpu()`
+
+可以继续运行程序。
+
+<br>
+
+## `tools/videocomposer/unet_sd.py` TensorRT转换
+
+文件路径：`tools/videocomposer/unet_sd.py`
+
+### 2次尝试
+
+
+Error:
+```
+Error: Cannot deserialize plugin since corresponding IPluginCreator not found in Plugin Registry with Yolov4 TensorRT engine
+```
+
+ref: [Error: Cannot deserialize plugin since corresponding IPluginCreator not found in Plugin Registry with Yolov4 TensorRT engine](https://forums.developer.nvidia.com/t/error-cannot-deserialize-plugin-since-corresponding-iplugincreator-not-found-in-plugin-registry-with-yolov4-tensorrt-engine/249790)
+ref: [TensorRT优化原理和TensorRT Plguin总结](https://blog.csdn.net/han2529386161/article/details/102723545)
+
+```
+polygraphy surgeon sanitize unetsd_temporal.onnx --fold-constant --cleanup -o unetsd_temporal_surgeon.onnx
+
+trtexec --onnx=./unetsd_temporal_surgeon.onnx --saveEngine=./unetsd_temporal_surgeon.plan --fp16 --device=1
+
+
+```
+
+### https://www.bilibili.com/video/BV19T4y1e7XK/?spm_id_from=333.788&vd_source=2ef7e92f2d522c31939f486aea77a19e
+
+
+Error：
+```
+AttributeError: module 'pycuda.driver' has no attribute 'CUresult'
+```
+Solution:
+```
+
+```
