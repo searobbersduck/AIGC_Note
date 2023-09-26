@@ -299,9 +299,17 @@ CUDA_VISIBLE_DEVICES=0,1 python /opt/nemo-rlhf/examples/nlp/gpt/train_reward_mod
 
 用户可以在浏览器输入如上链接查看，如`https://wandb.ai/searobbersandduck/nemo_rlhf_RM_test` 或 `https://wandb.ai/searobbersandduck/nemo_rlhf_RM_test/runs/a17k6ne3`
 
-显示如下：
+训练过程显示如下：（注：这里采用了程序默认的配置，但从图标可以看出，其实很早就可以停止训练了）
 
-![Alt text](image-11.png)
+![Alt text](image-12.png)
+
+![Alt text](image-13.png)
+
+![Alt text](image-14.png)
+
+结果如下：
+
+![Alt text](image-15.png)
 
 ```
 root@c2050935a676:/workspace/data/nemo_rlhf/data# CUDA_VISIBLE_DEVICES=0,1 python /opt/nemo-rlhf/examples/nlp/gpt/train_reward_model.py     --config-path=${CONFIG_PATH}     --config-name=${CONFIG_NAME}     trainer.num_nodes=1     trainer.devices=2     model.pretrained_checkpoint.restore_from_path=${PRETRAINED_CHECKPOINT_NEMO_FILE}     "model.data.data_prefix={train: [${TRAIN_DATA_PATH}], validation: [${VALID_DATA_PATH}], test: [${VALID_DATA_PATH}]}"     model.optim.name=distributed_fused_adam     ++model.optim.bucket_cap_mb=200     ++model.optim.overlap_grad_sync=False     ++model.optim.contiguous_grad_buffer=True     model.activations_checkpoint_granularity=selective     model.activations_checkpoint_method=uniform     model.micro_batch_size=${MICRO_BATCH_SIZE}     model.global_batch_size=${GLOBAL_BATCH_SIZE}     exp_manager.explicit_log_dir=${RESULTS}     exp_manager.create_wandb_logger=True     exp_manager.wandb_logger_kwargs.name=${NAME}     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
@@ -757,6 +765,78 @@ Epoch 0:   0%|                                                                  
 [NeMo W 2023-09-25 08:44:46 nemo_logging:349] /usr/local/lib/python3.8/dist-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:232: UserWarning: You called `self.log('consumed_samples', ...)` in your `training_step` but the value needs to be floating point. Converting it to torch.float32.
       warning_cache.warn(
 
-Epoch 0:   0%| | 150/60082 [04:12<28:00:34,  1.68s/it, loss=0.756, v_num=cmbh, reduced_train_loss=0.582, train_accuracy=0.750, global_step=99.00, rewards_choEpoch 0, global step 100: 'val_loss' reached 0.84012 (best 0.84012), saving model to '/workspace/data/nemo_rlhf/data/results_RM-nemo2b-TEST_dataset-0001/checkpoints/megatron_gpt--val_loss=0.84-step=100-consumed_samples=396.0.ckpt' as top 1
+Epoch 0:   5%| | 3225/60082 [1:20:11<23:33:44,  1.49s/it, loss=0.722, v_num=u5g0, reduced_train_loss=0.719, train_accuracy=0.000, global_step=2174.0, rewards_Epoch 0:   5%| | 3226/60082 [1:
+20:13<23:33:51,  1.49s/it, loss=0.722, v_num=u5g0, reduced_train_loss=0.719, train_accuracy=0.000, global_step=2174.0, rewards_Epoch Epoch 0:  36%|▎| 21918/60082 [8:58:54<15:38:21,  1.48s/i
+t, loss=0.68, v_num=u5g0, reduced_train_loss=0.824, train_accuracy=0.250, global_step=14617.0, rewards_chwandb: ERROR Error while calling W&B API: graphql: panic occurred: runtime error: in
+valid memory address or nil pointer dereference (<Response [500]>)
+Epoch 0:  36%|▎| 21926/60082 [8:59:10<15:38:16,  1.48s/it, loss=0.699, v_num=u5g0, reduced_train_loss=0.484, train_accuracy=1.000, global_step=14625.0, rewards_cwandb: ERROR Error while cal
+ling W&B API: graphql: panic occurred: runtime error: invalid memory address or nil pointer dereference (<Response [500]>)
+Epoch 0:  36%|▎| 21928/60082 [8:59:14<15:38:15,  1.48s/it, loss=0.667, v_num=u5g0, reduced_train_loss=0.457, train_accuracy=1.000, global_step=14627.0, rewards_cwandb: ERROR Error while cal
+ling W&B API: graphql: panic occurred: runtime error: invalid memory address or nil pointer dereference (<Response [500]>)
+Epoch 0:  36%|▎| 21929/60082 [8:59:16<15:38:14,  1.48s/it, loss=0.677, v_num=u5g0, reduced_train_loss=1.020, train_accuracy=0.000, global_step=14628.0, rewards_cwandb: ERROR Error while cal
+ling W&B API: graphql: panic occurred: runtime error: invalid memory address or nil pointer dereference (<Response [500]>)
+Epoch 0:  37%|▎| 21932/60082 [8:59:22<15:38:13,  1.48s/it, loss=0.664, v_num=u5g0, reduced_train_loss=0.598, train_accuracy=0.750, global_step=14631.0, rewards_cwandb: ERROR Error while cal
+ling W&B API: graphql: panic occurred: runtime error: invalid memory address or nil pointer dereference (<Response [500]>)
+Epoch 0:  37%|▎| 21937/60082 [8:59:32<15:38:10,  1.48s/it, loss=0.644, v_num=u5g0, reduced_train_loss=0.603, train_accuracy=0.750, global_step=14636.0, rewards_cwandb: ERROR Error while cal
+ling W&B API: graphql: panic occurred: runtime error: invalid memory address or nil pointer dereference (<Response [500]>)
+Epoch 0:  37%|▎| 21947/60082 [8:59:52<15:38:04,  1.48s/it, loss=0.614, v_num=u5g0, reduced_train_loss=0.577, train_accuracy=0.500, global_step=14646.0, rewards_cwandb: ERROR Error while cal
+ling W&B API: graphql: panic occurred: runtime error: invalid memory address or nil pointer dereference (<Response [500]>)
+Epoch 0:  37%|▎| 21965/60082 [9:00:28<15:37:54,  1.48s/it, loss=0.741, v_num=u5g0, reduced_train_loss=1.340, train_accuracy=0.500, global_step=14664.0, rewards_cwandb: ERROR Error while cal
+ling W&B API: graphql: panic occurred: runtime error: invalid memory address or nil pointer dereference (<Response [500]>)
+Epoch 0:  37%|▎| 22006/60082 [9:01:40<15:37:14,  1.48s/it, loss=0.715, v_num=u5g0, reduced_train_loss=0.780, train_accuracy=0.500, global_step=14699.0, rewards_cwandb: ERROR Error while cal
+ling W&B API: graphql: panic occurred: runtime error: invalid memory address or nil pointer dereference (<Response [500]>)  2.18it/s]
+Epoch 0:  41%|▍| 24380/60082 [9:59:58<14:38:36,  1.48s/it, loss=0.747, v_num=u5g0, reduced_train_loss=0.578, train_accuracy=0.500, global_step=16279.0, rewards_cTime limit reached. Elapsed
+time is 10:00:00. Signaling Trainer to stop.
+Epoch 0:  41%|▍| 24431/60082 [10:00:21<14:36:05,  1.47s/it, loss=0.728, v_num=u5g0, reduced_train_loss=0.475, train_accuracy=1.000, global_step=16280.0, rewards_`Trainer.fit` stopped: `max_
+epochs=1` reached.
+Epoch 0:  41%|▍| 24431/60082 [10:00:21<14:36:05,  1.47s/it, loss=0.728, v_num=u5g0, reduced_train_loss=0.475, train_accuracy=1.000, global_step=16280.0, rewards_
+
+
+
+
+wandb: Waiting for W&B process to finish... (success).
+wandb: / 0.082 MB of 0.082 MB uploaded (0.000 MB deduped)
+wandb: Run history:
+wandb:         consumed_samples ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:                    epoch ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:              global_step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:                grad_norm █▂▁▁▂▂▂▃▁▂▁▂▁▁▃▂▂▁▃▂▂▂▂▁▂▂▁▁▃▁▂▂▃▂▂▃▁▃▂▃
+wandb:                       lr ███████████▇▇▇▇▇▇▇▆▆▆▆▆▆▅▅▅▅▄▄▄▄▃▃▃▂▂▂▁▁
+wandb:     overall_rewards_mean █▅▄▂▃▃▄▃▂▁▁▃▃▃▅▄▄▅▇▆▅▄▅▄▃▄▅▅▅▅▆▄▄▄▃▄▄▄▄▄
+wandb:      overall_rewards_std █▂▁▃▃▂▄█▃▄▃▃▄▄▄▄▅▃█▄▇▂▇▆▃▃▅▄▄▄▆▂▃▃▅▅▄▃▆▅
+wandb: overall_val_rewards_mean ▇█▂▁▂▄▄▃▁▁▁▂▃▃▄▄▄▆▆▆▅▅▆▆▃▅▆▅▅▅▆▅▅▄▄▄▄▄▄▄
+wandb:  overall_val_rewards_std ▁▁▁▃▂▄▃▄▃▄▄▅▄▃▃▄▅▄▅▅▄▅▄█▃▄▅▄▅▅▃▅▅▅▆▆▅▅▅▇
+wandb:       reduced_train_loss ▄▅▄▄▅▆▃▄▄▅▃▃▄▃▃▃▄▄▇▇▁▅▄▃▅▃▄▄▅▃▄▃▅▄▄▆▃█▄▄
+wandb:      rewards_chosen_mean █▄▄▂▂▃▄▃▂▁▁▃▃▃▅▄▄▅▇▆▆▄▅▄▃▄▅▅▅▅▆▄▄▄▃▄▄▃▄▄
+wandb:    rewards_rejected_mean █▅▄▂▃▃▄▃▂▂▁▃▃▃▅▄▄▅▇▆▅▄▅▄▃▄▅▅▅▅▆▄▄▄▃▄▄▄▄▄
+wandb:           train_accuracy ▅▃▅▆▆▃▆▅▆▅▆█▆█▆█▅▅▅▁▆▅▆█▃▆▃▅▆▆▆▆▆▆▅▁█▆▅▅
+wandb:    train_backward_timing ▄▄▃▄▃▄▄▅▃▃▅▂█▅▄▄▃▃▃▄▃▂▁▃▃▃▂▂▃▃▃▃▃▃▃▇▃▁▂▂
+wandb:        train_step_timing ▂▂▁▂▁▂▂▂▁▂█▂▂▂▂▂▃▂▃▂▂▂▃▃▄▃▃▃▃▄▄▃▃▃▄▄▄▂▃█
+wandb:      trainer/global_step ▁▁▁▁▁▁▂▂▂▂▂▃▂▂▃▃▅▃▃▃▃▆▃▄▄▄▇▄▄▄▄█▅▅▅▅▅▅▅▅
+wandb:             val_accuracy ▂▁▃▆▆▇▇▆▆▆▆▇▆▇█▆▇▆▆▇▆▇▇▆▆▆▆▆▆▇▄▅▅▅▅▆▆▆▇▆
+wandb:                 val_loss ▆▆▅▂▄▂▃▄▃▃▂▄▄▂▂▃▃▃▃▃▃▄▃█▃▁▆▄▄▃▃▅▃▄▆▅▄▆▄▅
+wandb:   validation_step_timing ▁▁▁▁▁▁▁▁▁▁▁█▁█▁▁▁▁▂▂▁█▁▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂
+wandb:                                                                                                                                                                                       wandb: Run summary:
+wandb:         consumed_samples 65120.0                                                                                                                                                      wandb:                    epoch 0
+wandb:              global_step 16280.0                                                                                                                                                      wandb:                grad_norm 5.68486
+wandb:                       lr 1e-05                                                                                                                                                        wandb:     overall_rewards_mean 1.37537
+wandb:      overall_rewards_std 1.18902
+wandb: overall_val_rewards_mean 2.49412
+wandb:  overall_val_rewards_std 1.56299
+wandb:       reduced_train_loss 0.47503
+wandb:      rewards_chosen_mean 1.6355
+wandb:    rewards_rejected_mean 1.11523
+wandb:           train_accuracy 1.0
+wandb:    train_backward_timing 7e-05
+wandb:        train_step_timing 1.98977
+wandb:      trainer/global_step 16280
+wandb:             val_accuracy 0.615
+wandb:                 val_loss 0.66012
+wandb:   validation_step_timing 0.42358
+wandb:
+wandb: 🚀 View run RM-nemo2b-TEST_dataset-0001 at: https://wandb.ai/searobbersandduck/uncategorized/runs/nlghu5g0
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./results_RM-nemo2b-TEST_dataset-0001/wandb/run-20230925_094201-nlghu5g0/logs
+
 
 ```

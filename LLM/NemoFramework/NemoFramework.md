@@ -7,7 +7,8 @@
 docker链接： https://registry.ngc.nvidia.com/orgs/ea-bignlp/containers/nemofw-training
 
 ```
-docker run --shm-size=10gb --gpus all -it --name NEMOFRAMEWORK_LLAMA2 -p 6022:22 -p 6006:6006 -p 6064:6064 -p 6888:8888 -v /root/weidongz/docker_workspace:/workspace nvcr.io/ea-bignlp/nemofw-training:23.07-py3 bash
+docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name NEMOFRAMEWORK_LLAMA2 -p 6022:22 -p 6006:6006 -p 6064:6064 -p 6888:8888 -v /data/weidongz/docker_workspace:/workspace nvcr.io/ea-bignlp/nemofw-training:23.07-py3 bash
+
 ```
 
 **如果单机测试，可以启动Nemo的Docker(optional)**
