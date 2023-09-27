@@ -4,6 +4,8 @@
 * NeMo-RLHF supports **only GPT models** and implements the Proximal Policy Optimization (PPO) algorithm.
 * Support for **other models** and RL algorithms will be added **in future releases**.
 
+**如下Hands-on内容：基于此文档[NeMo Framework Reward Modeling](https://gitlab-master.nvidia.com/ai-sae/nemo-llm-playbooks/-/blob/dev-RewardModeling/llm_model_customization/Customization_-_Nemo_Framework_Train_Reward_Model.md#step-1-download-the-2b-gpt-model)**
+
 <br>
 
 ## Datasets
@@ -206,6 +208,8 @@ ls datasets
 ![Alt text](image-8.png)
 
 
+<br><br>
+
 ## Training: Reward Model
 
 **[Step 3: Customize config file for reward model training](https://gitlab-master.nvidia.com/ai-sae/nemo-llm-playbooks/-/blob/dev-RewardModeling/llm_model_customization/Customization_-_Nemo_Framework_Train_Reward_Model.md#step-3-customize-config-file-for-reward-model-training)**
@@ -310,6 +314,24 @@ CUDA_VISIBLE_DEVICES=0,1 python /opt/nemo-rlhf/examples/nlp/gpt/train_reward_mod
 结果如下：
 
 ![Alt text](image-15.png)
+
+
+<br><br>
+
+## 注意事项：
+
+试验过程中遇到很多问题，记录如下：
+
+* 试验的过程当中，如果按照默认设置，`/opt/nemo-rlhf/examples/nlp/gpt/conf/training_rm.yaml`，可能会保存大量checkpoints，占用大量空间，可以通过更改如下设置，来控制是否保存checkpoints或保存多少个checkpoints
+    * 如果不保存`checkpoints`，可以将`create_checkpoint_callback: False`，设置为False；具体参见：[Experiment Manager](https://docs.nvidia.com/deeplearning/nemo/user-guide/docs/en/stable/core/exp_manager.html#experiment-manager)
+    * 如果需要控制保存的`checkpoint`的数量，可以通过`save_top_k: 1`来控制，例如`save_top_k: 10`就代表保存10个checkpoints；具体参见：[Tips and Tricks](https://docs.nvidia.com/deeplearning/nemo/user-guide/docs/en/stable/core/exp_manager.html#tips-and-tricks)
+    * ![Alt text](image-16.png)
+* 如下的内容要添加到配置文件当中，非常重要，默认的配置文件可能没有`rampup_batch_size: null`
+    * ![Alt text](image-9.png)
+
+<br><br>
+
+## 附录
 
 ```
 root@c2050935a676:/workspace/data/nemo_rlhf/data# CUDA_VISIBLE_DEVICES=0,1 python /opt/nemo-rlhf/examples/nlp/gpt/train_reward_model.py     --config-path=${CONFIG_PATH}     --config-name=${CONFIG_NAME}     trainer.num_nodes=1     trainer.devices=2     model.pretrained_checkpoint.restore_from_path=${PRETRAINED_CHECKPOINT_NEMO_FILE}     "model.data.data_prefix={train: [${TRAIN_DATA_PATH}], validation: [${VALID_DATA_PATH}], test: [${VALID_DATA_PATH}]}"     model.optim.name=distributed_fused_adam     ++model.optim.bucket_cap_mb=200     ++model.optim.overlap_grad_sync=False     ++model.optim.contiguous_grad_buffer=True     model.activations_checkpoint_granularity=selective     model.activations_checkpoint_method=uniform     model.micro_batch_size=${MICRO_BATCH_SIZE}     model.global_batch_size=${GLOBAL_BATCH_SIZE}     exp_manager.explicit_log_dir=${RESULTS}     exp_manager.create_wandb_logger=True     exp_manager.wandb_logger_kwargs.name=${NAME}     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
