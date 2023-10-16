@@ -2,6 +2,40 @@
 
 **Nemo Framework版本23.07**
 
+## 启动[Tiny PPO Training Example](https://gitlab-master.nvidia.com/dl/JoC/nemo-rlhf/-/blob/master/tutorials/2b_ppo/Tiny_PPO.md#tiny-ppo-training-example)
+
+相关参数可以参照: **[Hyperparameters](https://gitlab-master.nvidia.com/dl/JoC/nemo-rlhf/-/blob/master/HPARAMS.md#Performance-hyperparameters)**
+
+**如下Launching the critic and reward model server**
+
+```
+NEMO_RLHF_DIR="/opt/nemo-rlhf"
+SP_TOKENIZER=nemo:a919114446344e349e73a0d807d9af98_mt_nlg_plus_multilingual_ja_zh_the_stack_frac_015_256k.model
+RM_NEMO_FILE="/workspace/data/nemo_rlhf/data/models/GPT-2B-001_bf16_tp1.nemo"
+CRITIC_PORT=5557
+
+export PYTHONPATH="${NEMO_RLHF_DIR}:${PYTHONPATH}" \
+&& export CUDA_VISIBLE_DEVICES="0,1" \
+&& MASTER_PORT=9999 python -u ${NEMO_RLHF_DIR}/examples/nlp/gpt/serve_ppo_critic.py \
+    --config-path=${NEMO_RLHF_DIR}/examples/nlp/gpt/conf/ \
+    --config-name=gpt_ppo_critic \
+    trainer.devices=2 \
+    trainer.num_nodes=1 \
+    model.tokenizer.model=${SP_TOKENIZER} \
+    model.tokenizer.tokenizer_model=${SP_TOKENIZER} \
+    inference.combine_rm_and_critic_server=True \
+    model.pretrained_checkpoint.restore_from_path=${RM_NEMO_FILE} \
+    inference.port=${CRITIC_PORT} \
+    model.global_batch_size=12 \
+    inference.micro_batch_size=2 \
+    model.micro_batch_size=2  2>critic_error.log >critic_output.log &
+
+```
+
+<br><br>
+
+## xxx
+
 **Ref: [Launching the Reward Model Inference Server](https://gitlab-master.nvidia.com/dl/JoC/nemo-rlhf/-/blob/master/tutorials/2b_ppo/README.md#launching-the-reward-model-inference-server)**
 
 ```
@@ -28,4 +62,5 @@ cd /opt/nemo-rlhf \
     port=5556
 
 ```
+
 
