@@ -1,5 +1,8 @@
+# Nemo-RLHF Services Hands-on
 
-ref: [Launching the Reward Model Inference Server](https://gitlab-master.nvidia.com/dl/JoC/nemo-rlhf/-/blob/master/tutorials/2b_ppo/README.md#launching-the-reward-model-inference-server)
+**Nemo Framework版本23.07**
+
+**Ref: [Launching the Reward Model Inference Server](https://gitlab-master.nvidia.com/dl/JoC/nemo-rlhf/-/blob/master/tutorials/2b_ppo/README.md#launching-the-reward-model-inference-server)**
 
 ```
 cd /opt/nemo-rlhf \
@@ -12,7 +15,7 @@ cd /opt/nemo-rlhf \
     port=5555
 ```
 
-ref: [Launching the Initial Policy Inference Server](https://gitlab-master.nvidia.com/dl/JoC/nemo-rlhf/-/blob/master/tutorials/2b_ppo/README.md#launching-the-initial-policy-inference-server)
+**Ref: [Launching the Initial Policy Inference Server](https://gitlab-master.nvidia.com/dl/JoC/nemo-rlhf/-/blob/master/tutorials/2b_ppo/README.md#launching-the-initial-policy-inference-server)**
 
 ```
 cd /opt/nemo-rlhf \
@@ -25,3 +28,4 @@ cd /opt/nemo-rlhf \
     port=5556
 
 ```
+
