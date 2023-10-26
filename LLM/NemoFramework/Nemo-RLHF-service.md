@@ -64,3 +64,14 @@ cd /opt/nemo-rlhf \
 ```
 
 
+
+****
+
+<br><br>
+
+## 启动NemoFramework 23.08
+
+```
+docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name RLHF_2308 -p 7022:22 -p 7006:6006 -p 7064:6064 -p 7888:8888 -v /data/weidongz/docker_workspace:/workspace nvcr.io/ea-bignlp/ga-participants/nemofw-training:23.08.03 bash
+
+```
