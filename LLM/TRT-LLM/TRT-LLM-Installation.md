@@ -9,11 +9,24 @@
 1106480     polygraphy-0.48.1-py2.py3-none-any.whl
 ```
 
-安装参照：**[Installation](https://github.com/NVIDIA/TensorRT-LLM/blob/release/0.5.0/docs/source/installation.md)**
+## 安装参照：**[Installation](https://github.com/NVIDIA/TensorRT-LLM/blob/release/0.5.0/docs/source/installation.md)**
 * 在主机或docker里运行都行，如下是我在主机运行的结果
 * 代码下载：**[Fetch the Sources](https://github.com/NVIDIA/TensorRT-LLM/blob/release/0.5.0/docs/source/installation.md#fetch-the-sources)**
-* 编译代码：**[Build TensorRT-LLM in One Step](https://github.com/NVIDIA/TensorRT-LLM/blob/release/0.5.0/docs/source/installation.md#build-tensorrt-llm-in-one-step)**
+* 编译代码：**[Build TensorRT-LLM in One Step](https://github.com/NVIDIA/TensorRT-LLM/blob/release/0.5.0/docs/source/installation.md#build-tensorrt-llm-in-one-step)** (具体信息见附录)
 ![Alt text](images/build_tensorrt_llm.png)
+
+## 运行docker
+
+参照：**[Build TensorRT-LLM in One Step](https://github.com/NVIDIA/TensorRT-LLM/blob/release/0.5.0/docs/source/installation.md#build-tensorrt-llm-in-one-step)**
+
+```
+make -C docker release_run
+```
+![tensorrt_llm_release_run](images/tensorrt_llm_release_run.png)
+
+<br><br>
+
+## 附录
 
 ```
 make -C docker release_build
