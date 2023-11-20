@@ -284,7 +284,46 @@ python build.py --model_dir /workspace/data/CodeLlama-34b-Instruct-hf/ \
                 --output_dir ./codellama_34b/tp_2_b16_i1024_o512/
 ```
 
+### 测试
 
+```
+echo "--------------------------------------- tp 1 ---------------------------------------"
+for b in 1 2 4 8 16
+do
+  for i in 16 64 256 1024
+  do
+    o=`expr $i / 2`
+    echo "case" $b $i $o
+    python3 run.py --max_output_len=$o \
+               --input_len=$i \
+               --batch_size=$b \
+               --tokenizer_dir ./codellama_34b_model \
+               --engine_dir=./codellama_34b/tp_1_b16_i1024_o512/
+  done
+done
+
+echo "--------------------------------------- tp 2 ---------------------------------------"
+for b in 1 2 4 8 16
+do
+  for i in 16 64 256 1024
+  do
+    o=`expr $i / 2`
+    echo "case" $b $i $o
+    mpirun -n 2 --allow-run-as-root \
+    python3 run.py --max_output_len=$o \
+               --input_len=$i \
+               --batch_size=$b \
+               --tokenizer_dir ./codellama_34b_model \
+               --engine_dir=./codellama_34b/tp_2_b16_i1024_o512/
+  done
+done
+```
+
+### 测试结果
+
+![Alt text](image-4.png)
+
+![Alt text](image-5.png)
 
 <br><br>
 
