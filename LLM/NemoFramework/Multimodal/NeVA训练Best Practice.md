@@ -1,4 +1,4 @@
-# NemoFramework MultiModal - NeVA Best Practice
+# Nemo Framework MultiModal - NeVA Best Practice (单机运行版本)
 
 
 <br><br>
