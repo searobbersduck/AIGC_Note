@@ -17,7 +17,7 @@ docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus al
 
 <br><br>
 
-## 数据
+## 2. 准备数据
 
 ### 下载数据
 
@@ -148,7 +148,7 @@ INFO: Created new tokenizer at: /workspace/data/mm/llama2-7b-hf/neva/tokenizers/
 
 <br><br>
 
-## 训练
+## 3. 训练
 
 修改配置文件：`/opt/NeMo/examples/multimodal/mllm/neva/conf/neva_config.yaml`
 
@@ -181,7 +181,7 @@ python neva_pretrain.py
 
 <br><br>
 
-## 评估
+## 4. 评估
 
 TODO
 
