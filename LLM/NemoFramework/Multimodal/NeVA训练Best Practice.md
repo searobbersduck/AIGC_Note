@@ -1,4 +1,4 @@
-## MM
+## 启动容器
 
 ```
 docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name MM -p 6022:22 -p 6006:6006 -p 6064:6064 -p 6888:8888 -v /data/weidongz/docker_workspace:/workspace nvcr.io/ea-bignlp/ea-mm-participants/bignlp-mm:23.08-py3 bash
@@ -103,6 +103,19 @@ python /opt/NeMo/scripts/tokenizers/add_special_tokens_to_sentencepiece.py \
 --tokens "<extra_id_0>" "<extra_id_1>" "<extra_id_2>" "<extra_id_3>" \
          "<extra_id_4>" "<extra_id_5>" "<extra_id_6>" "<extra_id_7>"
 
+
+wget -c https://huggingface.co/liuhaotian/llava-llama-2-13b-chat-lightning-preview/resolve/main/tokenizer.model?download=true
+
+ mv 'tokenizer.model?download=true' tokenizer.model
+
+cd /opt/sentencepiece/src/; protoc --python_out=/opt/NeMo/scripts/tokenizers/ sentencepiece_model.proto
+python /opt/NeMo/scripts/tokenizers/add_special_tokens_to_sentencepiece.py \
+--input_file /workspace/data/mm/llama2-7b-hf/neva/tokenizers/tokenizer.model \
+--output_file /workspace/data/mm/llama2-7b-hf/neva/tokenizers/tokenizer_neva.model \
+--is_userdefined \
+--tokens "<extra_id_0>" "<extra_id_1>" "<extra_id_2>" "<extra_id_3>" \
+         "<extra_id_4>" "<extra_id_5>" "<extra_id_6>" "<extra_id_7>"
+
 ```
 
 结果如下：
@@ -121,4 +134,40 @@ INFO: New tokenizer vocab size: 32008
 INFO: Created new tokenizer at: /workspace/data/mm/llama2-7b-hf/neva/tokenizers/tokenizer_neva.model
 
 ```
+
+<br>
+
+### 训练
+
+修改配置文件：`/opt/NeMo/examples/multimodal/mllm/neva/conf/neva_config.yaml`
+
+```
+restore_from_path:  /workspace/data/mm/llama2-7b-hf/neva/checkpoints/llama-2-7b-chat.nemo # used when starting from a .nemo file
+
+conv_template: ${model.mm_cfg.llm.model_type} # check `nemo/collections/multimodal/data/neva/conversation.py`
+
+
+model:  /workspace/data/mm/llama2-7b-hf/neva/tokenizers/tokenizer_neva.model
+
+vision_encoder:
+    from_pretrained: "openai/clip-vit-large-patch14"
+
+data_path: /workspace/data/mm/LLaVA-CC3M-Pretrain-595K/chat.json
+
+image_folder: /workspace/data/mm/LLaVA-CC3M-Pretrain-595K/images
+
+```
+
+运行：
+
+```
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+python neva_pretrain.py
+```
+
+![Alt text](./images/neva/neva_python_pretrained.png)
+
+
+## 评估
 
