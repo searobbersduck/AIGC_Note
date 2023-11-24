@@ -1,4 +1,10 @@
-## 启动容器
+# NemoFramework MultiModal - NeVA Best Practice
+
+
+<br><br>
+
+
+## 1. 启动容器
 
 ```
 docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name MM -p 6022:22 -p 6006:6006 -p 6064:6064 -p 6888:8888 -v /data/weidongz/docker_workspace:/workspace nvcr.io/ea-bignlp/ea-mm-participants/bignlp-mm:23.08-py3 bash
@@ -6,7 +12,12 @@ docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus al
 
 <br>
 
-## [NeVA](https://gitlab-master.nvidia.com/dl/JoC/NeMo-Megatron-Launcher/-/tree/internal/main?ref_type=heads#627-neva)
+**参考链接：[NeVA](https://gitlab-master.nvidia.com/dl/JoC/NeMo-Megatron-Launcher/-/tree/internal/main?ref_type=heads#627-neva)**
+
+
+<br><br>
+
+## 数据
 
 ### 下载数据
 
@@ -135,9 +146,9 @@ INFO: Created new tokenizer at: /workspace/data/mm/llama2-7b-hf/neva/tokenizers/
 
 ```
 
-<br>
+<br><br>
 
-### 训练
+## 训练
 
 修改配置文件：`/opt/NeMo/examples/multimodal/mllm/neva/conf/neva_config.yaml`
 
@@ -168,6 +179,15 @@ python neva_pretrain.py
 
 ![Alt text](./images/neva/neva_python_pretrained.png)
 
+<br><br>
 
 ## 评估
+
+TODO
+
+<br><br>
+
+## 附录
+
+
 
