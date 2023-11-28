@@ -150,6 +150,24 @@ INFO: Created new tokenizer at: /workspace/data/mm/llama2-7b-hf/neva/tokenizers/
 
 ## 3. 训练
 
+**锁频**
+```
+# 如下操作在docker外进行
+# 查询支持的时钟频率
+nvidia-smi -q -i 0,1 -d SUPPORTED_CLOCKS
+
+# 锁定频率
+# 这里我用的是H800，我锁频到1593M
+# nvidia-smi -lgc 1593
+nvidia-smi -i 0,1 -ac=1593,1755
+
+
+
+# 测试结束后，可以接触锁定，通过如下
+nvidia-smi --reset-gpu-clocks
+```
+
+
 修改配置文件：`/opt/NeMo/examples/multimodal/mllm/neva/conf/neva_config.yaml`
 
 ```
@@ -181,11 +199,204 @@ python neva_pretrain.py
 
 <br><br>
 
+### 3.1 记录输出
+
+```
+DATASET="TEST"
+JOB_ID="0001"
+NAME="NeVA-nemo2b-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="nemo_neva_test"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+```
+
+```
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+
 ## 4. 评估
 
 TODO
 
 <br><br>
+
+
+## LLaVA Training
+
+**为了尽可能保证环境一致，这里和NeVA公用一个container images，重新启动一个docker：之后的操作都在docker内进行**
+
+```
+docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name LLaVA -p 7022:22 -p 7006:6006 -p 7064:6064 -p 7888:8888 -v /data/weidongz/docker_workspace:/workspace nvcr.io/ea-bignlp/ea-mm-participants/bignlp-mm:23.08-py3 bash
+```
+
+### [安装依赖](https://github.com/haotian-liu/LLaVA#install)
+
+**如果你的安装之后程序能正常运行，请遵照如下步骤（我是直接进行的下面的步骤）**
+
+```
+mkdir -p /workspace/code/mm
+cd /workspace/code/mm/
+
+git clone https://github.com/haotian-liu/LLaVA.git
+cd LLaVA
+
+conda create -n llava python=3.10 -y
+conda activate llava
+pip install --upgrade pip  # enable PEP 660 support
+pip install -e .
+
+pip install -e ".[train]"
+pip install flash-attn --no-build-isolation
+```
+
+**如果你的安装之后程序不能正常运行，请遵照如下步骤（我是直接按此步骤执行的）**
+
+**如果报如下错误：Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.**
+
+1. 修改`pyproject.toml`文件，删除`torch`和`torchvision`相关的依赖；
+2. 修改`cog.ymal`文件，删除`torch`和`torchvision`相关的依赖；
+3. 按照如下进行安装：
+
+  ```
+  mkdir -p /workspace/code/mm
+  cd /workspace/code/mm/
+
+  git clone https://github.com/haotian-liu/LLaVA.git
+  cd LLaVA
+
+  conda create -n llava python=3.10 -y
+  conda activate llava
+
+  # ref: https://pytorch.org/get-started/locally/
+  pip3 install torch torchvision torchaudio
+
+  pip install --upgrade pip  # enable PEP 660 support
+  pip install -e .
+
+  pip install -e ".[train]"
+  pip install flash-attn --no-build-isolation
+  ```
+
+
+**Ref: [Train](https://github.com/haotian-liu/LLaVA#train)**
+
+### [Pretrain (feature alignment)](https://github.com/haotian-liu/LLaVA#pretrain-feature-alignment)
+
+**数据下载**
+
+Ref: [LLaVA-Pretrain](https://huggingface.co/datasets/liuhaotian/LLaVA-Pretrain)
+
+```
+cd /workspace/data/mm/
+git clone https://huggingface.co/datasets/liuhaotian/LLaVA-Pretrain
+
+cd /workspace/data/mm/LLaVA-Pretrain
+unzip images.zip -d images
+```
+
+```
+tree -L 1
+.
+├── blip_laion_cc_sbu_558k.json
+├── blip_laion_cc_sbu_558k_meta.json
+├── images
+├── images.zip
+└── README.md
+```
+
+**训练**
+
+修改文件：`./scripts/pretrain.sh`
+
+```
+#!/bin/bash
+
+# IMPORTANT: this is the training script for the original LLaVA, NOT FOR LLaVA V1.5!
+
+# Uncomment and set the following variables correspondingly to run this script:
+
+# MODEL_VERSION=vicuna-v1-3-7b
+MODEL_VERSION=llama-2-7b-chat
+
+########### DO NOT CHANGE ###########
+########### USE THIS FOR BOTH ###########
+PROMPT_VERSION=plain
+########### DO NOT CHANGE ###########
+
+DATA_PATH=/workspace/data/mm/LLaVA-Pretrain
+
+deepspeed llava/train/train_mem.py \
+    --deepspeed ./scripts/zero2.json \
+    --model_name_or_path ./checkpoints/$MODEL_VERSION \
+    --version $PROMPT_VERSION \
+    --data_path $DATA_PATH/blip_laion_cc_sbu_558k.json \
+    --image_folder $DATA_PATH/images \
+    --vision_tower openai/clip-vit-large-patch14 \
+    --tune_mm_mlp_adapter True \
+    --mm_vision_select_layer -2 \
+    --mm_use_im_start_end False \
+    --mm_use_im_patch_token False \
+    --bf16 True \
+    --output_dir ./checkpoints/llava-$MODEL_VERSION-pretrain \
+    --num_train_epochs 1 \
+    --per_device_train_batch_size 16 \
+    --per_device_eval_batch_size 4 \
+    --gradient_accumulation_steps 1 \
+    --evaluation_strategy "no" \
+    --save_strategy "steps" \
+    --save_steps 24000 \
+    --save_total_limit 1 \
+    --learning_rate 2e-3 \
+    --weight_decay 0. \
+    --warmup_ratio 0.03 \
+    --lr_scheduler_type "cosine" \
+    --logging_steps 1 \
+    --tf32 True \
+    --model_max_length 2048 \
+    --gradient_checkpointing True \
+    --dataloader_num_workers 4 \
+    --lazy_preprocess True \
+    --report_to wandb
+```
+
+进行训练：
+
+```
+cd /workspace/code/mm/LLaVA
+
+CUDA_VISIBLE_DEVICES=0,1 ./scripts/pretrain.sh
+```
+
+训练耗时：
+
+```
+cd /workspace/data/mm/LLaVA-CC3M-Pretrain-595K/images
+
+ls -l|grep "^-"|wc -l
+```
+
+```
+ls -l|grep "^-"|wc -l
+595375
+```
+
+训练595375张图片，耗时`1:37:37+2:41:45=4:19:22=4*3600+19*60+22=15562s`，双卡每秒处理`595375/15562=38.26张/s`
+
+
+<br><br>
+
 
 ## 附录
 
