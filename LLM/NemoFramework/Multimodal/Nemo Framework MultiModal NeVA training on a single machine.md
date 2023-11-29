@@ -197,6 +197,10 @@ python neva_pretrain.py
 
 ![Alt text](./images/neva/neva_python_pretrained.png)
 
+![Alt text](./images/neva_train_sample_per_second.png)
+
+训练595375张图片，耗时`1897*128/(149*60+43)=27.03张/s`，双卡每秒处理`27.03张/s`
+
 <br><br>
 
 ### 3.1 记录输出
@@ -225,6 +229,13 @@ python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain.py \
     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
 ```
 
+<br>
+
+## Finetuning
+
+修改配置文件：
+
+<br>
 
 ## 4. 评估
 
