@@ -27,6 +27,8 @@ ref: [LLaVA/docs/Data.md](https://github.com/haotian-liu/LLaVA/blob/main/docs/Da
 
 ref: [LLaVA-CC3M-Pretrain-595K](https://huggingface.co/datasets/liuhaotian/LLaVA-CC3M-Pretrain-595K)
 
+* 下载**Pretrain**数据
+
 ```
 cd /workspace/data/mm
 
@@ -41,6 +43,14 @@ unzip images.zip -d images
 ```
 root@b5ea8d4d7d81:/workspace/data/mm/LLaVA-CC3M-Pretrain-595K# ls -l images|grep "^-"|wc -l
 595375
+```
+
+* 下载**Finetune**数据
+
+```
+cd /workspace/data/mm
+
+git clone https://huggingface.co/datasets/liuhaotian/LLaVA-Instruct-150K
 ```
 
 <br>
@@ -71,6 +81,20 @@ from huggingface_hub import snapshot_download
 snapshot_download(repo_id="meta-llama/Llama-2-7b-hf", local_dir="llama2-7b-hf", local_dir_use_symlinks=False, token='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')
 ```
 
+或者：
+**7B:**
+```
+git clone https://huggingface.co/daryl149/llama-2-7b-chat-hf
+```
+**13B:**
+```
+mkdir -p /workspace/data/mm/llama2/13b
+cd /workspace/data/mm/llama2/13b
+
+git clone https://huggingface.co/daryl149/llama-2-13b-chat-hf
+```
+
+
 **转换nemo格式：**
 
 **这一步非常重要： Modify the default yaml file located at `/opt/NeMo/examples/nlp/language_modeling/conf/megatron_llama_config.yaml`. Set both `model.mcore_gpt` and `model.transformer_engine` to `False` prior to the checkpoint conversion.**
@@ -78,6 +102,15 @@ snapshot_download(repo_id="meta-llama/Llama-2-7b-hf", local_dir="llama2-7b-hf", 
 
 ```
 python /opt/NeMo/scripts/nlp_language_modeling/convert_hf_llama_to_nemo.py --in-file=./llama-2-7b-chat-hf/ --out-file=neva/checkpoints/llama-2-7b-chat.nemo
+
+```
+
+**13B**
+
+```
+cd /workspace/data/mm/llama2/13b
+
+python /opt/NeMo/scripts/nlp_language_modeling/convert_hf_llama_to_nemo.py --in-file=./llama-2-13b-chat-hf/ --out-file=neva/checkpoints/llama-2-13b-chat.nemo
 
 ```
 
@@ -199,9 +232,61 @@ python neva_pretrain.py
 
 ![Alt text](./images/neva_train_sample_per_second.png)
 
-训练595375张图片，耗时`1897*128/(149*60+43)=27.03张/s`，双卡每秒处理`27.03张/s`
+数据并行13B，双卡，训练595375张图片，耗时`1897*128/(149*60+43)=27.03张/s`，双卡每秒处理`27.03张/s`
+
+![Alt text](./images/neva_train_llama-7b-single-gpu-time.png)
+
+数据并行13B，单卡，训练595375张图片，耗时`4649*128/(704*60+34)=14.07张/s`,单卡每秒处理`14.07张/s`
 
 <br><br>
+
+**7B**
+
+```
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-nemo7b-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="nemo_neva_test"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain_7b.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+**13B**
+
+```
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-nemo13b-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="nemo_neva_test"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
 
 ### 3.1 记录输出
 
@@ -233,7 +318,47 @@ python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain.py \
 
 ## Finetuning
 
-修改配置文件：
+修改配置文件：`examples/multimodal/mllm/neva/conf/neva_finetune.yaml`
+
+```
+restore_from_path: /workspace/data/mm/llama2-7b-hf/neva/checkpoints/llama-2-7b-chat.nemo # used when starting from a .nemo file
+
+conv_template: ${model.mm_cfg.llm.model_type} # check `nemo/collections/multimodal/data/neva/conversation.py`
+
+# 修改数据路径
+dataloader_type: single
+data_path: /workspace/data/mm/LLaVA-Instruct-150K/llava_instruct_150k.json
+image_folder: /workspace/data/mm/LLaVA-CC3M-Pretrain-595K/images
+
+vision_encoder:
+  from_pretrained: "openai/clip-vit-large-patch14-336" #path or name
+```
+
+# TODO (这里未通)
+
+运行如下：
+```
+DATASET="TEST"
+JOB_ID="0002"
+NAME="NeVA-nemo7b-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="nemo_neva_test"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
 
 <br>
 
@@ -403,11 +528,81 @@ ls -l|grep "^-"|wc -l
 595375
 ```
 
-训练595375张图片，耗时`1:37:37+2:41:45=4:19:22=4*3600+19*60+22=15562s`，双卡每秒处理`595375/15562=38.26张/s`
+实际用到如下数据：
+```
+/workspace/data/mm/LLaVA-Pretrain/images
+
+ls * -l|grep "^-"|wc -l
+558128
+```
+
+训练`558128`张图片，耗时`1:37:37+2:41:45=4:19:22=4*3600+19*60+22=15562s`，双卡每秒处理`558128/15562=35.86张/s`
 
 
 <br><br>
 
+
+## 可能遇到的问题
+
+### 问题1
+如果利用 `vscode` debug代码时报如下问题：
+
+```
+--------------------------------------------------------------------------
+*** An error occurred in MPI_Init_thread
+*** on a NULL communicator
+*** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+***    and potentially your MPI job)
+```
+解决方案参考：
+* [Local abort before MPI_INIT completed completed successfully, but am not able to aggregate error messages, and not able to guarantee that all other processes were killed!](https://github.com/NVIDIA/TensorRT-LLM/issues/116)
+* [Problem with MPI_Init_thread ](https://github.com/open-mpi/ompi/issues/8058)
+
+可以修改`launch.json`文件的环境变量部分如下：
+```
+        {
+            "name": "neva",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${fileDirname}",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "0", 
+                "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:/usr/local/mpi/lib", 
+                "OPAL_PREFIX": "/opt/hpcx/ompi"
+            },
+            "args": [
+            ]
+        },
+```
+
+<br><br>
+
+## Pretrain性能对比
+
+|Algo|lm_model|vision model|GPUs|samples/gpu*s|tp|
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|LLaVA|/workspace/data/mm/llama2-7b-hf/llama-2-7b-hf|openai/clip-vit-large-patch14|2|17.93/s|1|
+|LLaVA|/workspace/data/mm/llama2-7b-hf/llama-2-7b-hf|openai/clip-vit-large-patch14|1|17.86/s|1|
+|NeVA|/workspace/data/mm/llama2-7b-hf/neva/checkpoints/llama-2-7b-chat.nemo|openai/clip-vit-large-patch14|1|24.24/s|1|
+|NeVA|/workspace/data/mm/llama2/13b/llama2-13b-hf/neva/checkpoints/llama-2-13b-chat.nemo|openai/clip-vit-large-patch14|1|14.13/s|1|
+|NeVA|/workspace/data/mm/llama2/13b/llama2-13b-hf/neva/checkpoints/llama-2-13b-chat.nemo|openai/clip-vit-large-patch14|1|14.13/s|1|
+
+
+**NeVA: 7b-vit14**
+![Alt text](image.png)
+`57*128/(5*60+1) = 24.24 samples/s`
+
+**NeVA:13b-vit14**
+![Alt text](image-2.png)
+`52480/(61*60+55) = 14.13 samples/s`
+
+**LLaVA: 7b-vit14**
+![Alt text](image-1.png)
+`1057*128/(126*60+17) = 17.86 samples/s`
+
+<br><br>
 
 ## 附录
 
