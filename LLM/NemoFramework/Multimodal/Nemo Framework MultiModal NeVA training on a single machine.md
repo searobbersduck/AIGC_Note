@@ -53,6 +53,13 @@ cd /workspace/data/mm
 git clone https://huggingface.co/datasets/liuhaotian/LLaVA-Instruct-150K
 ```
 
+```
+mkdir -p /workspace/data/mm/coco
+cd /workspace/data/mm/coco
+
+
+```
+
 <br>
 
 ### 下载模型并转换
@@ -589,7 +596,6 @@ ls * -l|grep "^-"|wc -l
 |NeVA|/workspace/data/mm/llama2/13b/llama2-13b-hf/neva/checkpoints/llama-2-13b-chat.nemo|openai/clip-vit-large-patch14|1|14.13/s|1|
 |NeVA|/workspace/data/mm/llama2/13b/llama2-13b-hf/neva/checkpoints/llama-2-13b-chat.nemo|openai/clip-vit-large-patch14|1|14.13/s|1|
 
-
 **NeVA: 7b-vit14**
 ![Alt text](image.png)
 `57*128/(5*60+1) = 24.24 samples/s`
@@ -601,6 +607,22 @@ ls * -l|grep "^-"|wc -l
 **LLaVA: 7b-vit14**
 ![Alt text](image-1.png)
 `1057*128/(126*60+17) = 17.86 samples/s`
+
+<br><br>
+
+## 显存使用分析
+
+### Finetune
+
+|Algo|lm_model|num_layers|hidden_size|ffn_hidden_size|num_attention_heads|tp|micro batch|global batch|memory occupy/gpu|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|NeVA|llama-7b|32|4096|11008|32|2|4|32|OOM|
+|NeVA||16|4096|11008|16|2|4|32|34697MiB / 81559MiB|
+|NeVA||16|4096|11008|32|2|4|32|34687MiB / 81559MiB|
+|NeVA||20|4096|11008|32|2|4|32|42359MiB / 81559MiB|
+|NeVA||24|4096|11008|32|2|4|32|49945MiB / 81559MiB|
+|NeVA||30|4096|11008|32|2|4|32|61433MiB / 81559MiB|
+
 
 <br><br>
 
