@@ -28,4 +28,5 @@
 
 ### 2023.11.28
 - [ ] confirm nvonline apply status
-- [ ] 
+- [ ] fp8 progress follow
+- [ ] nccl problem from yanyun

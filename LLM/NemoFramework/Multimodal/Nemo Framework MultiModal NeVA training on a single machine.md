@@ -53,9 +53,13 @@ cd /workspace/data/mm
 git clone https://huggingface.co/datasets/liuhaotian/LLaVA-Instruct-150K
 ```
 
+* 下载**coco**数据：[coco](https://github.com/haotian-liu/LLaVA/tree/main#visual-instruction-tuning)
+
 ```
 mkdir -p /workspace/data/mm/coco
 cd /workspace/data/mm/coco
+
+wget -c http://images.cocodataset.org/zips/train2017.zip
 
 
 ```
@@ -366,6 +370,122 @@ python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
     exp_manager.wandb_logger_kwargs.name=${NAME} \
     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
 ```
+
+<br>
+
+## 测试
+
+**如下测试是在H100 NVL8卡机上进行的：**
+* 94显存，两卡之间NV12链接，拓扑03/12/45/67分别是NVLINK链接；
+* 如下做了两组试验：
+  * 一组是llama7b的finetune，目的是测试FP8和BF16的end to end的收敛性和性能；
+  * 一组测试llama7b的pretrain，目的是测试两卡训练时，使用dp和tp的收敛性和性能；
+
+**试验组1-finetune：fp8**
+
+|Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Finetune|llama-7b|mcore|**fp8**|LLaVA-Instruct-150K|0/3|NVLINK|94G|4|32|2|1|1|
+
+```
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-fp8-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0,3 python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune_fp8.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+**试验组1-finetune：bf16**
+
+|Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Finetune|llama-7b|mcore|**bf16**|LLaVA-Instruct-150K|0/3|NVLINK|94G|4|32|2|1|1|
+
+```
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-bf16-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=1,2 python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+**试验组1 结果比对：**
+
+
+
+```
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-pretrain-bf16-dp-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-pretrain"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=4,5 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain_7b_dp.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+```
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-pretrain-bf16-tp2-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-pretrain"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain_7b_tp2.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+![Alt text](image-3.png)
 
 <br>
 
