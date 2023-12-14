@@ -381,6 +381,10 @@ python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
   * 一组是llama7b的finetune，目的是测试FP8和BF16的end to end的收敛性和性能；
   * 一组测试llama7b的pretrain，目的是测试两卡训练时，使用dp和tp的收敛性和性能；
 
+```
+docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name MM -p 6022:22 -p 6006:6006 -p 6064:6064 -p 6888:8888 -v /home/scratch.weidongz_wwfo:/workspace nvcr.io/ea-bignlp/ea-mm-participants/bignlp-mm:23.08-py3 bash
+```
+
 **试验组1-finetune：fp8**
 
 |Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|
@@ -388,6 +392,7 @@ python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
 |Finetune|llama-7b|mcore|**fp8**|LLaVA-Instruct-150K|0/3|NVLINK|94G|4|32|2|1|1|
 
 ```
+WORK_DIR="/workspace/data/mm/exp"
 DATASET="158k"
 JOB_ID="0001"
 NAME="NeVA-llama7b-finetue-fp8-${DATASET}_dataset-${JOB_ID}"
@@ -416,6 +421,7 @@ CUDA_VISIBLE_DEVICES=0,3 python /opt/NeMo/examples/multimodal/mllm/neva/neva_fin
 |Finetune|llama-7b|mcore|**bf16**|LLaVA-Instruct-150K|0/3|NVLINK|94G|4|32|2|1|1|
 
 ```
+WORK_DIR="/workspace/data/mm/exp"
 DATASET="158k"
 JOB_ID="0001"
 NAME="NeVA-llama7b-finetue-bf16-${DATASET}_dataset-${JOB_ID}"
@@ -438,10 +444,25 @@ CUDA_VISIBLE_DEVICES=1,2 python /opt/NeMo/examples/multimodal/mllm/neva/neva_fin
 ```
 
 **试验组1 结果比对：**
+具体结果请参见：[NeVA-llama7b-finetue](https://wandb.ai/searobbersandduck/NeVA-llama7b-finetue)
 
+* 收敛性：![Alt text](images/wandb/NeVA-llama7b-finetue-convergence.png)
+* 运行时间：这里由于服务器回收，具体数值没有记录，此处以GPU使用时间来进行粗略估计：
+![Alt text](images/wandb/NeVA-llama7b-finetue-fp8-samples.png)
+`14170/(15*60+2) = 15 samples/s`,  `15/2 = 7.5 samples/gpu/s`
+![Alt text](images/wandb/NeVA-llama7b-finetue-fp8-samples.png)
+`17536/(21*60+52) = 13 samples/s`, `13/2 = 6.5 samples/gpu/s`
 
+|Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|samples/gpu/s|ratio|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Finetune|llama-7b|mcore|**fp8**|LLaVA-Instruct-150K|0/3|NVLINK|94G|4|32|2|1|1|7.5|1.154|
+|Finetune|llama-7b|mcore|**bf16**|LLaVA-Instruct-150K|1/2|NVLINK|94G|4|32|2|1|1|6.5|1|
 
+<br>
+
+**试验组2-Pretrain：dp=2**
 ```
+WORK_DIR="/workspace/data/mm/exp"
 DATASET="595k"
 JOB_ID="0001"
 NAME="NeVA-llama7b-pretrain-bf16-dp-${DATASET}_dataset-${JOB_ID}"
@@ -464,6 +485,7 @@ CUDA_VISIBLE_DEVICES=4,5 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pre
 ```
 
 ```
+WORK_DIR="/workspace/data/mm/exp"
 DATASET="595k"
 JOB_ID="0001"
 NAME="NeVA-llama7b-pretrain-bf16-tp2-${DATASET}_dataset-${JOB_ID}"
