@@ -5,7 +5,6 @@
 
 ## TASK TO DO
 
-<br><br>
 
 - [ ] NeVA
   - [x] Successfully run pretrain and finetune code.
@@ -22,6 +21,8 @@
   - [ ] Successfully run SD code
   - [ ] Source code analysis
   - [ ] Successfully run SDXL code and performace analysis (code still W.I.P)
+
+<br><br>
 
 ## 1. 启动容器
 
