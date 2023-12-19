@@ -3,6 +3,25 @@
 
 <br><br>
 
+## TASK TO DO
+
+<br><br>
+
+- [ ] NeVA
+  - [x] Successfully run pretrain and finetune code.
+  - [x] Successfully install the LLaVA environment and run the LLaVA code.
+  - [x] Performance comparison: LLaVA vs NeVA (pretrained, samples/gpu/s)
+  - [x] FP8 performance comparison and convergence analysis: Finetune.
+  - [ ] FP8 performance comparison and convergence analysis: Pretrain.
+  - [ ] Performance comparison: dp=2 vs tp=2 (Pretrain, note: Finetune must turn on tp)
+  - [x] Source code analysis: Pretrain, Finetune, PEFT (NeVA)
+  - [ ] source code analysis: Inference, Triton Deployment
+  - [ ] Performace Test: Inference, Deployment
+  - [ ] Nsight Analysis
+- [ ] StableDiffusion
+  - [ ] Successfully run SD code
+  - [ ] Source code analysis
+  - [ ] Successfully run SDXL code and performace analysis (code still W.I.P)
 
 ## 1. 启动容器
 
