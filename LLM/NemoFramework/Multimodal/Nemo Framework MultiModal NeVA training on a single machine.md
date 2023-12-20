@@ -30,6 +30,12 @@
 docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name MM -p 6022:22 -p 6006:6006 -p 6064:6064 -p 6888:8888 -v /data/weidongz/docker_workspace:/workspace nvcr.io/ea-bignlp/ea-mm-participants/bignlp-mm:23.08-py3 bash
 ```
 
+如果在computelabe运行：
+
+```
+docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name MM -p 6022:22 -p 6006:6006 -p 6064:6064 -p 6888:8888 -v /home/scratch.weidongz_wwfo:/workspace nvcr.io/ea-bignlp/ea-mm-participants/bignlp-mm:23.08-py3 bash
+```
+
 <br>
 
 **参考链接：[NeVA](https://gitlab-master.nvidia.com/dl/JoC/NeMo-Megatron-Launcher/-/tree/internal/main?ref_type=heads#627-neva)**
@@ -497,12 +503,20 @@ wandb login
 
 cd /opt/NeMo/examples/multimodal/mllm/neva/
 
-CUDA_VISIBLE_DEVICES=4,5 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain_7b_dp.py \
+CUDA_VISIBLE_DEVICES=4,5 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain_7b_dp2.py \
     exp_manager.explicit_log_dir=${RESULTS} \
     exp_manager.create_wandb_logger=True \
     exp_manager.wandb_logger_kwargs.name=${NAME} \
     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
 ```
+
+![Alt text](./images/neva_pretrain_7b_dp2_bf16_samples_per_second.png)
+
+`69760/(25*60+47)/2 = 22.55 samples/gpu/s`
+
+![Alt text](./images/neva_pretrain_7b_dp2_bf16_samples_per_second_mb64.png)
+
+`78848/(28*60+54)/2 = 22.74 samples/gpu/s`
 
 ```
 WORK_DIR="/workspace/data/mm/exp"
@@ -527,7 +541,137 @@ CUDA_VISIBLE_DEVICES=6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pre
     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
 ```
 
+![Alt text](./images/neva_pretrain_7b_tp2_bf16_samples_per_second.png)
+
+`86528/(31*60+48)/2 = 22.67 samples/gpu/s`
+
+![Alt text](./images/neva_pretrain_7b_tp2_bf16_samples_per_second_mb64.png)
+
+`91136/(33*60+16)/2 = 22.83 samples/gpu/s`
+
+**mb=32, gb=128**
+![Alt text](./images/wandb/NeVA-llama7b-pretrain-dp2-tp2-memory.png)
+**mb=64, gb=512**
+![Alt text](./images/wandb/NeVA-llama7b-pretrain-dp2-tp2-memory-mb64.png)
+
 ![Alt text](image-3.png)
+
+**试验组3-Pretrain：dp=1 fp8 vs bf16 convergence and performance**
+
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-pretrain-fp8-dp1-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-pretrain"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=2 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain_7b_fp8.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+![Alt text](./images/neva_pretrain_7b_tp1_fp8_samples_per_second_mb32.png)
+
+`1146*128/(46*60+33) = 52.52 samples/gpu/s`
+
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-pretrain-bf16-dp1-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-pretrain"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=3 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain_7b_bf16.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+![Alt text](./images/neva_pretrain_7b_tp1_bf16_samples_per_second_mb32.png)
+
+`71808/(41*60) = 29.19 samples/gpu/s`
+
+**2卡 Pretrain FP8 vs BF16 mb=32, gb=256**
+
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-pretrain-fp8-dp2-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-pretrain"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=4,5 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain_7b_dp2_fp8.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+![Alt text](./images/neva_pretrain_7b_tp2_fp8_samples_per_second_mb32.png)
+
+`2325*256/(95*60+30)/2 = 51.94 samples/gpu/s`
+
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-pretrain-bf16-dp2-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-pretrain"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain_7b_dp2_bf16.py \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+![Alt text](./images/neva_pretrain_7b_tp2_bf16_samples_per_second_mb32_full_epoch.png)
+
+`2325*256/(170*60+31)/2 = 29.09`
+
+![Alt text](./images/wandb/NeVA-llama7b-pretrain-memory-fp8-vs-bf16-mb32-gb256.png)
+
+**收敛性**
+![](./images/wandb/NeVA-llama7b-pretrain-convergence-fp8-vs-bf16-dp2.png)
 
 <br>
 
