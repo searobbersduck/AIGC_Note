@@ -677,6 +677,8 @@ CUDA_VISIBLE_DEVICES=6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pre
     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
 ```
 
+**mb=32, gb=256**
+
 ![Alt text](./images/neva_pretrain_7b_tp2_bf16_samples_per_second_mb32_full_epoch.png)
 
 `2325*256/(170*60+31)/2 = 29.09 samples/gpu/s`
@@ -689,8 +691,8 @@ CUDA_VISIBLE_DEVICES=6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pre
 
 |Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|samples/gpu/s|ratio|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|Finetune|llama-7b|mcore|**fp8**|LLaVA-CC3M-Pretrain-595K|5/6|NVLINK|94G|32|256|1|1|1|51.94|1.785|
-|Finetune|llama-7b|mcore|**bf16**|LLaVA-CC3M-Pretrain-595K|5/6|NVLINK|94G|32|256|1|1|1|29.09|1|
+|Pretrain|llama-7b|mcore|**fp8**|LLaVA-CC3M-Pretrain-595K|4/5|NVLINK|94G|32|256|1|1|1|51.94|1.785|
+|Pretrain|llama-7b|mcore|**bf16**|LLaVA-CC3M-Pretrain-595K|6/7|NVLINK|94G|32|256|1|1|1|29.09|1|
 
 <br>
 
