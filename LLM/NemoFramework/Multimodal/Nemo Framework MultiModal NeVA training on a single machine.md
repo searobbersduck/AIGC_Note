@@ -8,13 +8,14 @@
 
 - [ ] NeVA
   - [x] Successfully run pretrain and finetune code.
-  - [x] Successfully install the LLaVA environment and run the LLaVA code.
-  - [x] Performance comparison: LLaVA vs NeVA (pretrained, samples/gpu/s)
-  - [x] FP8 performance comparison and convergence analysis: Finetune.
-  - [ ] FP8 performance comparison and convergence analysis: Pretrain.
-  - [ ] Performance comparison: dp=2 vs tp=2 (Pretrain, note: Finetune must turn on tp)
+  - [x] [Successfully install the LLaVA environment and run the LLaVA code](https://github.com/searobbersduck/AIGC_Note/blob/main/LLM/NemoFramework/Multimodal/Nemo%20Framework%20MultiModal%20NeVA%20training%20on%20a%20single%20machine.md#llava-training).
+  - [x] [Performance comparison: LLaVA vs NeVA (pretrained, samples/gpu/s)](https://github.com/searobbersduck/AIGC_Note/blob/main/LLM/NemoFramework/Multimodal/Nemo%20Framework%20MultiModal%20NeVA%20training%20on%20a%20single%20machine.md#pretrain%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94)
+  - [x] [FP8 performance comparison and convergence analysis: Finetune.](https://github.com/searobbersduck/AIGC_Note/blob/main/LLM/NemoFramework/Multimodal/Nemo%20Framework%20MultiModal%20NeVA%20training%20on%20a%20single%20machine.md#%E8%AF%95%E9%AA%8C%E7%BB%841-finetunefp8)
+  - [x] [FP8 performance comparison and convergence analysis: Pretrain.](https://github.com/searobbersduck/AIGC_Note/blob/main/LLM/NemoFramework/Multimodal/Nemo%20Framework%20MultiModal%20NeVA%20training%20on%20a%20single%20machine.md#%E8%AF%95%E9%AA%8C%E7%BB%843-pretraindp1-fp8-vs-bf16-convergence-and-performance)
+  - [x] [Performance comparison: dp=2 vs tp=2 (Pretrain, note: Finetune must turn on tp)](https://github.com/searobbersduck/AIGC_Note/blob/main/LLM/NemoFramework/Multimodal/Nemo%20Framework%20MultiModal%20NeVA%20training%20on%20a%20single%20machine.md#%E8%AF%95%E9%AA%8C%E7%BB%842-pretraindp2-vs-tp2-bf16)
   - [x] Source code analysis: Pretrain, Finetune, PEFT (NeVA)
-  - [ ] source code analysis: Inference, Triton Deployment
+  - [ ] Source code analysis: Dataset.
+  - [ ] Source code analysis: Inference, Triton Deployment
   - [ ] Performace Test: Inference, Deployment
   - [ ] Nsight Analysis
 - [ ] StableDiffusion
