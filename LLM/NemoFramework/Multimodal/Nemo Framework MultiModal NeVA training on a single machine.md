@@ -486,7 +486,7 @@ CUDA_VISIBLE_DEVICES=1,2 python /opt/NeMo/examples/multimodal/mllm/neva/neva_fin
 
 <br>
 
-**试验组2-Pretrain：dp=2**
+**试验组2-Pretrain：dp=2 vs tp=2 bf16**
 ```
 WORK_DIR="/workspace/data/mm/exp"
 DATASET="595k"
@@ -550,11 +550,22 @@ CUDA_VISIBLE_DEVICES=6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pre
 `91136/(33*60+16)/2 = 22.83 samples/gpu/s`
 
 **mb=32, gb=128**
+
 ![Alt text](./images/wandb/NeVA-llama7b-pretrain-dp2-tp2-memory.png)
+
 **mb=64, gb=512**
+
 ![Alt text](./images/wandb/NeVA-llama7b-pretrain-dp2-tp2-memory-mb64.png)
 
-![Alt text](image-3.png)
+|Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|samples/gpu/s|ratio|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Pretrain|llama-7b|mcore|**fp8**|LLaVA-CC3M-Pretrain-595K|4/5|NVLINK|94G|32|128|1|1|1|22.55|1|
+|Finetune|llama-7b|mcore|**bf16**|LLaVA-Instruct-150K|6/7|NVLINK|94G|32|128|2|1|1|22.67|approximately 1|
+|Pretrain|llama-7b|mcore|**fp8**|LLaVA-CC3M-Pretrain-595K|4/5|NVLINK|94G|64|256|1|1|1|22.74|1|
+|Finetune|llama-7b|mcore|**bf16**|LLaVA-Instruct-150K|6/7|NVLINK|94G|64|256|2|1|1|22.67|approximately 1|
+
+
+<br>
 
 **试验组3-Pretrain：dp=1 fp8 vs bf16 convergence and performance**
 
