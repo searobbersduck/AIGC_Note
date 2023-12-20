@@ -411,7 +411,7 @@ python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
 docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name MM -p 6022:22 -p 6006:6006 -p 6064:6064 -p 6888:8888 -v /home/scratch.weidongz_wwfo:/workspace nvcr.io/ea-bignlp/ea-mm-participants/bignlp-mm:23.08-py3 bash
 ```
 
-**试验组1-finetune：fp8**
+#### **试验组1-finetune：fp8**
 
 |Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -486,7 +486,7 @@ CUDA_VISIBLE_DEVICES=1,2 python /opt/NeMo/examples/multimodal/mllm/neva/neva_fin
 
 <br>
 
-**试验组2-Pretrain：dp=2 vs tp=2 bf16**
+#### **试验组2-Pretrain：dp=2 vs tp=2 bf16**
 ```
 WORK_DIR="/workspace/data/mm/exp"
 DATASET="595k"
@@ -567,7 +567,7 @@ CUDA_VISIBLE_DEVICES=6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pre
 
 <br>
 
-**试验组3-Pretrain：dp=1 fp8 vs bf16 convergence and performance**
+#### **试验组3-Pretrain：dp=1 fp8 vs bf16 convergence and performance**
 
 ```
 WORK_DIR="/workspace/data/mm/exp"
@@ -677,11 +677,13 @@ CUDA_VISIBLE_DEVICES=6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pre
     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
 ```
 
-**mb=32, gb=256**
+
 
 ![Alt text](./images/neva_pretrain_7b_tp2_bf16_samples_per_second_mb32_full_epoch.png)
 
 `2325*256/(170*60+31)/2 = 29.09 samples/gpu/s`
+
+**mb=32, gb=256**
 
 ![Alt text](./images/wandb/NeVA-llama7b-pretrain-memory-fp8-vs-bf16-mb32-gb256.png)
 
