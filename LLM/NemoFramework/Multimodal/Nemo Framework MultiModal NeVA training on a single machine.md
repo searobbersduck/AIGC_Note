@@ -559,10 +559,10 @@ CUDA_VISIBLE_DEVICES=6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pre
 
 |Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|samples/gpu/s|ratio|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|Pretrain|llama-7b|mcore|**fp8**|LLaVA-CC3M-Pretrain-595K|4/5|NVLINK|94G|32|128|1|1|1|22.55|1|
-|Finetune|llama-7b|mcore|**bf16**|LLaVA-Instruct-150K|6/7|NVLINK|94G|32|128|2|1|1|22.67|approximately 1|
-|Pretrain|llama-7b|mcore|**fp8**|LLaVA-CC3M-Pretrain-595K|4/5|NVLINK|94G|64|256|1|1|1|22.74|1|
-|Finetune|llama-7b|mcore|**bf16**|LLaVA-Instruct-150K|6/7|NVLINK|94G|64|256|2|1|1|22.67|approximately 1|
+|Pretrain|llama-7b|mcore|**bf16**|LLaVA-CC3M-Pretrain-595K|4/5|NVLINK|94G|32|128|1|1|1|22.55|1|
+|Pretrain|llama-7b|mcore|**bf16**|LLaVA-CC3M-Pretrain-595K|6/7|NVLINK|94G|32|128|2|1|1|22.67|approximately 1|
+|Pretrain|llama-7b|mcore|**bf16**|LLaVA-CC3M-Pretrain-595K|4/5|NVLINK|94G|64|512|1|1|1|22.74|1|
+|Pretrain|llama-7b|mcore|**bf16**|LLaVA-CC3M-Pretrain-595K|6/7|NVLINK|94G|64|512|2|1|1|22.67|approximately 1|
 
 
 <br>
@@ -623,6 +623,8 @@ CUDA_VISIBLE_DEVICES=3 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretr
 
 `71808/(41*60) = 29.19 samples/gpu/s`
 
+<br>
+
 **2卡 Pretrain FP8 vs BF16 mb=32, gb=256**
 
 ```
@@ -677,12 +679,18 @@ CUDA_VISIBLE_DEVICES=6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pre
 
 ![Alt text](./images/neva_pretrain_7b_tp2_bf16_samples_per_second_mb32_full_epoch.png)
 
-`2325*256/(170*60+31)/2 = 29.09`
+`2325*256/(170*60+31)/2 = 29.09 samples/gpu/s`
 
 ![Alt text](./images/wandb/NeVA-llama7b-pretrain-memory-fp8-vs-bf16-mb32-gb256.png)
 
 **收敛性**
+
 ![](./images/wandb/NeVA-llama7b-pretrain-convergence-fp8-vs-bf16-dp2.png)
+
+|Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|samples/gpu/s|ratio|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Finetune|llama-7b|mcore|**fp8**|LLaVA-CC3M-Pretrain-595K|5/6|NVLINK|94G|32|256|1|1|1|51.94|1.785|
+|Finetune|llama-7b|mcore|**bf16**|LLaVA-CC3M-Pretrain-595K|5/6|NVLINK|94G|32|256|1|1|1|29.09|1|
 
 <br>
 
