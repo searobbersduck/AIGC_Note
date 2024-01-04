@@ -37,6 +37,33 @@ sudo reboot
 
 <br>
 
+### 可能出现的问题解决 (Optional)
+
+* [nvidia-fabricmanager.service can not start due to CUDA Version mismatch](https://github.com/NVIDIA/gpu-operator/issues/544)
+
+  ```
+  I was also facing the same issue of fabric manager mismatch.
+
+  I think Ubuntu package manager updates fabric-manager which causes Nvidia driver and fabric manager version mismatch.
+  Once the fabric manager is updated, you cannot reinstall the previous version as it is removed from ubuntu package manager.
+
+  The only way to solve this is to either install old fabric manager from the link shared by @shivamerla
+  Or
+  reinstall the latest Nvidia Driver which matches the fabric manager available on Ubuntu (535.129.03 worked for me)
+  ```
+  * 这里我遇到的问题及解决方案是将驱动版本降到和能安装的fabricmanager版本一致；
+* 如何安装`fabricmanager`
+  * ref: [Installation](https://github.com/NVIDIA/apt-packaging-fabric-manager?tab=readme-ov-file#installation)
+  
+  ```
+  apt-get install cuda-drivers-fabricmanager-535
+  ```
+* [[Docker] 错误之Error response from daemon: could not select device driver ““ with capabilities: [[gpu]]](https://blog.csdn.net/dou3516/article/details/108314908)
+
+
+
+<br>
+
 ### 2. Run Container
 
 ```
@@ -58,3 +85,55 @@ docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus al
 
 * `model`的`from_pretrained`，要指定具体的路径，如果没有路径，这部分空白，如下：
   * ![Alt text](./images/sd/mm-sd-simple-demo-modify-config-unet-from-pretrained.png)
+  * ![Alt text](./images/sd/mm-sd-simple-demo-modify-config-first-stage-from-pretrained.png)
+  * ![Alt text](./images/sd/mm-sd-simple-demo-modify-config-cond-stage-from-pretrained.png)
+    * 此处需要注意默认的配置文件的里面的`capture_cudagraph_iters: ${model.capture_cudagraph_iters}`有错误；
+* 最简单的demo，可以先使用合成数据，修改如下：
+  * ![Alt text](./images/sd/mm-sd-simple-demo-modify-config-data-synthetic.png)
+
+
+具体最简单的demo运行的配置文件设置，见附录（单节点、单卡、）
+
+<br><br>
+
+## Benchmark
+
+H800:
+
+|GPU Type|Task|precision|Datasets|Devices|Nodes|Micro Batch|Global Batch|samples/gpu/s|samples|time consume|command|Memory|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|H100 PCIE|SD_V1|16|Synthetic|1|1|1|1|x|100k|4:21:48|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m1g1'|
+|H100 PCIE|SD_V1|16|Synthetic|1|1|4|4|69564/(48*60+10)=24.07|69564|48:10|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4'|
+|H100 PCIE|SD_V1|16|Synthetic|1|1|4|16|28784/(15*60+27)=31.05|28784|15:27|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g16'|21047MiB / 81559MiB|
+|H100 PCIE|SD_V1|16|Synthetic|1|1|8|8|37256/(18*60+39)=33.29|37256|18:39|CUDA_VISIBLE_DEVICES=1 python sd_train_v1.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=8|24929MiB / 81559MiB|
+|H100 PCIE|SD_V1|16|Synthetic|1|1|8|16|49136/(22*60+36)=36.24|49136|22:36|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=16|24889MiB / 81559MiB|
+|H100 PCIE|SD_V1|16|Synthetic|1|1|16|16|1e5/(43*60)=38.76|100k|43:00|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16|32893MiB / 81559MiB|
+|H100 PCIE|SD_V1|16|Synthetic|1|1|32|32|1e5/(39*60+19)=42.39|100k|39:19|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=32 model.global_batch_size=32|48787MiB / 81559MiB|
+|H100 PCIE|SD_V1|16|Synthetic|1|1|64|64|1e5/(37*60+49)=44.07|100k|37:49|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=64|80747MiB / 81559MiB|
+|H100 PCIE|SD_V1|16|Synthetic|2|1|64|128|2e5/(39*60+5)/2=85.29/2=42.64|200k|39:05|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=128 trainer.devices=2|80139MiB / 81559MiB, 80507MiB / 81559MiB|
+|L20 emulated by L40|SD_V1|16|Synthetic|1|1|16|16|16.60|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32480MiB / 46068MiB|
+|L20 emulated by L40|SD_V1|16|Synthetic|1|1|24|24|16.20|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40428MiB / 46068MiB|
+|L20 emulated by L40|SD_V1|16|Synthetic|1|1|28|28|16.40|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=28 model.global_batch_size=28 trainer.devices=1|44412MiB / 46068MiB|
+|L20 emulated by L40|SD_V1|16|Synthetic|1|1|30|30||xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=30 model.global_batch_size=30 trainer.devices=1|OOM / 46068MiB|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|16.60|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32573MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|8|8|16.60|xx|xx|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=8 trainer.devices=1|24609MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|24|24||xx|xx|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40295MiB / 40960MiB|
+
+
+
+```
+docker exec -it 6b9937651457 /bin/bash
+cd /opt/NeMo/examples/multimodal/generative/stable_diffusion
+
+CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=16
+```
+
+CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=16
+
+
+
+
+
+
+

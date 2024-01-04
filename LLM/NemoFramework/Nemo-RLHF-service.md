@@ -11,7 +11,8 @@
 ```
 NEMO_RLHF_DIR="/opt/nemo-rlhf"
 SP_TOKENIZER=nemo:a919114446344e349e73a0d807d9af98_mt_nlg_plus_multilingual_ja_zh_the_stack_frac_015_256k.model
-RM_NEMO_FILE="/workspace/data/nemo_rlhf/data/models/GPT-2B-001_bf16_tp1.nemo"
+# RM_NEMO_FILE="/workspace/data/nemo_rlhf/data/models/GPT-2B-001_bf16_tp1.nemo"
+RM_NEMO_FILE="/results/checkpoints/megatron_gpt.nemo"
 CRITIC_PORT=5557
 
 export PYTHONPATH="${NEMO_RLHF_DIR}:${PYTHONPATH}" \
@@ -48,6 +49,18 @@ cd /opt/nemo-rlhf \
     gpt_rm_model_file=/workspace/data/nemo_rlhf/data/results_RM-nemo2b-TEST_dataset-0001/checkpoints/megatron_gpt.nemo \
     port=5555
 ```
+
+```
+cd /opt/nemo-rlhf \
+&& export PYTHONPATH="/opt/nemo-rlhf:${PYTHONPATH}" \
+&& export HYDRA_FULL_ERROR=1 \
+&& python -u examples/nlp/gpt/serve_reward_model.py \
+    --config-path=/opt/nemo-rlhf/examples/nlp/gpt/conf \
+    --config-name=inference_rm \
+    gpt_rm_model_file=/results/checkpoints/megatron_gpt.nemo \
+    port=5555
+```
+
 
 **Ref: [Launching the Initial Policy Inference Server](https://gitlab-master.nvidia.com/dl/JoC/nemo-rlhf/-/blob/master/tutorials/2b_ppo/README.md#launching-the-initial-policy-inference-server)**
 
