@@ -931,7 +931,7 @@ ls * -l|grep "^-"|wc -l
 |Algo|lm_model|vision model|GPUs|samples/gpu*s|tp|speedup|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |LLaVA|/workspace/data/mm/llama2-7b-hf/llama-2-7b-hf|openai/clip-vit-large-patch14|1|17.86/s|1|1|
-|NeVA|/workspace/data/mm/llama2-7b-hf/neva/checkpoints/llama-2-7b-chat.nemo|openai/clip-vit-large-patch14|1|24.24/s|1|1.36|
+|NeVA|/workspace/data/mm/llama2-7b-hf/neva/checkpoints/llama-2-7b-chat.nemo|openai/clip-vit-large-patch14|1|24.24/s|1|36%|
 
 **NeVA: 7b-vit14**
 ![Alt text](image.png)
