@@ -121,6 +121,22 @@ H800:
 |A100 40G NVLINK|SD_V1|16|Synthetic|1|1|24|24|30.50|xx|xx|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40295MiB / 40960MiB|
 |A100 40G NVLINK|SD_V1|16|Synthetic|1|4|16|64|4e5/(59*60+9)/4=28.18|4e5|59:09|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40295MiB / 40960MiB|
 
+<br>
+
+### Ablation Exp
+
+|GPU Type|Task|precision|Datasets|Devices|Nodes|Micro Batch|Global Batch|samples/gpu/s|samples|time consume|command|Memory|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|28.80|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1 model.unet_config.use_flash_attention=True|32557MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|2|2|9.92|xx|xx|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=2 model.global_batch_size=2 trainer.devices=1 model.unet_config.use_flash_attention=False|29531MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|29.00|xx|xx|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1 model.inductor=True|29667MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|29.00|1e5|57:29|CUDA_VISIBLE_DEVICES=3 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1 model.inductor_cudagraphs=True|32557MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|28.87|1e5|57:44|CUDA_VISIBLE_DEVICES=4 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1 model.fused_opt=False| 32573MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|29.10|4884*16|44:45|CUDA_VISIBLE_DEVICES=5 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1 model.use_ema=True|32573MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|28.90|4735*16|43:41|CUDA_VISIBLE_DEVICES=6 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1 model.concat_mode=False|32573MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|28.55|4432*16|41:24|CUDA_VISIBLE_DEVICES=7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1 model.unet_config.enable_amp_o2_fp16=False|38957MiB / 40960MiB|
+
+<br>
 
 ```
 docker exec -it 6b9937651457 /bin/bash
