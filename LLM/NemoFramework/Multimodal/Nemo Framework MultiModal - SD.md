@@ -138,6 +138,10 @@ docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus al
 
 ## Benchmark Version 1
 
+**Docker image: nvcr.io/ea-bignlp/ea-mm-participants/bignlp-mm:23.08-py3**
+
+****
+
 |GPU Type|Task|precision|Datasets|Devices|Nodes|Micro Batch|Global Batch|samples/gpu/s|command|Memory|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |H800 PCIE|SD_V1|16|Synthetic|1|1|1|1|6.37|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m1g1'|
@@ -149,17 +153,22 @@ docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus al
 |H800 PCIE|SD_V1|16|Synthetic|1|1|32|32|42.39|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=32 model.global_batch_size=32|48787MiB / 81559MiB|
 |H800 PCIE|SD_V1|16|Synthetic|1|1|64|64|44.07|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=64|80747MiB / 81559MiB|
 |H800 PCIE|SD_V1|16|Synthetic|2|1|64|128|42.64|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=128 trainer.devices=2|80139MiB / 81559MiB, 80507MiB / 81559MiB|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+||||||||||||
 |L20 emulated by L40|SD_V1|16|Synthetic|1|1|16|16|16.60|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32480MiB / 46068MiB|
 |L20 emulated by L40|SD_V1|16|Synthetic|1|1|24|24|16.20|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40428MiB / 46068MiB|
 |L20 emulated by L40|SD_V1|16|Synthetic|1|1|28|28|16.40|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=28 model.global_batch_size=28 trainer.devices=1|44412MiB / 46068MiB|
 |L20 emulated by L40|SD_V1|16|Synthetic|1|1|30|30||CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=30 model.global_batch_size=30 trainer.devices=1|OOM / 46068MiB|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+||||||||||||
 |A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|29.00|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32573MiB / 40960MiB|
 |A100 40G NVLINK|SD_V1|16|Synthetic|1|1|8|8|25.50|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=8 trainer.devices=1|24609MiB / 40960MiB|
 |A100 40G NVLINK|SD_V1|16|Synthetic|1|1|24|24|30.50|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40295MiB / 40960MiB|
 |A100 40G NVLINK|SD_V1|16|Synthetic|1|4|16|64|28.18|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40295MiB / 40960MiB|
 
+<br>
+
+- [ ] **TODO: 8 GPU L20 vs A100**
+
+<br><br>
 
 ## For Test
 ```
