@@ -98,19 +98,17 @@ docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus al
 
 ## Benchmark
 
-H800:
-
 |GPU Type|Task|precision|Datasets|Devices|Nodes|Micro Batch|Global Batch|samples/gpu/s|samples|time consume|command|Memory|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|H100 PCIE|SD_V1|16|Synthetic|1|1|1|1|x|100k|4:21:48|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m1g1'|
-|H100 PCIE|SD_V1|16|Synthetic|1|1|4|4|69564/(48*60+10)=24.07|69564|48:10|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4'|
-|H100 PCIE|SD_V1|16|Synthetic|1|1|4|16|28784/(15*60+27)=31.05|28784|15:27|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g16'|21047MiB / 81559MiB|
-|H100 PCIE|SD_V1|16|Synthetic|1|1|8|8|37256/(18*60+39)=33.29|37256|18:39|CUDA_VISIBLE_DEVICES=1 python sd_train_v1.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=8|24929MiB / 81559MiB|
-|H100 PCIE|SD_V1|16|Synthetic|1|1|8|16|49136/(22*60+36)=36.24|49136|22:36|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=16|24889MiB / 81559MiB|
-|H100 PCIE|SD_V1|16|Synthetic|1|1|16|16|1e5/(43*60)=38.76|100k|43:00|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16|32893MiB / 81559MiB|
-|H100 PCIE|SD_V1|16|Synthetic|1|1|32|32|1e5/(39*60+19)=42.39|100k|39:19|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=32 model.global_batch_size=32|48787MiB / 81559MiB|
-|H100 PCIE|SD_V1|16|Synthetic|1|1|64|64|1e5/(37*60+49)=44.07|100k|37:49|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=64|80747MiB / 81559MiB|
-|H100 PCIE|SD_V1|16|Synthetic|2|1|64|128|2e5/(39*60+5)/2=85.29/2=42.64|200k|39:05|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=128 trainer.devices=2|80139MiB / 81559MiB, 80507MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|1|1|1e5/(261*60+48)=6.37|100k|4:21:48|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m1g1'|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|4|4|69564/(48*60+10)=24.07|69564|48:10|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4'|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|4|16|28784/(15*60+27)=31.05|28784|15:27|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g16'|21047MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|8|8|37256/(18*60+39)=33.29|37256|18:39|CUDA_VISIBLE_DEVICES=1 python sd_train_v1.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=8|24929MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|8|16|49136/(22*60+36)=36.24|49136|22:36|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=16|24889MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|16|16|1e5/(43*60)=38.76|100k|43:00|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16|32893MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|32|32|1e5/(39*60+19)=42.39|100k|39:19|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=32 model.global_batch_size=32|48787MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|64|64|1e5/(37*60+49)=44.07|100k|37:49|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=64|80747MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|2|1|64|128|2e5/(39*60+5)/2=85.29/2=42.64|200k|39:05|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=128 trainer.devices=2|80139MiB / 81559MiB, 80507MiB / 81559MiB|
 |L20 emulated by L40|SD_V1|16|Synthetic|1|1|16|16|16.60|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32480MiB / 46068MiB|
 |L20 emulated by L40|SD_V1|16|Synthetic|1|1|24|24|16.20|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40428MiB / 46068MiB|
 |L20 emulated by L40|SD_V1|16|Synthetic|1|1|28|28|16.40|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=28 model.global_batch_size=28 trainer.devices=1|44412MiB / 46068MiB|
@@ -119,7 +117,7 @@ H800:
 |A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|29.00|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32573MiB / 40960MiB|
 |A100 40G NVLINK|SD_V1|16|Synthetic|1|1|8|8|25.50|xx|xx|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=8 trainer.devices=1|24609MiB / 40960MiB|
 |A100 40G NVLINK|SD_V1|16|Synthetic|1|1|24|24|30.50|xx|xx|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40295MiB / 40960MiB|
-|A100 40G NVLINK|SD_V1|16|Synthetic|1|4|16|64|4e5/(59*60+9)/4=28.18|4e5|59:09|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40295MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|4|1|16|64|4e5/(59*60+9)/4=28.18|4e5|59:09|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40295MiB / 40960MiB|
 
 <br>
 
@@ -138,6 +136,32 @@ H800:
 
 <br>
 
+## Benchmark Version 1
+
+|GPU Type|Task|precision|Datasets|Devices|Nodes|Micro Batch|Global Batch|samples/gpu/s|command|Memory|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|1|1|6.37|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m1g1'|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|4|4|24.07|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4'|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|4|16|31.05|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g16'|21047MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|8|8|33.29|CUDA_VISIBLE_DEVICES=1 python sd_train_v1.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=8|24929MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|8|16|49136/36.24|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=16|24889MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|16|16|38.76|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16|32893MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|32|32|42.39|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=32 model.global_batch_size=32|48787MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|1|1|64|64|44.07|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=64|80747MiB / 81559MiB|
+|H800 PCIE|SD_V1|16|Synthetic|2|1|64|128|42.64|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=128 trainer.devices=2|80139MiB / 81559MiB, 80507MiB / 81559MiB|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|L20 emulated by L40|SD_V1|16|Synthetic|1|1|16|16|16.60|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32480MiB / 46068MiB|
+|L20 emulated by L40|SD_V1|16|Synthetic|1|1|24|24|16.20|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40428MiB / 46068MiB|
+|L20 emulated by L40|SD_V1|16|Synthetic|1|1|28|28|16.40|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=28 model.global_batch_size=28 trainer.devices=1|44412MiB / 46068MiB|
+|L20 emulated by L40|SD_V1|16|Synthetic|1|1|30|30||CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=30 model.global_batch_size=30 trainer.devices=1|OOM / 46068MiB|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|16|16|29.00|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32573MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|8|8|25.50|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=8 trainer.devices=1|24609MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|1|24|24|30.50|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40295MiB / 40960MiB|
+|A100 40G NVLINK|SD_V1|16|Synthetic|1|4|16|64|28.18|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40295MiB / 40960MiB|
+
+
+## For Test
 ```
 docker exec -it 6b9937651457 /bin/bash
 cd /opt/NeMo/examples/multimodal/generative/stable_diffusion
