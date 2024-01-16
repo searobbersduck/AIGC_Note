@@ -729,7 +729,414 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python /opt/NeMo/examples/multimodal/mllm/n
     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
 ```
 
-## 4. 评估
+A100 40G
+
+|Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|samples/gpu/s|ratio|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Finetune|llama-7b|False|**bf16**|LLaVA-Instruct-150K|8|NVLINK|40G|8|16|8|1|1|20.27|1|
+|Finetune|llama-7b|True|**bf16**|LLaVA-Instruct-150K|8|NVLINK|40G|8|16|8|1|1|xx|1|
+
+![Alt text](image-5.png)
+```
+78400/(64*60+28)=20.27 samples/gpu/s
+```
+
+```
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-A100' \
+    model.micro_batch_size=8 \
+    model.global_batch_size=16 \
+    trainer.devices=8 \
+    model.tensor_model_parallel_size=8 \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+![Alt text](image-6.png)
+
+```
+78400/(64*60+29)=20.27 samples/gpu/s
+```
+
+```
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-A100' \
+    model.micro_batch_size=16 \
+    model.global_batch_size=16 \
+    trainer.devices=8 \
+    model.tensor_model_parallel_size=8 \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+![Alt text](image-7.png)
+
+```
+39200/(37*60+5)=17.62 samples/gpu/s
+```
+
+
+<br>
+
+#### **试验组5-Pretrain：消融试验**
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-pretrain-bf16-dp1-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-pretrain"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain.py \
+    --config-name 'neva_config-7b' \
+    model.micro_batch_size=16 \
+    model.global_batch_size=16 \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+```
+Epoch 0: :   2%|  | 559/37210 [14:34<15:55:30, v_num=x9lm, reduced_train_loss=6.600, global_step=558.0, consumed_samples=8944.0, train_step_timing in s=1.520]
+```
+
+```
+8944/(14*60+34)=10.23 samples/gpu/s
+```
+
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-pretrain-bf16-dp1-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-pretrain"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain.py \
+    --config-name 'neva_config-7b' \
+    model.micro_batch_size=16 \
+    model.global_batch_size=16 \
+    model.masked_softmax_fusion=False \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+```
+Epoch 0: :   2%|█                                                                     | 574/37210 [14:58<15:55:30, v_num=t7en, reduced_train_loss=7.290, global_step=573.0, consumed_samples=9184.0, train_step_timing in s=1.560]
+```
+
+```
+9184/(14*60+58)=10.227 samples/gpu/s
+```
+
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-pretrain-bf16-dp1-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-pretrain"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain.py \
+    --config-name 'neva_config-7b' \
+    model.micro_batch_size=16 \
+    model.global_batch_size=16 \
+    model.data.lazy_preprocess=False \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+```
+Epoch 0: :  11%|█▋             | 4112/37210 [1:47:25<14:24:41, v_num=bwws, reduced_train_loss=6.090, global_step=4111.0, consumed_samples=65792.0, train_step_timing in s=1.600]
+```
+
+```
+65792/(107*60+25)=10.21 samples/gpu/s
+```
+
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="595k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-pretrain-bf16-dp1-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-pretrain"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0 python /opt/NeMo/examples/multimodal/mllm/neva/neva_pretrain.py \
+    --config-name 'neva_config-7b' \
+    model.micro_batch_size=16 \
+    model.global_batch_size=16 \
+    model.optim.name="megatron_fused_adam" \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+```
+Epoch 0: :   2%|▍                  | 786/37210 [20:27<15:47:42, v_num=lcza, reduced_train_loss=6.790, global_step=785.0, consumed_samples=12576.0, train_step_timing in s=1.560]
+```
+
+```
+12576/(20*60+27)=10.25
+```
+
+<br>
+
+## Profiling
+
+6000 Ada: **sudo nvidia-smi -i 0 -ac=10001,3105**
+
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-bf16-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o ./nsys_report/  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=1 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/persist_layer_norm_true.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=1 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=False \
+    model.persist_layer_norm=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/persist_layer_norm_false.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=1 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=False \
+    model.persist_layer_norm=False \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/megatron_amp_O2_false.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=1 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=False \
+    model.megatron_amp_O2=False \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+**bias_dropout_add_fusion: True/False**
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/bias_dropout_add_fusion_false.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=1 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=False \
+    model.bias=True \
+    model.bias_dropout_add_fusion=False \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/bias_dropout_add_fusion_true.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=1 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=False \
+    model.bias=True \
+    model.bias_dropout_add_fusion=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/bias_dropout_add_fusion_false_m8.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=8 \
+    model.global_batch_size=8 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=False \
+    model.bias=True \
+    model.bias_dropout_add_fusion=False \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/bias_dropout_add_fusion_true_m8.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=8 \
+    model.global_batch_size=8 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=False \
+    model.bias=True \
+    model.bias_dropout_add_fusion=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+**flash attention**
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/use_flash_attention_false.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=1 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=False \
+    model.use_flash_attention=false \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/use_flash_attention_true_m8.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=8 \
+    model.global_batch_size=8 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/use_flash_attention_false_m8.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-fake' \
+    model.micro_batch_size=8 \
+    model.global_batch_size=8 \
+    trainer.devices=1 \
+    model.tensor_model_parallel_size=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=False \
+    model.use_flash_attention=False \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
 
 TODO
 
