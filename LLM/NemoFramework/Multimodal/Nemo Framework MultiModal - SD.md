@@ -200,6 +200,8 @@ nvidia-smi -lgc 2520
 ||||||||||||
 |L20|SD_V1|16|Synthetic|1|1|16|16|17.10|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32380MiB / 46068MiB|
 |L20|SD_V1|16|Synthetic|1|1|20|20|17.20|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=20 trainer.devices=1|36250MiB / 46068MiB|
+|L20|SD_V1|16|Synthetic|1|1|16|16|17.10|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32380MiB / 46068MiB|
+|L20|SD_V1|16|Synthetic|1|1|20|20|17.20|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=20 trainer.devices=1|36250MiB / 46068MiB|
 |L20|SD_V1|16|Synthetic|1|1|24|24|16.50|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40264MiB / 46068MiB|
 |L20|SD_V1|16|Synthetic|1|1|28|28|16.50|CUDA_VISIBLE_DEVICES=3 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=28 model.global_batch_size=28 trainer.devices=1|44310MiB / 46068MiB|
 |L20|SD_V1|16|Synthetic|8|1|16|128|124.0|CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=128 trainer.devices=8||
