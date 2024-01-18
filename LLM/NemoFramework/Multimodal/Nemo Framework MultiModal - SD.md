@@ -217,6 +217,8 @@ nvidia-smi -lgc 2520
 2. 在单节点上进行测试（L20 8GPU 2:8:5 vs A100 8GPU 40G NVLINK），在L20上运行SD_v1的性能是A100上运行的55.5%。（samples/node/s）
 3. 单节点（56.4%，L20 8GPU 2:8:5 vs A100 8GPU 40G NVLINK）相比单GPU（55.5%，L20 8GPU 2:8:5 vs A100 8GPU 40G NVLINK）测试结果稍低，可能是A100有更高的卡间通信带宽；
 4. L20样卡相比L20 emulated by L40，SD_v1运行的性能大约有3%的提升；
+5. 在单GPU L20上进行测试，mbs=20, 能够得到最大吞吐：17.1 samples/s.
+6. 在单节点上L20进行测试（L20 8GPU 2:8:5），mbs=20，gbs=160，能够得到最大吞吐：229 samples/s.
 
 <br><br>
 
