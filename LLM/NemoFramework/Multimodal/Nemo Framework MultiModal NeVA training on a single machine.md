@@ -122,6 +122,9 @@ snapshot_download(repo_id="meta-llama/Llama-2-7b-hf", local_dir="llama2-7b-hf", 
 或者：
 **7B:**
 ```
+mkdir -p /workspace/data/mm/llama2/7b
+cd /workspace/data/mm/llama2/7b
+
 git clone https://huggingface.co/daryl149/llama-2-7b-chat-hf
 ```
 **13B:**
@@ -158,8 +161,8 @@ python /opt/NeMo/scripts/nlp_language_modeling/convert_hf_llama_to_nemo.py --in-
 # Instructions for the 7B model partitioning provided here.
 # Adjust parameters for the 13B model as needed.
  python /opt/NeMo/examples/nlp/language_modeling/megatron_change_num_partitions.py \
-   --model_file=/workspace/data/mm/llama2-7b-hf/neva/checkpoints/llama-2-7b-chat.nemo  \
-   --target_file=/workspace/data/mm/llama2-7b-hf/neva/checkpoints/llama-2-7b-chat-tp2.nemo \
+   --model_file=/workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/neva/checkpoints/llama-2-7b-chat.nemo  \
+   --target_file=/workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/neva/checkpoints/llama-2-7b-chat-tp2.nemo \
    --tensor_model_parallel_size=1 \
    --target_tensor_model_parallel_size=2 \
    --pipeline_model_parallel_size=1 \
@@ -175,12 +178,12 @@ python /opt/NeMo/scripts/nlp_language_modeling/convert_hf_llama_to_nemo.py --in-
 ### [Tokenizer Configuration](https://gitlab-master.nvidia.com/dl/JoC/NeMo-Megatron-Launcher/-/tree/internal/main?ref_type=heads#6273-tokenizer-configuration)
 
 ```
-mkdir -p /workspace/data/mm/llama2-7b-hf/neva/tokenizers
+mkdir -p /workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/neva/tokenizers
 
 cd /opt/sentencepiece/src/; protoc --python_out=/opt/NeMo/scripts/tokenizers/ sentencepiece_model.proto
 python /opt/NeMo/scripts/tokenizers/add_special_tokens_to_sentencepiece.py \
---input_file /workspace/data/mm/llama2-7b-hf/llama-2-7b-chat-hf/tokenizer.model \
---output_file /workspace/data/mm/llama2-7b-hf/neva/tokenizers/tokenizer_neva.model \
+--input_file /workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/llama-2-7b-chat-hf/tokenizer.model \
+--output_file /workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/neva/tokenizers/tokenizer_neva.model \
 --is_userdefined \
 --tokens "<extra_id_0>" "<extra_id_1>" "<extra_id_2>" "<extra_id_3>" \
          "<extra_id_4>" "<extra_id_5>" "<extra_id_6>" "<extra_id_7>"
@@ -192,8 +195,8 @@ wget -c https://huggingface.co/liuhaotian/llava-llama-2-13b-chat-lightning-previ
 
 cd /opt/sentencepiece/src/; protoc --python_out=/opt/NeMo/scripts/tokenizers/ sentencepiece_model.proto
 python /opt/NeMo/scripts/tokenizers/add_special_tokens_to_sentencepiece.py \
---input_file /workspace/data/mm/llama2-7b-hf/neva/tokenizers/tokenizer.model \
---output_file /workspace/data/mm/llama2-7b-hf/neva/tokenizers/tokenizer_neva.model \
+--input_file /workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/neva/tokenizers/tokenizer.model \
+--output_file /workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/neva/tokenizers/tokenizer_neva.model \
 --is_userdefined \
 --tokens "<extra_id_0>" "<extra_id_1>" "<extra_id_2>" "<extra_id_3>" \
          "<extra_id_4>" "<extra_id_5>" "<extra_id_6>" "<extra_id_7>"
