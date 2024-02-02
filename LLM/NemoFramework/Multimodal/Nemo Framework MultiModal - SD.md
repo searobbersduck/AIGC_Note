@@ -171,23 +171,104 @@ nvidia-smi -lgc 2520
 ```
 cd /opt/NeMo/examples/multimodal/generative/stable_diffusion
 
-docker exec -it a94e2ad38bca /bin/bash
+sudo docker exec -it a94e2ad38bca /bin/bash
 
 
 ```
 
 |GPU Type|Task|precision|Datasets|Devices|Nodes|Micro Batch|Global Batch|samples/gpu/s|samples|time consume|command|Memory|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|H20|SD_V1|16|Synthetic|1|1|16|16|17.10|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1|32380MiB / 46068MiB|
-|L20|SD_V1|16|Synthetic|1|1|20|20|17.20|xx|xx|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=20 trainer.devices=1|36250MiB / 46068MiB|
-|L20|SD_V1|16|Synthetic|1|1|24|24|16.50|xx|xx|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1|40264MiB / 46068MiB|
-|L20|SD_V1|16|Synthetic|1|1|28|28|16.50|xx|xx|CUDA_VISIBLE_DEVICES=3 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=28 model.global_batch_size=28 trainer.devices=1|44310MiB / 46068MiB|
-|L20|SD_V1|16|Synthetic|8|1|16|128|124.0|8e5|1:46:00|CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=128 trainer.devices=8||
-|L20|SD_V1|16|Synthetic|8|1|20|160|127.0|||CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=160 trainer.devices=8||
-|L20|SD_V1|16|Synthetic|8|1|24|192|123.0|||CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=192 trainer.devices=8||
-|L20|SD_V1|16|Synthetic|8|1|28|224|125.0|||CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=28 model.global_batch_size=224 trainer.devices=8||
-|L20|SD_V1|16|Synthetic|8|1|8|64|98.00|||CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=64 trainer.devices=8||
+|H20|SD_V1|16|Synthetic|1|1|16|16|19.64|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1||
+|H20|SD_V1|16|Synthetic|1|1|20|20|19.73|xx|xx|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=20 trainer.devices=1||
+|H20|SD_V1|16|Synthetic|1|1|24|24|20.08|xx|xx|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1||
+|H20|SD_V1|16|Synthetic|1|1|32|32|20.29|xx|xx|CUDA_VISIBLE_DEVICES=3 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=32 model.global_batch_size=32 trainer.devices=1||
+|H20|SD_V1|16|Synthetic|1|1|48|48|20.47|xx|xx|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=48 model.global_batch_size=48 trainer.devices=1|64725MiB / 97871MiB|
+|H20|SD_V1|16|Synthetic|1|1|48|48|20.86|xx|xx|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=64 trainer.devices=1|80597MiB / 97871MiB|
+|H20|SD_V1|16|Synthetic|8|1|20|160|157.02|xx|xx|CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=160 trainer.devices=8||
+|H20|SD_V1|16|Synthetic|8|1|32|256|161.63|xx|xx|CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=32 model.global_batch_size=256 trainer.devices=8||
+|H20|SD_V1|16|Synthetic|8|1|48|384|127.0|||CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=40 model.global_batch_size=320 trainer.devices=8|Error|
+|H20|SD_V1|16|Synthetic|8|1|64|512|127.0|||CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=512 trainer.devices=8|Error|
 
+
+
+case 1 bs=16:
+
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|7:43|8928||
+|12:07|14112|(14112-8928)/(4*60+24)=19.636|
+
+case 2 bs=20:
+
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|12:41|14880||
+|17:36|20700|(20700-14880)/(4*60+55)=19.729|
+
+case 3 bs=24:
+
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|12:04|14352||
+|18:30|22104|(22104-14352)/(6*60+26)=20.083|
+
+case 4 bs=32:
+
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|12:37|15136||
+|18:54|14112|(22784-15136)/(6*60+17)=20.287|
+
+case 5 bs=48:
+
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|8:49|10608||
+|11:05|13392|(13392-10608)/(2*60+16)=20.471|
+
+case 6 bs=64:
+
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|8:55|10880||
+|12:42|15616|(15616-10880)/(3*60+47)=20.863|
+
+case 1 bs=32:
+
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|5:28|51456||
+|9:24|89600|(89600-51456)/(3*60+56)=161.627|
+
+case 2 bs=20:
+
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|5:34|50880||
+|9:09|84640|(84640-50880)/(3*60+35)=157.023|
+
+
+**Timeline mbs=20**
+
+```
+mkdir -p /workspace/data/mm/nsys_report/H20_SD
+```
+
+```
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 nsys profile -s none -o /workspace/data/mm/nsys_report/H20_SD/sd_m20g160.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=160 trainer.devices=8 model.nsys_profile.enabled=True model.nsys_profile.gen_shape=True
+```
+
+```
+CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/H20_SD/sd_m20g20.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=20 trainer.devices=1 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
 
 <br>
 
@@ -233,6 +314,16 @@ docker exec -it a94e2ad38bca /bin/bash
 |L20|SD_V1|16|Synthetic|8|1|24|192|123.0|CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=192 trainer.devices=8||
 |L20|SD_V1|16|Synthetic|8|1|28|224|125.0|CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=28 model.global_batch_size=224 trainer.devices=8||
 |L20|SD_V1|16|Synthetic|8|1|8|64|98.00|CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=8 model.global_batch_size=64 trainer.devices=8||
+|H20|SD_V1|16|Synthetic|1|1|16|16|19.64|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=16 model.global_batch_size=16 trainer.devices=1||
+|H20|SD_V1|16|Synthetic|1|1|20|20|19.73|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=20 trainer.devices=1||
+|H20|SD_V1|16|Synthetic|1|1|24|24|20.08|CUDA_VISIBLE_DEVICES=2 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=24 model.global_batch_size=24 trainer.devices=1||
+|H20|SD_V1|16|Synthetic|1|1|32|32|20.29|CUDA_VISIBLE_DEVICES=3 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=32 model.global_batch_size=32 trainer.devices=1||
+|H20|SD_V1|16|Synthetic|1|1|48|48|20.47|CUDA_VISIBLE_DEVICES=0 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=48 model.global_batch_size=48 trainer.devices=1|64725MiB / 97871MiB|
+|H20|SD_V1|16|Synthetic|1|1|48|48|20.86|CUDA_VISIBLE_DEVICES=1 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=64 trainer.devices=1|80597MiB / 97871MiB|
+|H20|SD_V1|16|Synthetic|8|1|20|160|157.02|CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=160 trainer.devices=8||
+|H20|SD_V1|16|Synthetic|8|1|32|256|161.63|CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=32 model.global_batch_size=256 trainer.devices=8||
+|H20|SD_V1|16|Synthetic|8|1|48|384||||CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=40 model.global_batch_size=320 trainer.devices=8|Error|
+|H20|SD_V1|16|Synthetic|8|1|64|512||||CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=64 model.global_batch_size=512 trainer.devices=8|Error|
 
 <br>
 

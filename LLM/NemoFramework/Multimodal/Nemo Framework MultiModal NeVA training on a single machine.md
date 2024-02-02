@@ -182,7 +182,7 @@ mkdir -p /workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/neva/tokenizers
 
 cd /opt/sentencepiece/src/; protoc --python_out=/opt/NeMo/scripts/tokenizers/ sentencepiece_model.proto
 python /opt/NeMo/scripts/tokenizers/add_special_tokens_to_sentencepiece.py \
---input_file /workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/llama-2-7b-chat-hf/tokenizer.model \
+--input_file /workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/tokenizer.model \
 --output_file /workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/neva/tokenizers/tokenizer_neva.model \
 --is_userdefined \
 --tokens "<extra_id_0>" "<extra_id_1>" "<extra_id_2>" "<extra_id_3>" \
@@ -1144,6 +1144,461 @@ CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/us
 TODO
 
 <br><br>
+
+## H20 
+
+**TODO LIST: FINETUNE**
+
+- [x] 2 GPUs: tp=2, m1g1, n1g2, bf16, 3.535 samples/s
+- [ ] 2 GPUs: tp=2, m1g1, n1g2, fp8
+- [x] 4 GPUs: tp=2, m1g2, n1g4, bf16, 6.303 samples/s
+- [ ] 4 GPUs: tp=2, m1g2, n1g4, fp8
+- [] 4 GPUs: tp=4, m1g1, n1g4, bf16, 6.236 samples/s
+- [ ] 4 GPUs: tp=4, m1g1, n1g4, fp8
+
+
+*~5min warmup, ~5min iter avr*
+
+|Sub Task|LLM Model|mcore|precision|Datasets|GPUs|NVLINK|GPU Memory|Micro Batch|Global Batch|tp|pp|sp|samples/gpu/s|ratio|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Finetune|llama-7b|True|**bf16**|LLaVA-Instruct-150K|8|NVLINK|40G|8|16|8|1|1|20.27|1|
+
+
+*tp=2, bf16, m1g1, n1g2*
+```
+CUDA_VISIBLE_DEVICES=0,1 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp2_m1g1_mcoretrue_n1g2.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=1 \
+    trainer.devices=2 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=2 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|2:30|212||
+|4:46|684|(684-212)/(2*60+16)=3.47|
+|8:13|1418|(1418-212)/(5*60+43)=3.51, (1418-684)/(3*60+27)=3.54|
+|14:05|2647|(2647-1418)/(5*60+52)|
+
+<br>
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|6:46|1057||
+|12:00|2167|(2167-1057)/(5*60+14)=3.535|
+
+
+*tp=2, fp8, m1g1, n1g2*
+```
+CUDA_VISIBLE_DEVICES=0,1 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp2_m1g1_mcoretrue_n1g2_fp8.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=1 \
+    trainer.devices=2 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=2 \
+    model.transformer_engine=True \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+
+*tp=2, bf16, m1g2, n1g4*
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-bf16-tp4-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=4,5,6,7 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp2_m1g2_mcoretrue_n1g4.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=2 \
+    trainer.devices=4 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=2 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+<br>
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|5:10|1656||
+|10:14|3572|(3572-1656)/(5*60+4)=6.303|
+
+
+*tp=2, fp8, m1g2, n1g4*
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-fp8-tp2-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=4,5,6,7 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp2_m1g2_mcoretrue_n1g4.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=2 \
+    trainer.devices=4 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=2 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+<br>
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+
+
+
+*tp=4, bf16, m2g2, n1g4*
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-bf16-tp4-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=4,5,6,7 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp4_m2g2_mcoretrue_n1g4.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=2 \
+    model.global_batch_size=2 \
+    trainer.devices=4 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=4 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+<br>
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|5:10|961||
+|12:33|5284|(5284-961)/(7*60+23)=9.758|
+
+
+
+
+*tp=4, bf16, m4g4, n1g4*
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-bf16-tp4-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=4,5,6,7 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp4_m4g4_mcoretrue_n1g4.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=4 \
+    model.global_batch_size=4 \
+    trainer.devices=4 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=4 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+<br>
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|6:40|2992||
+|12:44|6184|(6184-2992)/(6*60+4)=8.769|
+
+
+*tp=4, bf16, m8g8, n1g4*
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-bf16-tp4-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=4,5,6,7 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp4_m8g8_mcoretrue_n1g4.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=8 \
+    model.global_batch_size=8 \
+    trainer.devices=4 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=4 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|6:16|2872||
+|12:07|6120|(6120-2872)/(5*60+51)=9.254|
+
+
+
+*tp=2, bf16, m1g4, n1g8*
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-bf16-tp2-n1g8-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp2_m1g4_mcoretrue_n1g8.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=4 \
+    trainer.devices=8 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=2 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+<br>
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|8:09|1250*4||
+|13:42|8944|(8944-1250*4)/(5*60+33)=11.844|
+|18:33|12392|(12392-1250*4)/(10*60+24)=11.846|
+
+
+
+
+*tp=4, bf16, m2g4, n1g8*
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-bf16-tp4-n2g4-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp4_m2g4_mcoretrue_n1g8.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=2 \
+    model.global_batch_size=4 \
+    trainer.devices=8 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=4 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+<br>
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|13:19|7732||
+|19:00|12404|(12404-7732)/(5*60+41)=13.701|
+|5:11|3428||
+|10:34|7872|(7872-3428)/(5*60+23)=13.759|
+
+
+
+
+*tp=4, bf16, m4g8, n1g8*
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-bf16-tp4-n1g8-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp4_m4g8_mcoretrue_n1g8.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=4 \
+    model.global_batch_size=8 \
+    trainer.devices=8 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=4 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+<br>
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+|6:23|5096||
+|12:04|10592|(10592-5096)/(5*60+41)=16.117|
+
+
+
+*tp=8, bf16, m1g1, n1g8*
+
+```
+WORK_DIR="/workspace/data/mm/exp"
+DATASET="158k"
+JOB_ID="0001"
+NAME="NeVA-llama7b-finetue-bf16-tp8-n1g8-${DATASET}_dataset-${JOB_ID}"
+
+WANDB="1ee66e27d1e97b6018dda9793bd6cccac7d988bc"
+WANDB_PROJECT="NeVA-llama7b-finetue"
+
+RESULTS="${WORK_DIR}/results_${NAME}"
+mkdir -p ${RESULTS}
+
+wandb login
+
+cd /opt/NeMo/examples/multimodal/mllm/neva/
+
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 nsys profile -s none -o /workspace/data/mm/nsys_report/neva_tp8_m1g1_mcoretrue_n1g8.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
+    python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py \
+    --config-name 'neva_finetune-7b-H20.yaml' \
+    model.micro_batch_size=1 \
+    model.global_batch_size=1 \
+    trainer.devices=8 \
+    model.mcore_gpt=True \
+    model.tensor_model_parallel_size=8 \
+    model.nsys_profile.enabled=True \
+    model.nsys_profile.gen_shape=True \
+    model.use_flash_attention=True \
+    exp_manager.explicit_log_dir=${RESULTS} \
+    exp_manager.create_wandb_logger=True \
+    exp_manager.wandb_logger_kwargs.name=${NAME} \
+    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+```
+
+<br>
+|Timeline|samples|samples/sec|
+|:-:|:-:|:-:|
+||||
+|||(5900-2040)/(10*60+19)=6.236|
+
+
+
+
 
 
 ## LLaVA Training
