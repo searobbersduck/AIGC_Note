@@ -1,0 +1,44 @@
+# 如何启动运行MagatronLM?
+
+## Prepare Data
+
+### 1.1 Download vocab file
+
+ref: [Downloading Checkpoints](https://github.com/NVIDIA/Megatron-LM#downloading-checkpoints)
+
+```
+mkdir -p /workspace/data/llm/gpt2-data
+cd /workspace/data/llm/gpt2-data
+```
+
+* Download `gpt2-vocab`
+```
+wget -c https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-vocab.json
+```
+* Download `gpt2-merges`
+```
+wget -c https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-merges.txt
+```
+
+### 2. Process data
+
+* Preprocess data: ref: [https://github.com/NVIDIA/Megatron-LM#data-preprocessing](https://github.com/NVIDIA/Megatron-LM#data-preprocessing)
+
+```
+DS_PATH=/workspace/data/llm/Anthropic
+GPT2_DATA_PATH=/workspace/data/llm/gpt2-data
+DS_OUT_PATH=$GPT2_DATA_PATH/datasets
+
+MAGATRON_LM_CODE_PATH=/workspace/code/megatron-lm/
+
+mkdir -p $DS_OUT_PATH
+
+python $MAGATRON_LM_CODE_PATH/tools/preprocess_data.py \
+       --input $DS_PATH/train_comparisons.jsonl \
+       --output-prefix $DS_OUT_PATH/my-gpt2 \
+       --vocab-file $GPT2_DATA_PATH/gpt2-vocab.json \
+       --tokenizer-type GPT2BPETokenizer \
+       --merge-file $GPT2_DATA_PATH/gpt2-merges.txt \
+       --workers 30 \
+       --append-eod
+```

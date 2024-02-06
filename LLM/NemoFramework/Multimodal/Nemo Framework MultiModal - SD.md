@@ -61,8 +61,21 @@ sudo reboot
 * [[Docker] 错误之Error response from daemon: could not select device driver ““ with capabilities: [[gpu]]](https://blog.csdn.net/dou3516/article/details/108314908)
 
 
-
 <br>
+
+#### **遇到cublas错误，解决方案如下：(更新cublas版本)**
+ref: https://developer.nvidia.com/cuda-12-3-1-download-archive?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local
+```
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+wget https://developer.download.nvidia.com/compute/cuda/12.3.1/local_installers/cuda-repo-ubuntu2204-12-3-local_12.3.1-545.23.08-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu2204-12-3-local_12.3.1-545.23.08-1_amd64.deb
+sudo cp /var/cuda-repo-ubuntu2204-12-3-local/cuda-*-keyring.gpg /usr/share/keyrings/
+sudo apt-get update
+sudo apt-get -y install cuda-toolkit-12-3
+```
+
+<br><br>
 
 ### 2. Run Container
 
@@ -263,11 +276,7 @@ python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 mo
 CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/H20_SD/sd_m20g20.nsys-rep  -t cuda,nvtx --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop \
     python sd_train.py --config-name 'sd_train_v1_m4g4' model.micro_batch_size=20 model.global_batch_size=20 trainer.devices=1 \
     model.nsys_profile.enabled=True \
-    model.nsys_profile.gen_shape=True \
-    exp_manager.explicit_log_dir=${RESULTS} \
-    exp_manager.create_wandb_logger=True \
-    exp_manager.wandb_logger_kwargs.name=${NAME} \
-    exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}
+    model.nsys_profile.gen_shape=True
 ```
 
 <br>
@@ -334,6 +343,8 @@ CUDA_VISIBLE_DEVICES=0 nsys profile -s none -o /workspace/data/mm/nsys_report/H2
 4. L20样卡相比L20 emulated by L40，SD_v1运行的性能大约有3%的提升；
 5. 在单GPU L20上进行测试，mbs=20, 能够得到最大吞吐：17.1 samples/s.
 6. 在单节点上L20进行测试（L20 8GPU 2:8:5），mbs=20，gbs=160，能够得到最大吞吐：229 samples/s.
+7. 在单GPU上进行测试（H20 96G NVLINK 900Gb/s vs L20 2:8:5），在H20上运行SD_v1的性能是L20上运行的1.21倍。（samples/gpu/s）
+8. 在单节点上进行测试（H20 8GPU 96G NVLINK 900Gb/s vs L20 8GPU 2:8:5），在H20上运行SD_v1的性能是L20上运行的1.27倍。
 
 <br><br>
 
