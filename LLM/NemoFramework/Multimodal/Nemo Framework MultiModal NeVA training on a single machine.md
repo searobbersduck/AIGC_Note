@@ -1874,7 +1874,7 @@ ls * -l|grep "^-"|wc -l
 ## nsys-tap分析
 
 ```
-CUDA_VISIBLE_DEVICES=4,5 TAP_RECORD_SHAPES=true TAP_WARMUP_STEPS=100 TAP_ACTIVE_STEPS=1 TAP_MODE=auto TAP_BACKWARD_NVTX=true python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py     --config-name 'neva_finetune-fake.yaml'     model.micro_batch_size=1     model.global_batch_size=1     trainer.devices=2     model.mcore_gpt=True  model.mm_cfg.llm.freeze=False   model.tensor_model_parallel_size=2  model.num_layers=32    model.nsys_profile.enabled=True     model.nsys_profile.gen_shape=False     model.use_flash_attention=True     exp_manager.explicit_log_dir=${RESULTS}     exp_manager.create_wandb_logger=True     exp_manager.wandb_logger_kwargs.name=${NAME}     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}  model.nsys_profile.ranks=[0,1]
+CUDA_VISIBLE_DEVICES=4,5 TAP_WARMUP_STEPS=100 TAP_ACTIVE_STEPS=1 TAP_MODE=auto TAP_BACKWARD_NVTX=true python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py     --config-name 'neva_finetune-fake.yaml'     model.micro_batch_size=1     model.global_batch_size=1     trainer.devices=2     model.mcore_gpt=True  model.mm_cfg.llm.freeze=False   model.tensor_model_parallel_size=2  model.num_layers=32    model.nsys_profile.enabled=True     model.nsys_profile.gen_shape=False     model.use_flash_attention=True     exp_manager.explicit_log_dir=${RESULTS}     exp_manager.create_wandb_logger=True     exp_manager.wandb_logger_kwargs.name=${NAME}     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}  model.nsys_profile.ranks=[0,1]
 ```
 
 <br><br>
