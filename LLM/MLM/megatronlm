@@ -20,7 +20,35 @@ wget -c https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-vocab.json
 wget -c https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-merges.txt
 ```
 
-### 2. Process data
+### 1.2 Download wikipidia data
+
+ref: [Collecting Wikipedia Training Data](https://github.com/NVIDIA/Megatron-LM#collecting-wikipedia-training-data)
+
+```
+mkdir -p /workspace/data/llm/wikipidia
+cd /workspace/data/llm/wikipidia
+
+wget -c https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2
+
+
+pip install wikiextractor
+
+python -m wikiextractor.WikiExtractor ./enwiki-latest-pages-articles.xml.bz2 --json
+```
+
+note: 这个过程中用到了很多`WikiExtractor`的默认参数，`WikiExtractor`的详细参数可以参见：[Wikiextractor Usage](https://github.com/attardi/wikiextractor#wikiextractor-1)
+
+```
+Output:
+  -o OUTPUT, --output OUTPUT
+			    directory for extracted files (or '-' for dumping to stdout)
+  -b n[KMG], --bytes n[KMG]
+			    maximum bytes per output file (default 1M)
+  -c, --compress        compress output files using bzip
+  --json                write output in json format instead of the default <doc> format
+```
+
+### 2.1 Process data ：Anthropic
 
 * Preprocess data: ref: [https://github.com/NVIDIA/Megatron-LM#data-preprocessing](https://github.com/NVIDIA/Megatron-LM#data-preprocessing)
 
@@ -41,4 +69,68 @@ python $MAGATRON_LM_CODE_PATH/tools/preprocess_data.py \
        --merge-file $GPT2_DATA_PATH/gpt2-merges.txt \
        --workers 30 \
        --append-eod
+
+
+# or
+python $MAGATRON_LM_CODE_PATH/tools/preprocess_data.py \
+       --input $DS_PATH/train_comparisons.jsonl \
+       --output-prefix $DS_OUT_PATH/my-gpt2 \
+       --vocab-file $GPT2_DATA_PATH/gpt2-vocab.json \
+       --tokenizer-type Llama2Tokenizer \
+       --tokenizer-model /workspace/data/mm/llama2/7b/llama-2-7b-chat-hf/tokenizer.model \
+       --merge-file $GPT2_DATA_PATH/gpt2-merges.txt \
+       --workers 30 \
+       --append-eod
+```
+
+
+```
+MAGATRON_PATH=/workspace/code/megatron-lm/
+```
+
+### 2.2 Process data ：Wikipidia
+
+
+## script
+
+```
+DIR=/workspace/exp
+mkdir -p $DIR
+
+OUT_DIR=$DIR
+
+mkdir -p $OUT_DIR
+
+nvidia-smi -l 1 1>$OUT_DIR/nvidia-smi.log 2>&1 &
+NVSMI_PID=$!
+```
+
+
+## Run Container
+
+```
+docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name MOE -p 6022:22 -p 6006:6006 -p 6064:6064 -p 6888:8888 -v /data/weidongz/docker_workspace:/workspace nvcr.io/nvidia/pytorch:24.01-py3 bash
+```
+
+## MOE
+
+Error:
+
+```
+instantiating TransformerLayer
+Traceback (most recent call last):
+  File "/workspace/code/moe/megatron-lm/megatron/core/transformer/spec_utils.py", line 99, in build_module
+    return module(
+  File "/workspace/code/moe/megatron-lm/megatron/core/transformer/moe/moe_layer.py", line 58, in __init__
+    self.experts = GroupedMLP(self.num_local_experts, self.config)
+  File "/workspace/code/moe/megatron-lm/megatron/core/transformer/moe/experts.py", line 33, in __init__
+    gg.assert_grouped_gemm_is_available()
+  File "/workspace/code/moe/megatron-lm/megatron/core/transformer/moe/grouped_gemm_util.py", line 14, in assert_grouped_gemm_is_available
+    assert grouped_gemm_is_available(), (
+AssertionError: Grouped GEMM is not available. Please run `pip install git+https://github.com/fanshiqing/grouped_gemm@main`.
+
+```
+
+```
+pip install git+https://github.com/fanshiqing/grouped_gemm@main
 ```

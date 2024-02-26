@@ -41,6 +41,35 @@ docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus al
 
 **参考链接：[NeVA](https://gitlab-master.nvidia.com/dl/JoC/NeMo-Megatron-Launcher/-/tree/internal/main?ref_type=heads#627-neva)**
 
+### 环境准备以及可能遇到问题
+
+1. [docker出现GPG error: At least one invalid signature was encountered 相关问题及解决方法](https://blog.csdn.net/u014374009/article/details/114010841)
+
+```
+docker image prune -a 
+docker container prune -a
+docker system prune
+docker system df
+```
+2. update lfs
+
+```
+apt update
+
+apt install --fix-broken
+
+apt install git-lfs
+```
+
+### profile环境安装
+
+ref: [Torch Automated Profiler](https://gitlab-master.nvidia.com/dl/gwe/torch_automated_profiler)
+
+ref: [Support automatic backward nvtx annotations if torch >= 1.14.0](https://gitlab-master.nvidia.com/dl/gwe/torch_automated_profiler/-/merge_requests/11?commit_id=707ae14dae3f3bab310f3863798f68f0249da522)
+
+```
+pip install git+https://gitlab-master.nvidia.com/dl/gwe/torch_automated_profiler@release
+```
 
 <br><br>
 
@@ -1839,6 +1868,14 @@ ls * -l|grep "^-"|wc -l
 **LLaVA: 7b-vit14**
 ![Alt text](image-1.png)
 `1057*128/(126*60+17) = 17.86 samples/s`
+
+<br><br>
+
+## nsys-tap分析
+
+```
+CUDA_VISIBLE_DEVICES=4,5 TAP_RECORD_SHAPES=true TAP_WARMUP_STEPS=100 TAP_ACTIVE_STEPS=1 TAP_MODE=auto TAP_BACKWARD_NVTX=true python /opt/NeMo/examples/multimodal/mllm/neva/neva_finetune.py     --config-name 'neva_finetune-fake.yaml'     model.micro_batch_size=1     model.global_batch_size=1     trainer.devices=2     model.mcore_gpt=True  model.mm_cfg.llm.freeze=False   model.tensor_model_parallel_size=2  model.num_layers=32    model.nsys_profile.enabled=True     model.nsys_profile.gen_shape=False     model.use_flash_attention=True     exp_manager.explicit_log_dir=${RESULTS}     exp_manager.create_wandb_logger=True     exp_manager.wandb_logger_kwargs.name=${NAME}     exp_manager.wandb_logger_kwargs.project=${WANDB_PROJECT}  model.nsys_profile.ranks=[0,1]
+```
 
 <br><br>
 
