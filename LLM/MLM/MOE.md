@@ -52,12 +52,34 @@ Output:
 
 * Preprocess data: ref: [https://github.com/NVIDIA/Megatron-LM#data-preprocessing](https://github.com/NVIDIA/Megatron-LM#data-preprocessing)
 
+* ref: [datasets](https://github.com/searobbersduck/AIGC_Note/blob/main/LLM/NemoFramework/Nemo-RLHF-handson.md#datasets)
+
+```
+pip install datasets
+
+mkdir -p /workspace/code/llm/moe/moe_utils
+cd /workspace/code/llm/moe/moe_utils
+
+touch process_anthropic_hh.py
+
+# 该函数会自动下载数据，并保存在当前路径下
+# python process_anthropic_hh.py
+
+cd /workspace/data/llm/
+mkdir -p /workspace/data/llm/Anthropic
+cd /workspace/data/llm/Anthropic
+cp /workspace/code/llm/moe/moe_utils/process_anthropic_hh.py /workspace/data/llm/Anthropic/
+
+python process_anthropic_hh.py
+
+```
+
 ```
 DS_PATH=/workspace/data/llm/Anthropic
 GPT2_DATA_PATH=/workspace/data/llm/gpt2-data
 DS_OUT_PATH=$GPT2_DATA_PATH/datasets
 
-MAGATRON_LM_CODE_PATH=/workspace/code/megatron-lm/
+MAGATRON_LM_CODE_PATH=/workspace/code/llm/moe/megatron-lm/
 
 mkdir -p $DS_OUT_PATH
 
@@ -85,7 +107,7 @@ python $MAGATRON_LM_CODE_PATH/tools/preprocess_data.py \
 
 
 ```
-MAGATRON_PATH=/workspace/code/megatron-lm/
+MAGATRON_PATH=/workspace/code/llm/moe/megatron-lm/
 ```
 
 ### 2.2 Process data ：Wikipidia
@@ -106,14 +128,43 @@ NVSMI_PID=$!
 ```
 
 
-## Run Container
+<br><br>
+
+## Setup Env
+
+### Run Container
 
 ```
 docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name MOE -p 6022:22 -p 6006:6006 -p 6064:6064 -p 6888:8888 -v /data/weidongz/docker_workspace:/workspace nvcr.io/nvidia/pytorch:24.01-py3 bash
 ```
 
+### Download code
+
+```
+mkdir -p /workspace/code/llm/moe/
+cd /workspace/code/llm/moe/
+
+git clone -b zijiey/fix_top2_dispatcher https://gitlab-master.nvidia.com/zijiey/megatron-lm.git
+
+
+git clone https://gitlab-master.nvidia.com/arch_moe_exploration/megatron-moe-scripts.git
+
+```
+
+
 ## MOE
 
+ref: [MOE gitlab](https://gitlab-master.nvidia.com/zijiey/megatron-lm/-/tree/zijiey/fix_top2_dispatcher/megatron/core/transformer/moe)
+
+ref: [selene集群脚本]( https://gitlab-master.nvidia.com/arch_moe_exploration/megatron-moe-scripts/-/blob/master/pretrain-gpt-moe-dropless-selene.sh#L157)
+
+ref: [computelab脚本](https://gitlab-master.nvidia.com/arch_moe_exploration/megatron-moe-scripts/-/blob/master/pretrain-gpt-moe-dropless-computelab.sh)
+
+ref: [pretrain-gpt-moe-droppable-localhost](https://gitlab-master.nvidia.com/arch_moe_exploration/megatron-moe-scripts/-/blob/master/pretrain-gpt-moe-droppable-localhost.sh)
+
+ref: [启动megatron的dockerfile](https://gitlab-master.nvidia.com/zijiey/docker_pytorch/-/blob/master/Megatron.dockerfile)
+
+## Error
 Error:
 
 ```
@@ -134,3 +185,27 @@ AssertionError: Grouped GEMM is not available. Please run `pip install git+https
 ```
 pip install git+https://github.com/fanshiqing/grouped_gemm@main
 ```
+
+Error: 
+```
+
+Zarr-based strategies will not be registered because of missing packages
+Traceback (most recent call last):
+  File "/workspace/code/llm/moe/megatron-lm//tools/preprocess_data.py", line 28, in <module>
+    class CustomLanguageVars(nltk.tokenize.punkt.PunktLanguageVars):
+NameError: name 'nltk' is not defined
+```
+
+```
+pip install nltk
+```
+
+Error: 
+```
+ModuleNotFoundError: No module named 'sentencepiece'
+```
+
+```
+pip install sentencepiece
+```
+
