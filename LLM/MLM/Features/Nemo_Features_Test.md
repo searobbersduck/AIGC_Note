@@ -1,4 +1,4 @@
-# Nemo
+# Test the impact of different configurations on GPU memory and performance
 
 
 ## Setup Env
