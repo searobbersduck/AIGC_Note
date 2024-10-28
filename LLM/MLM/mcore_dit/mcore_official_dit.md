@@ -9,6 +9,16 @@
 docker run --shm-size=20gb --ulimit memlock=-1 --ulimit stack=67108864 --gpus all -it --name MCORE_OFFICIAL_DIT -p 5022:22 -p 5006:6006 -p 5064:6064 -p 5888:8888 -v /data/weidongz/docker_workspace:/workspace nvcr.io/nvidia/pytorch:24.08-py3 bash
 ```
 
+On PDX:
+
+```
+srun -w h20-[1-8] -N 1 --gres=gpu:8 --container-image=nvcr.io/nvidia/pytorch:24.08-py3 --container-save=/home/weidongz/docker_workspace/images/official_dit.pytorch2408.sqsh --container-mounts=/home/weidongz/docker_workspace:/workspace --container-writable --pty bash
+```
+
+```
+srun -w h20-[1-8] -N 1 --gres=gpu:8 --container-image=/home/weidongz/docker_workspace/images/official_dit.pytorch2408.sqsh --container-save=/home/weidongz/docker_workspace/images/official_dit.pytorch2408-bk.sqsh --container-mounts=/home/weidongz/docker_workspace:/workspace --container-writable --pty bash
+```
+
 ### Code
 
 ```
@@ -26,7 +36,20 @@ git clone -b zhuoyaow/official_dit_convergence https://gitlab-master.nvidia.com/
 
 Data位于如下路径：
 
+computelab路径：
+
 ```
+ /home/scratch.weidongz_wwfo/cached_latent.tar.gz
+```
+
+```
+mkdir -p /workspace/data/
+cd /workspace/data/
+
+scp -r weidongz@computelab:/home/scratch.weidongz_wwfo/cached_latent.tar.gz ./
+
+tar -xzvf cached_latent.tar.gz
+
 /workspace/data/imagenet_latent_64_train
 ```
 数据如下, 1000个样本：
@@ -116,3 +139,8 @@ cd /workspace/code/sora-like/official_dit/mcore-vfm/examples
 ![alt text](image-1.png)
 
 
+## Performance Test
+
+### FP8 Support
+
+### Flash Attn vs Fused Attn
