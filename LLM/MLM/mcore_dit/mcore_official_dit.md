@@ -143,4 +143,20 @@ cd /workspace/code/sora-like/official_dit/mcore-vfm/examples
 
 ### FP8 Support
 
+```
+    --fp8-format hybrid \
+    --fp8-amax-history-len 1024 \
+    --fp8-amax-compute-algo max
+```
+
+FP8的loss与BF16训练的loss基本能对齐 (H20)：
+
+![alt text](mcore_official_dit-fp8-bf16-loss.png)
+
+**H20 tp1pp1cp1情况下**：FP8 vs BF16的加速比 120.4%
+
+|FP8 time/iter|BF16 time/iter|Speedup|
+|:-:|:-:|:-:|
+|1093 ms|1316 ms|120.4%|
+
 ### Flash Attn vs Fused Attn
