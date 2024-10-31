@@ -738,3 +738,11 @@ python /opt/NeMo/examples/nlp/language_modeling/megatron_gpt_pretraining.py  \
 ```
 显存接着爆，OOM
 
+<br><br>
+
+## 试验结论
+1. 单节点并行配置的开启顺序为TP>FSDP>CP>PP；
+2. 对于7B模型，只开启TP+FSDP+recompute，最多能支持到32K上下文，如需支持64K上下文，需要同时开启TP+FSDP+recompute+CP；
+3. 对于7B模型，32K上下文输入，FSDP+TP2+recompute性能最优；
+4. 开启recompute时，选用selective recompute时，对性能的影响不超过3%；
+5. 对于7B模型，64K上下文输入，CPU内存会成为限制因素，如使用container，需要加大CPU内存的设置；

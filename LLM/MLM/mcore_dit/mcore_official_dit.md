@@ -113,6 +113,8 @@ pip install setuptools -U
 
 需要升级TE到1.10版本，参照：[Installation (from source)](https://docs.nvidia.com/deeplearning/transformer-engine/user-guide/installation.html#installation-from-source)
 
+
+
 ```
 mkdir -p /workspace/code/sora-like/official_dit
 cd /workspace/code/sora-like/official_dit
