@@ -161,11 +161,17 @@ FP8的loss与BF16训练的loss基本能对齐 (H20)：
 |:-:|:-:|:-:|
 |1093 ms|1316 ms|120.4%|
 
+<br><br>
+
 ### Flash Attn vs Fused Attn
 
-|FlashA time/iter|FusedA time/iter|Speedup (Fused/Flash)|
-|:-:|:-:|:-:|
-|1522.4 ms|1482.9 ms|102.7%|
+**latent[b,h,w,c]: 32x64x64x4, patch_size=2, transformer seqLen=1024**
+
+
+||FlashA time/iter|FusedA time/iter|Speedup (Fused/Flash)|
+|:-:|:-:|:-:|:-:|
+|cp1||1522.4 ms|1482.9 ms|102.7%|
+|cp2||2091.7 ms|2167.5 ms|96.5%|
 
 #### Default config (cp disabled)
 
@@ -228,7 +234,9 @@ NVTE_FUSED_ATTN=1
 ```
 
 ```
-
+ [2024-11-06 11:10:02] iteration      200/   10000 | consumed samples:        51200 | elapsed time per iteration (ms): 2112.5 | throughput per GPU (TFLOP/s/GPU): 55.3 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.945181E-01 | loss scale: 1.0 | grad norm: 0.546 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 11:13:31] iteration      300/   10000 | consumed samples:        76800 | elapsed time per iteration (ms): 2091.7 | throughput per GPU (TFLOP/s/GPU): 55.9 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.883746E-01 | loss scale: 1.0 | grad norm: 0.485 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 11:17:03] iteration      400/   10000 | consumed samples:       102400 | elapsed time per iteration (ms): 2121.2 | throughput per GPU (TFLOP/s/GPU): 55.1 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.841455E-01 | loss scale: 1.0 | grad norm: 0.415 | number of skipped iterations:   0 | number of nan iterations:   0 |
 
 ```
 
