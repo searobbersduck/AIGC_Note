@@ -162,3 +162,86 @@ FP8的loss与BF16训练的loss基本能对齐 (H20)：
 |1093 ms|1316 ms|120.4%|
 
 ### Flash Attn vs Fused Attn
+
+|FlashA time/iter|FusedA time/iter|Speedup (Fused/Flash)|
+|:-:|:-:|:-:|
+|1522.4 ms|1482.9 ms|102.7%|
+
+#### Default config (cp disabled)
+
+```
+CP_SIZE=1
+TP_SIZE=1
+PP_SIZE=1
+VPP_SIZE=1
+
+GPUS_PER_NODE=8
+MB=32
+let GB=${MB}*${GPUS_PER_NODE}
+```
+
+**Flash Atten**:
+
+```
+NAME="Official-DiT-Base-FUSEATTN0-${DATASET}_dataset-${JOB_ID}-bf16-flashattn-vs-fusedattn"
+
+NVTE_FUSED_ATTN=0
+```
+
+```
+ [2024-11-06 09:50:49] iteration      200/   10000 | consumed samples:        51200 | elapsed time per iteration (ms): 1521.9 | throughput per GPU (TFLOP/s/GPU): 76.8 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.927525E-01 | loss scale: 1.0 | grad norm: 0.214 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 09:53:22] iteration      300/   10000 | consumed samples:        76800 | elapsed time per iteration (ms): 1524.6 | throughput per GPU (TFLOP/s/GPU): 76.7 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.921382E-01 | loss scale: 1.0 | grad norm: 0.173 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 09:55:54] iteration      400/   10000 | consumed samples:       102400 | elapsed time per iteration (ms): 1527.4 | throughput per GPU (TFLOP/s/GPU): 76.5 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.830679E-01 | loss scale: 1.0 | grad norm: 0.175 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 09:58:27] iteration      500/   10000 | consumed samples:       128000 | elapsed time per iteration (ms): 1522.4 | throughput per GPU (TFLOP/s/GPU): 76.8 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.787374E-01 | loss scale: 1.0 | grad norm: 0.251 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 10:01:01] iteration      600/   10000 | consumed samples:       153600 | elapsed time per iteration (ms): 1541.3 | throughput per GPU (TFLOP/s/GPU): 75.9 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.793828E-01 | loss scale: 1.0 | grad norm: 0.138 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 10:03:34] iteration      700/   10000 | consumed samples:       179200 | elapsed time per iteration (ms): 1532.1 | throughput per GPU (TFLOP/s/GPU): 76.3 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.821270E-01 | loss scale: 1.0 | grad norm: 0.195 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 10:06:08] iteration      800/   10000 | consumed samples:       204800 | elapsed time per iteration (ms): 1535.6 | throughput per GPU (TFLOP/s/GPU): 76.1 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.734681E-01 | loss scale: 1.0 | grad norm: 0.186 | number of skipped iterations:   0 | number of nan iterations:   0 |
+
+```
+
+**Fused Atten**:
+
+```
+NAME="Official-DiT-Base-FUSEATTN1-${DATASET}_dataset-${JOB_ID}-bf16-flashattn-vs-fusedattn"
+
+NVTE_FUSED_ATTN=1
+```
+
+```
+
+ [2024-11-06 10:30:14] iteration      200/   10000 | consumed samples:        51200 | elapsed time per iteration (ms): 1484.3 | throughput per GPU (TFLOP/s/GPU): 78.8 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.926066E-01 | loss scale: 1.0 | grad norm: 0.812 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 10:32:43] iteration      300/   10000 | consumed samples:        76800 | elapsed time per iteration (ms): 1487.0 | throughput per GPU (TFLOP/s/GPU): 78.6 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.921367E-01 | loss scale: 1.0 | grad norm: 0.243 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 10:35:11] iteration      400/   10000 | consumed samples:       102400 | elapsed time per iteration (ms): 1482.9 | throughput per GPU (TFLOP/s/GPU): 78.8 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.830459E-01 | loss scale: 1.0 | grad norm: 0.336 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 10:37:40] iteration      500/   10000 | consumed samples:       128000 | elapsed time per iteration (ms): 1492.2 | throughput per GPU (TFLOP/s/GPU): 78.4 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.788824E-01 | loss scale: 1.0 | grad norm: 0.239 | number of skipped iterations:   0 | number of nan iterations:   0 |
+
+```
+
+
+
+#### Default config (cp enabled)
+
+**Flash Atten**:
+```
+NAME="Official-DiT-Base-FUSEATTN0-${DATASET}_dataset-${JOB_ID}-bf16-flashattn-vs-fusedattn-cp2"
+
+NVTE_FUSED_ATTN=1
+```
+
+```
+
+
+```
+
+**Fused Atten**:
+```
+NAME="Official-DiT-Base-FUSEATTN1-${DATASET}_dataset-${JOB_ID}-bf16-flashattn-vs-fusedattn-cp2"
+
+NVTE_FUSED_ATTN=1
+```
+
+```
+ [2024-11-06 10:49:37] iteration      200/   10000 | consumed samples:        51200 | elapsed time per iteration (ms): 2187.4 | throughput per GPU (TFLOP/s/GPU): 53.5 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 2.170999E-01 | loss scale: 1.0 | grad norm: 0.372 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 10:53:14] iteration      300/   10000 | consumed samples:        76800 | elapsed time per iteration (ms): 2167.5 | throughput per GPU (TFLOP/s/GPU): 53.9 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 2.169537E-01 | loss scale: 1.0 | grad norm: 1.028 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 10:56:54] iteration      400/   10000 | consumed samples:       102400 | elapsed time per iteration (ms): 2198.9 | throughput per GPU (TFLOP/s/GPU): 53.2 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 2.150569E-01 | loss scale: 1.0 | grad norm: 0.406 | number of skipped iterations:   0 | number of nan iterations:   0 |
+
+```
