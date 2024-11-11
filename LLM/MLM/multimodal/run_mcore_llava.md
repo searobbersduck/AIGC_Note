@@ -107,6 +107,17 @@ ModuleNotFoundError: No module named 'MMMU'
 pip install git+https://github.com/MMMU-Benchmark/MMMU.git
 ```
 
+```
+## Code
+
+```
+mkdir -p /workspace/code/mcore/mcore_llava
+cd /workspace/code/mcore/mcore_llava
+
+git clone https://github.com/NVIDIA/Megatron-LM.git
+```
+```
+
 
 运行示例：
 
@@ -117,4 +128,16 @@ ref: [Multimodal Example](https://github.com/NVIDIA/Megatron-LM/tree/main/exampl
 cd code/mcore/mcore_uneven_pp/Megatron-LM/
 
 examples/multimodal/pretrain_mistral_clip.sh
+```
+
+```
+--vision-model-type siglip \
+--disable-vision-class-token \
+
+```
+
+ON PDX
+
+```
+srun -w h20-[1-8] -N 1 --gres=gpu:8 --container-image=/home/xueh/images/mm-nemo2407.sqsh --container-save=/home/weidongz/docker_workspace/images/mm-nemo2407.sqsh --container-mounts=/home/weidongz/docker_workspace:/workspace --container-writable --pty bash
 ```

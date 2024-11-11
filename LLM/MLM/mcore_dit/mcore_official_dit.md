@@ -165,13 +165,22 @@ FP8的loss与BF16训练的loss基本能对齐 (H20)：
 
 ### Flash Attn vs Fused Attn
 
-**latent[b,h,w,c]: 32x64x64x4, patch_size=2, transformer seqLen=1024**
+
+
+**Real datasets: latent[b,h,w,c]: 32x64x64x4, patch_size=2, transformer seqLen=1024**
 
 
 ||FlashA time/iter|FusedA time/iter|Speedup (Fused/Flash)|
 |:-:|:-:|:-:|:-:|
 |cp1||1522.4 ms|1482.9 ms|102.7%|
 |cp2||2091.7 ms|2167.5 ms|96.5%|
+
+**Mock datasets: latent[b,h,w,c]: 1x256x256x4, patch_size=2, transformer seqLen=16384**
+
+
+||FlashA time/iter|FusedA time/iter|Speedup (Fused/Flash)|
+|:-:|:-:|:-:|:-:|
+|cp2||3148.7 ms|2925.4 ms|107.6%|
 
 #### Default config (cp disabled)
 
@@ -239,6 +248,18 @@ NVTE_FUSED_ATTN=1
  [2024-11-06 11:17:03] iteration      400/   10000 | consumed samples:       102400 | elapsed time per iteration (ms): 2121.2 | throughput per GPU (TFLOP/s/GPU): 55.1 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 1.841455E-01 | loss scale: 1.0 | grad norm: 0.415 | number of skipped iterations:   0 | number of nan iterations:   0 |
 
 ```
+```
+ [2024-11-06 14:33:48] iteration      200/   10000 | consumed samples:         1600 | elapsed time per iteration (ms): 3153.2 | throughput per GPU (TFLOP/s/GPU): 53.8 | learning rate: 1.000000E-04 |57687E-01 | loss scale: 1.0 | grad norm: 0.300 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 14:39:03] iteration      300/   10000 | consumed samples:         2400 | elapsed time per iteration (ms): 3150.1 | throughput per GPU (TFLOP/s/GPU): 53.9 | learning rate: 1.000000E-04 |79750E-01 | loss scale: 1.0 | grad norm: 0.347 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 14:44:16] iteration      400/   10000 | consumed samples:         3200 | elapsed time per iteration (ms): 3132.6 | throughput per GPU (TFLOP/s/GPU): 54.2 | learning rate: 1.000000E-04 |42985E-01 | loss scale: 1.0 | grad norm: 0.260 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 14:49:33] iteration      500/   10000 | consumed samples:         4000 | elapsed time per iteration (ms): 3167.2 | throughput per GPU (TFLOP/s/GPU): 53.6 | learning rate: 1.000000E-04 |97503E-01 | loss scale: 1.0 | grad norm: 0.335 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 14:54:48] iteration      600/   10000 | consumed samples:         4800 | elapsed time per iteration (ms): 3148.7 | throughput per GPU (TFLOP/s/GPU): 53.9 | learning rate: 1.000000E-04 |92128E-01 | loss scale: 1.0 | grad norm: 0.226 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 15:00:03] iteration      700/   10000 | consumed samples:         5600 | elapsed time per iteration (ms): 3152.2 | throughput per GPU (TFLOP/s/GPU): 53.9 | learning rate: 1.000000E-04 |05513E-01 | loss scale: 1.0 | grad norm: 0.181 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 15:05:17] iteration      800/   10000 | consumed samples:         6400 | elapsed time per iteration (ms): 3140.1 | throughput per GPU (TFLOP/s/GPU): 54.1 | learning rate: 1.000000E-04 |27104E-01 | loss scale: 1.0 | grad norm: 0.268 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 15:10:34] iteration      900/   10000 | consumed samples:         7200 | elapsed time per iteration (ms): 3167.6 | throughput per GPU (TFLOP/s/GPU): 53.6 | learning rate: 1.000000E-04 |81686E-01 | loss scale: 1.0 | grad norm: 0.191 | number of skipped iterations:   0 | number of nan iterations:   0 |
+
+```
+
 
 **Fused Atten**:
 ```
@@ -251,5 +272,16 @@ NVTE_FUSED_ATTN=1
  [2024-11-06 10:49:37] iteration      200/   10000 | consumed samples:        51200 | elapsed time per iteration (ms): 2187.4 | throughput per GPU (TFLOP/s/GPU): 53.5 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 2.170999E-01 | loss scale: 1.0 | grad norm: 0.372 | number of skipped iterations:   0 | number of nan iterations:   0 |
  [2024-11-06 10:53:14] iteration      300/   10000 | consumed samples:        76800 | elapsed time per iteration (ms): 2167.5 | throughput per GPU (TFLOP/s/GPU): 53.9 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 2.169537E-01 | loss scale: 1.0 | grad norm: 1.028 | number of skipped iterations:   0 | number of nan iterations:   0 |
  [2024-11-06 10:56:54] iteration      400/   10000 | consumed samples:       102400 | elapsed time per iteration (ms): 2198.9 | throughput per GPU (TFLOP/s/GPU): 53.2 | learning rate: 1.000000E-04 | global batch size:   256 | loss: 2.150569E-01 | loss scale: 1.0 | grad norm: 0.406 | number of skipped iterations:   0 | number of nan iterations:   0 |
+
+```
+
+```
+
+ [2024-11-06 15:27:04] iteration      200/   10000 | consumed samples:         1600 | elapsed time per iteration (ms): 2930.2 | throughput per GPU (TFLOP/s/GPU): 57.9 | learning rate: 1.000000E-04 | global batch size:     8 | loss: 2.958057E-01 | loss scale: 1.0 | grad norm: 0.283 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 15:31:59] iteration      300/   10000 | consumed samples:         2400 | elapsed time per iteration (ms): 2950.5 | throughput per GPU (TFLOP/s/GPU): 57.5 | learning rate: 1.000000E-04 | global batch size:     8 | loss: 2.878827E-01 | loss scale: 1.0 | grad norm: 0.411 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 15:36:52] iteration      400/   10000 | consumed samples:         3200 | elapsed time per iteration (ms): 2925.4 | throughput per GPU (TFLOP/s/GPU): 58.0 | learning rate: 1.000000E-04 | global batch size:     8 | loss: 2.842934E-01 | loss scale: 1.0 | grad norm: 0.225 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 15:41:45] iteration      500/   10000 | consumed samples:         4000 | elapsed time per iteration (ms): 2933.6 | throughput per GPU (TFLOP/s/GPU): 57.9 | learning rate: 1.000000E-04 | global batch size:     8 | loss: 2.597779E-01 | loss scale: 1.0 | grad norm: 0.352 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 15:46:37] iteration      600/   10000 | consumed samples:         4800 | elapsed time per iteration (ms): 2912.0 | throughput per GPU (TFLOP/s/GPU): 58.3 | learning rate: 1.000000E-04 | global batch size:     8 | loss: 2.892290E-01 | loss scale: 1.0 | grad norm: 0.240 | number of skipped iterations:   0 | number of nan iterations:   0 |
+ [2024-11-06 15:51:31] iteration      700/   10000 | consumed samples:         5600 | elapsed time per iteration (ms): 2940.3 | throughput per GPU (TFLOP/s/GPU): 57.7 | learning rate: 1.000000E-04 | global batch size:     8 | loss: 3.005735E-01 | loss scale: 1.0 | grad norm: 0.166 | number of skipped iterations:   0 | number of nan iterations:   0 |
 
 ```
