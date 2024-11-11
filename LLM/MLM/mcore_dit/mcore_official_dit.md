@@ -172,15 +172,15 @@ FP8的loss与BF16训练的loss基本能对齐 (H20)：
 
 ||FlashA time/iter|FusedA time/iter|Speedup (Fused/Flash)|
 |:-:|:-:|:-:|:-:|
-|cp1||1522.4 ms|1482.9 ms|102.7%|
-|cp2||2091.7 ms|2167.5 ms|96.5%|
+|cp1|1522.4 ms|1482.9 ms|102.7%|
+|cp2|2091.7 ms|2167.5 ms|96.5%|
 
 **Mock datasets: latent[b,h,w,c]: 1x256x256x4, patch_size=2, transformer seqLen=16384**
 
 
 ||FlashA time/iter|FusedA time/iter|Speedup (Fused/Flash)|
 |:-:|:-:|:-:|:-:|
-|cp2||3148.7 ms|2925.4 ms|107.6%|
+|cp2|3148.7 ms|2925.4 ms|107.6%|
 
 #### Default config (cp disabled)
 
